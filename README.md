@@ -75,8 +75,7 @@
 ---
 
 ## 📦 ERD (요약)
-
-**Course / User / Review / Bookmark** 중심 도메인 구조  
+<img width="800" height="450" alt="당근코-ERD" src="https://github.com/user-attachments/assets/49b74e61-fa5e-49f8-953a-4d4e48c5ae73" />
 
 
 ---
