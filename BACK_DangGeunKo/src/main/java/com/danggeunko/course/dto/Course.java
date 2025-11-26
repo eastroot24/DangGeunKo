@@ -1,6 +1,7 @@
 package com.danggeunko.course.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Course {
 
@@ -18,6 +19,7 @@ public class Course {
     private Integer courseRegion;
     private String startAddress;
     private String endAddress;
+    private List<CoursePoint> coursePoints;
 
     // 러닝 정보
     private double distanceKm;
@@ -35,6 +37,9 @@ public class Course {
 
     // 평점
     private double avgRatings;
+    
+    // 조회수
+    private int viewCnt;
 
     // 시스템 시간
     private LocalDateTime createdAt;
@@ -52,7 +57,7 @@ public class Course {
                      Integer courseRegion, String startAddress, String endAddress,
                      double distanceKm, double durationMin, double paceMin,
                      Integer courseType, String difficulty, String description,
-                     Boolean hasCrosswalk, Boolean hasToilet, double avgRatings,
+                     Boolean hasCrosswalk, Boolean hasToilet, double avgRatings, int viewCnt, 
                      LocalDateTime createdAt, LocalDateTime updatedAt) {
 
         this.courseId = courseId;
@@ -71,6 +76,7 @@ public class Course {
         this.hasCrosswalk = hasCrosswalk;
         this.hasToilet = hasToilet;
         this.avgRatings = avgRatings;
+        this.viewCnt = viewCnt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -207,8 +213,16 @@ public class Course {
     public void setAvgRatings(double avgRatings) {
         this.avgRatings = avgRatings;
     }
+    
+    public int getViewCnt() {
+		return viewCnt;
+	}
 
-    public LocalDateTime getCreatedAt() {
+	public void setViewCnt(int viewCnt) {
+		this.viewCnt = viewCnt;
+	}
+
+	public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
@@ -231,7 +245,7 @@ public class Course {
 				+ endAddress + ", distanceKm=" + distanceKm + ", durationMin=" + durationMin + ", paceMin=" + paceMin
 				+ ", courseType=" + courseType + ", difficulty=" + difficulty + ", description=" + description
 				+ ", hasCrosswalk=" + hasCrosswalk + ", hasToilet=" + hasToilet + ", avgRatings=" + avgRatings
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ ", viewCnt=" + viewCnt + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
     
 }
