@@ -10,7 +10,7 @@ public interface UserDao {
 	//특정 유저 조회
 	public User getUserById(int id);
 	//전체 유저 조회
-	public List<User> getAllUser();
+	public List<User> getAllUsers();
 	//유저 수정
 	public int updateUser(int id, User user);
 	//유저 삭제
