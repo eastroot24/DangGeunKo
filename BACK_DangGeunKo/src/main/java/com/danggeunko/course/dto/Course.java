@@ -9,7 +9,7 @@ public class Course {
     private Integer courseId;
 
     // 사용자 ID
-    private String nickname;
+    private Integer userId;
 
     // 좋아요 수
     private Integer like;
@@ -53,7 +53,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(Integer courseId, String nickname, Integer like, String courseName,
+    public Course(Integer courseId, Integer userId, Integer like, String courseName,
                      Integer courseRegion, String startAddress, String endAddress,
                      double distanceKm, double durationMin, double paceMin,
                      Integer courseType, String difficulty, String description,
@@ -61,7 +61,7 @@ public class Course {
                      LocalDateTime createdAt, LocalDateTime updatedAt) {
 
         this.courseId = courseId;
-        this.nickname = nickname;
+        this.userId = userId;
         this.like = like;
         this.courseName = courseName;
         this.courseRegion = courseRegion;
@@ -94,12 +94,12 @@ public class Course {
         this.courseId = courseId;
     }
 
-    public String getnickname() {
-        return nickname;
+    public Integer getuserId() {
+        return userId;
     }
 
-    public void setnickname(String nickname) {
-        this.nickname = nickname;
+    public void setuserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getLike() {
@@ -240,7 +240,7 @@ public class Course {
 
 	@Override
 	public String toString() {
-		return "CourseDto [courseId=" + courseId + ", nickname=" + nickname + ", like=" + like + ", courseName="
+		return "CourseDto [courseId=" + courseId + ", userId=" + userId + ", like=" + like + ", courseName="
 				+ courseName + ", courseRegion=" + courseRegion + ", startAddress=" + startAddress + ", endAddress="
 				+ endAddress + ", distanceKm=" + distanceKm + ", durationMin=" + durationMin + ", paceMin=" + paceMin
 				+ ", courseType=" + courseType + ", difficulty=" + difficulty + ", description=" + description
