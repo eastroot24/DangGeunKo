@@ -100,5 +100,12 @@ public class Review {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+	@Override
+	public String toString() {
+		return "Review [reviewId=" + reviewId + ", courseId=" + courseId + ", content=" + content + ", rating=" + rating
+				+ ", userId=" + userId + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt + "]";
+	}
+    
 }
 
