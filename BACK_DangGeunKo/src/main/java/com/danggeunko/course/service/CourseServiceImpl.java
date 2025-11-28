@@ -21,12 +21,14 @@ public class CourseServiceImpl implements CourseService {
 	public boolean addCourse(Course course) {
 		return courseDao.insertCourse(course) > 0;
 	}
-
+	
+	@Transactional
 	@Override
 	public List<Course> getAllCourses() {
 		return courseDao.selectAllCourses();
 	}
-
+	
+	@Transactional
 	@Override
 	public Course getCourseById(int id) {
 		courseDao.updateViewCnt(id);
@@ -44,10 +46,16 @@ public class CourseServiceImpl implements CourseService {
 	public boolean deleteCourse(int id) {
 		return courseDao.deleteCourse(id) > 0;
 	}
-
+	
+	@Transactional
 	@Override
 	public List<Course> search(SearchCondition condition) {
 		return courseDao.search(condition);
+	}
+
+	@Override
+	public List<Course> getWeeklyRanking(String region) {
+		return courseDao.selectWeeklyRanking(region);
 	}
 
 }
