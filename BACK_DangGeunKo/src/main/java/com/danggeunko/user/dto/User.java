@@ -17,6 +17,7 @@ public class User {
     private int age; // 나이 (age)
     private int region; // 동네정보 (region)
     private LocalDateTime createdAt; // 가입일자 (created_at)
+    private LocalDateTime updatedAt; // 수정일자 (updated_at) 
 
     // 선호 정보 (User 테이블 기반)
     private double prefDistance; // 선호 거리(km) (pref_distance)
@@ -27,13 +28,13 @@ public class User {
     private List<Course> likeList; 
   
     // --- Constructor, Getters, and Setters below ---
-
+    
     // 기본 생성자
     public User() {
     }
 
     // 모든 필드를 포함하는 생성자 (비밀번호는 제외할 수 있음)
-    public User(int userId, String userName, String nickname, String userEmail, String userPassword, String gender, int age, int region, LocalDateTime createdAt, float prefDistance, String prefDifficulty) {
+    public User(int userId, String userName, String nickname, String userEmail, String userPassword, String gender, int age, int region, LocalDateTime createdAt, float prefDistance, String prefDifficulty, LocalDateTime updatedAt) {
         this.userId = userId;
         this.userName = userName;
         this.nickname = nickname;
@@ -43,6 +44,7 @@ public class User {
         this.age = age;
         this.region = region;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.prefDistance = prefDistance;
         this.prefDifficulty = prefDifficulty;
         this.likeList = null;
@@ -53,7 +55,15 @@ public class User {
         return userId;
     }
 
-    public String getUserName() {
+    public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getUserName() {
         return userName;
     }
 
@@ -148,10 +158,10 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "UserDto [userId=" + userId + ", userName=" + userName + ", nickname=" + nickname + ", userEmail="
+		return "User [userId=" + userId + ", userName=" + userName + ", nickname=" + nickname + ", userEmail="
 				+ userEmail + ", userPassword=" + userPassword + ", gender=" + gender + ", age=" + age + ", region="
-				+ region + ", createdAt=" + createdAt + ", prefDistance=" + prefDistance + ", prefDifficulty="
-				+ prefDifficulty + ", likeList=" + likeList + "]";
+				+ region + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", prefDistance=" + prefDistance
+				+ ", prefDifficulty=" + prefDifficulty + ", likeList=" + likeList + "]";
 	}
     
 }
