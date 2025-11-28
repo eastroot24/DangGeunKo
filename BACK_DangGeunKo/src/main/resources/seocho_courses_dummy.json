@@ -1,0 +1,502 @@
+[
+  {
+    "courseId": 101,
+    "nickname": "MoonRunner",
+    "like": 128,
+    "courseName": "Seocho Seorae Park Loop",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 반포대로 15",
+    "endAddress": "서울 서초구 반포대로 16",
+    "coursePoints": [
+      {
+        "latitude": 37.4935,
+        "longitude": 127.011,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.4945,
+        "longitude": 127.0125,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.495,
+        "longitude": 127.014,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.4955,
+        "longitude": 127.016,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.4948,
+        "longitude": 127.018,
+        "orderIndex": 5
+      },
+      {
+        "latitude": 37.4935,
+        "longitude": 127.017,
+        "orderIndex": 6
+      }
+    ],
+    "distanceKm": 4.2,
+    "durationMin": 26.5,
+    "paceMin": 6.3,
+    "courseType": 1,
+    "difficulty": "중상",
+    "description": "Seorae Park 주변 산책로와 조깅로를 연결한 원형 코스. 평탄하고 경치가 좋으며 가벼운 언덕 구간이 포함된다.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.6,
+    "viewCnt": 1578,
+    "createdAt": "2025-11-01T09:00:00",
+    "updatedAt": "2025-11-28T08:45:00"
+  },
+  {
+    "courseId": 102,
+    "nickname": "SkyBlue",
+    "like": 210,
+    "courseName": "Bangbae-dong Yangjaecheon Run",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 방배로 68",
+    "endAddress": "서울 서초구 방배로 92",
+    "coursePoints": [
+      {
+        "latitude": 37.493,
+        "longitude": 127.014,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.495,
+        "longitude": 127.016,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.4968,
+        "longitude": 127.0185,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.498,
+        "longitude": 127.02,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.5,
+        "longitude": 127.019,
+        "orderIndex": 5
+      }
+    ],
+    "distanceKm": 3.8,
+    "durationMin": 22.5,
+    "paceMin": 5.93,
+    "courseType": 2,
+    "difficulty": "초급",
+    "description": "양재천 산책로를 따라 이어지는 편안한 코스. 강변 풍경과 조용한 분위기가 특징.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.5,
+    "viewCnt": 980,
+    "createdAt": "2025-11-02T10:15:00",
+    "updatedAt": "2025-11-28T09:50:00"
+  },
+  {
+    "courseId": 103,
+    "nickname": "HarborWalker",
+    "like": 89,
+    "courseName": "Seocho Cultural Park Circuit",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 남부순환로 1234",
+    "endAddress": "서울 서초구 남부순환로 1235",
+    "coursePoints": [
+      {
+        "latitude": 37.4953,
+        "longitude": 127.0155,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.496,
+        "longitude": 127.0168,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.4972,
+        "longitude": 127.0182,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.498,
+        "longitude": 127.02,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.497,
+        "longitude": 127.0215,
+        "orderIndex": 5
+      },
+      {
+        "latitude": 37.4953,
+        "longitude": 127.0155,
+        "orderIndex": 6
+      }
+    ],
+    "distanceKm": 4.1,
+    "durationMin": 25.0,
+    "paceMin": 6.1,
+    "courseType": 1,
+    "difficulty": "중",
+    "description": "남부문화예술회관 주변 조깅 루프. 아트와 공원이 어우러진 도심 핫스팟.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.4,
+    "viewCnt": 640,
+    "createdAt": "2025-11-03T11:20:00",
+    "updatedAt": "2025-11-28T09:50:00"
+  },
+  {
+    "courseId": 104,
+    "nickname": "Jinjin",
+    "like": 320,
+    "courseName": "Yangjaecheon Riverside Pace",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 양재대로 123",
+    "endAddress": "서울 서초구 양재대로 200",
+    "coursePoints": [
+      {
+        "latitude": 37.468,
+        "longitude": 127.03,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.47,
+        "longitude": 127.0315,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.4718,
+        "longitude": 127.033,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.4725,
+        "longitude": 127.0345,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.474,
+        "longitude": 127.033,
+        "orderIndex": 5
+      }
+    ],
+    "distanceKm": 5.2,
+    "durationMin": 31.0,
+    "paceMin": 5.96,
+    "courseType": 2,
+    "difficulty": "초급-중급",
+    "description": "양재천 경관과 도심 풍경이 어우러진 중간 강도 코스.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.7,
+    "viewCnt": 1320,
+    "createdAt": "2025-11-04T12:10:00",
+    "updatedAt": "2025-11-28T10:10:00"
+  },
+  {
+    "courseId": 105,
+    "nickname": "HarborNova",
+    "like": 512,
+    "courseName": "Seocho Hillside Run",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 남부순환로 200",
+    "endAddress": "서울 서초구 남부순환로 230",
+    "coursePoints": [
+      {
+        "latitude": 37.4938,
+        "longitude": 127.018,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.4945,
+        "longitude": 127.0192,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.4957,
+        "longitude": 127.0208,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.4968,
+        "longitude": 127.0225,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.496,
+        "longitude": 127.021,
+        "orderIndex": 5
+      },
+      {
+        "latitude": 37.4938,
+        "longitude": 127.018,
+        "orderIndex": 6
+      }
+    ],
+    "distanceKm": 3.9,
+    "durationMin": 23.5,
+    "paceMin": 6.02,
+    "courseType": 1,
+    "difficulty": "중상",
+    "description": "힐 구간이 섞인 도시 공원 루프. 해질녘 조망이 좋습니다.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.5,
+    "viewCnt": 780,
+    "createdAt": "2025-11-05T09:40:00",
+    "updatedAt": "2025-11-28T11:05:00"
+  },
+  {
+    "courseId": 106,
+    "nickname": "BlueRiver",
+    "like": 210,
+    "courseName": "Banpo Hangang Waterline Run",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 반포대로 22",
+    "endAddress": "서울 서초구 반포대로 76",
+    "coursePoints": [
+      {
+        "latitude": 37.506,
+        "longitude": 127.009,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.508,
+        "longitude": 127.0105,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.5095,
+        "longitude": 127.012,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.5107,
+        "longitude": 127.0135,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.511,
+        "longitude": 127.014,
+        "orderIndex": 5
+      }
+    ],
+    "distanceKm": 6.0,
+    "durationMin": 36.0,
+    "paceMin": 6.0,
+    "courseType": 3,
+    "difficulty": "중상",
+    "description": "한강변 산책로를 따라 이어지는 긴 러닝 루프. 야경이 특히 아름다워요.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.6,
+    "viewCnt": 1500,
+    "createdAt": "2025-11-06T21:15:00",
+    "updatedAt": "2025-11-28T12:15:00"
+  },
+  {
+    "courseId": 107,
+    "nickname": "RunnerB",
+    "like": 145,
+    "courseName": "Seocho Village Green Circuit",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 서리풀길 12",
+    "endAddress": "서울 서초구 서리풀길 12-2",
+    "coursePoints": [
+      {
+        "latitude": 37.4905,
+        "longitude": 127.014,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.492,
+        "longitude": 127.0155,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.493,
+        "longitude": 127.017,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.492,
+        "longitude": 127.0185,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.4908,
+        "longitude": 127.017,
+        "orderIndex": 5
+      },
+      {
+        "latitude": 37.4905,
+        "longitude": 127.014,
+        "orderIndex": 6
+      }
+    ],
+    "distanceKm": 4.6,
+    "durationMin": 28.0,
+    "paceMin": 6.08,
+    "courseType": 1,
+    "difficulty": "초급-중급",
+    "description": "지역 공원과 주거가 잘 어우러진 이색 루프. 가족 단위도 많이 찾습니다.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.3,
+    "viewCnt": 540,
+    "createdAt": "2025-11-07T08:30:00",
+    "updatedAt": "2025-11-28T12:40:00"
+  },
+  {
+    "courseId": 108,
+    "nickname": "SunsetR",
+    "like": 98,
+    "courseName": "Seorae Garden Path",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 서초대로 300",
+    "endAddress": "서울 서초구 서초대로 320",
+    "coursePoints": [
+      {
+        "latitude": 37.495,
+        "longitude": 127.015,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.496,
+        "longitude": 127.0165,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.4968,
+        "longitude": 127.0185,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.4958,
+        "longitude": 127.0195,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.495,
+        "longitude": 127.018,
+        "orderIndex": 5
+      }
+    ],
+    "distanceKm": 3.2,
+    "durationMin": 19.5,
+    "paceMin": 6.09,
+    "courseType": 2,
+    "difficulty": "초급",
+    "description": "서초구 중심부의 짧고 느긋한 코스. 도심 속 작은 정원을 지나갑니다.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.2,
+    "viewCnt": 420,
+    "createdAt": "2025-11-08T07:50:00",
+    "updatedAt": "2025-11-28T13:05:00"
+  },
+  {
+    "courseId": 109,
+    "nickname": "PixelRunner",
+    "like": 260,
+    "courseName": "Bogwang Mountain Base Loop",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 방배로 111",
+    "endAddress": "서울 서초구 방배로 166",
+    "coursePoints": [
+      {
+        "latitude": 37.481,
+        "longitude": 127.023,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.4825,
+        "longitude": 127.025,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.484,
+        "longitude": 127.0265,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.486,
+        "longitude": 127.024,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.4845,
+        "longitude": 127.023,
+        "orderIndex": 5
+      }
+    ],
+    "distanceKm": 5.0,
+    "durationMin": 29.0,
+    "paceMin": 5.8,
+    "courseType": 4,
+    "difficulty": "중상-상급",
+    "description": "방배동의 언덕이 있는 코스로 언덕 훈련에 좋습니다.",
+    "hasCrosswalk": true,
+    "hasToilet": false,
+    "avgRatings": 4.6,
+    "viewCnt": 860,
+    "createdAt": "2025-11-09T06:40:00",
+    "updatedAt": "2025-11-28T13:40:00"
+  },
+  {
+    "courseId": 110,
+    "nickname": "NaraRun",
+    "like": 310,
+    "courseName": "Seocho Riverside Sunrise",
+    "courseRegion": 1102,
+    "startAddress": "서울 서초구 반포대로 50",
+    "endAddress": "서울 서초구 반포대로 60",
+    "coursePoints": [
+      {
+        "latitude": 37.502,
+        "longitude": 127.006,
+        "orderIndex": 1
+      },
+      {
+        "latitude": 37.5035,
+        "longitude": 127.0075,
+        "orderIndex": 2
+      },
+      {
+        "latitude": 37.505,
+        "longitude": 127.009,
+        "orderIndex": 3
+      },
+      {
+        "latitude": 37.506,
+        "longitude": 127.0105,
+        "orderIndex": 4
+      },
+      {
+        "latitude": 37.507,
+        "longitude": 127.012,
+        "orderIndex": 5
+      }
+    ],
+    "distanceKm": 4.0,
+    "durationMin": 24.0,
+    "paceMin": 6.0,
+    "courseType": 3,
+    "difficulty": "초급",
+    "description": "일출을 바라보며 시작하는 해돋이 러닝 루트. 한강과 도심이 한눈에 보입니다.",
+    "hasCrosswalk": true,
+    "hasToilet": true,
+    "avgRatings": 4.4,
+    "viewCnt": 700,
+    "createdAt": "2025-11-10T05:55:00",
+    "updatedAt": "2025-11-28T14:20:00"
+  }
+]
