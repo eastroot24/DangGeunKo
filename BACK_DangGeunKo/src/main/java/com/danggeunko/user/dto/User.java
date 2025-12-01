@@ -23,9 +23,6 @@ public class User {
     private double prefDistance; // 선호 거리(km) (pref_distance)
     private String prefDifficulty; // 선호 난이도 (pref_difficulty)
 
-    // Like/찜하기
-    // 코스 찜 목록
-    private List<Course> likeList; 
   
     // --- Constructor, Getters, and Setters below ---
     
@@ -47,7 +44,6 @@ public class User {
         this.updatedAt = updatedAt;
         this.prefDistance = prefDistance;
         this.prefDifficulty = prefDifficulty;
-        this.likeList = null;
     }
 
     // Getters
@@ -103,10 +99,6 @@ public class User {
         return prefDifficulty;
     }
 
-    public List<Course> getLikeCount() {
-        return likeList;
-    }
-
     // Setters
     public void setUserId(int userId) {
         this.userId = userId;
@@ -152,16 +144,13 @@ public class User {
         this.prefDifficulty = prefDifficulty;
     }
 
-    public void setLikeCount(List<Course> likeList) {
-        this.likeList = likeList;
-    }
 
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", userName=" + userName + ", nickname=" + nickname + ", userEmail="
 				+ userEmail + ", userPassword=" + userPassword + ", gender=" + gender + ", age=" + age + ", region="
 				+ region + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", prefDistance=" + prefDistance
-				+ ", prefDifficulty=" + prefDifficulty + ", likeList=" + likeList + "]";
+				+ ", prefDifficulty=" + prefDifficulty + "]";
 	}
     
 }

@@ -59,6 +59,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 	}
+	
 	//회원 정보 수정
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable("id") int id, @RequestBody User user){

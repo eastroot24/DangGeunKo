@@ -3,8 +3,39 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.danggeunko.review.dao.ReviewDao">
-<select id="getReviewsByCourse" resultType="Review" parameterType="int">
-        SELECT * FROM review
-    </select>
-
+	<!-- 리뷰 추가-->
+	<insert id="insertReview" parameterType="Review">
+		INSERT INTO review (course_id, content, rating, user_id)
+		VALUES(#{courseId}, #{content}, #{rating}, #{userId})
+	</insert>
+	<!-- 특정 코스에 대한 리뷰 조회-->
+	<select id="getReviewsByCourse" resultType="Review" parameterType="ReviewSearchCondition">
+	      SELECT user_id, content, rating
+	      FROM review
+	      WHERE course_id = #{courseId}
+	      <if test="sortBy != null">
+	      ORDER BY 
+	      <choose>
+	      	<when test="sortBy == 'rating'">rating</when>
+	      	<when test="sortBy == 'createdAt'">created_at</when>
+	      	<otherwise>review_id</otherwise>
+	      </choose>
+	      <if test="sortDirection == 'desc'">DESC</if>
+	      <if test="sortDirection == 'asc'">ASC</if>
+	      </if>
+	      <if test="size != null and size > 0 and page != null and page > 0">
+	      	LIMIT #{size} OFFSET #{offset}
+	      </if>
+	</select>
+	<!-- 리뷰 수정 -->
+	<update id="updateReview" >
+		UPDATE review
+		SET course_id = #{review.courseId}, content = #{review.content}, rating = #{review.rating}
+		WHERE review_id = #{reviewId}
+	</update>
+	<!-- 리뷰 삭제 -->
+	<delete id="deleteReview" parameterType="int">
+		DELETE FROM review
+		WHERE review_id = #{reviewId}
+	</delete>
 </mapper>

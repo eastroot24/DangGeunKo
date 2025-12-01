@@ -13,7 +13,7 @@ public interface ReviewDao {
 	public List<Review> getReviewsByCourse(ReviewSearchCondition reviewSearchCondition);
 
 	// 리뷰 수정
-	public int updateReview(int id, Review review);
+	public int updateReview(int reviewId, Review review);
 
 	// 리뷰 삭제
 	public int deleteReview(int id);
