@@ -1,0 +1,748 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "SpringBoard API",
+    "description": "Spring Boot Board REST API",
+    "license": {
+      "name": "SSAFY",
+      "url": "https://www.ssafy.com"
+    },
+    "version": "v0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api-user/user/{id}": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-review/review/{reviewId}": {
+      "put": {
+        "tags": [
+          "review-controller"
+        ],
+        "operationId": "updateUser_1",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-course/course/{id}": {
+      "get": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Course"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-user/user": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "addUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-review/review": {
+      "get": {
+        "tags": [
+          "review-controller"
+        ],
+        "operationId": "getReviewsByCourse",
+        "parameters": [
+          {
+            "name": "condition",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ReviewSearchCondition"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "review-controller"
+        ],
+        "operationId": "addReview",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-course/course": {
+      "get": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "list",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "add",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Course"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-course/course/search": {
+      "post": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "search",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchCondition"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-course/course/ranking": {
+      "get": {
+        "tags": [
+          "course-controller"
+        ],
+        "operationId": "weeklyRanking",
+        "parameters": [
+          {
+            "name": "region",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-review/review/{id}": {
+      "delete": {
+        "tags": [
+          "review-controller"
+        ],
+        "operationId": "deleteUser_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string"
+          },
+          "userPassword": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "region": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prefDistance": {
+            "type": "number",
+            "format": "double"
+          },
+          "prefDifficulty": {
+            "type": "string"
+          }
+        }
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "reviewId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Course": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "likeCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "courseName": {
+            "type": "string"
+          },
+          "courseRegion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startAddress": {
+            "type": "string"
+          },
+          "endAddress": {
+            "type": "string"
+          },
+          "coursePoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoursePoint"
+            }
+          },
+          "distanceKm": {
+            "type": "number",
+            "format": "double"
+          },
+          "durationMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "paceMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "courseType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "difficulty": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "hasCrosswalk": {
+            "type": "boolean"
+          },
+          "hasToilet": {
+            "type": "boolean"
+          },
+          "avgRatings": {
+            "type": "number",
+            "format": "double"
+          },
+          "viewCnt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CoursePoint": {
+        "type": "object",
+        "properties": {
+          "pointId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sequence": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "SearchCondition": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "minRange": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxRange": {
+            "type": "number",
+            "format": "double"
+          },
+          "orderBy": {
+            "type": "string"
+          },
+          "orderByDir": {
+            "type": "string"
+          }
+        }
+      },
+      "ReviewSearchCondition": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sortDirection": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}

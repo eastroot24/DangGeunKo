@@ -29,5 +29,5 @@ public interface CourseDao {
 	public List<Course> search(SearchCondition condition);
 	
 	// 게시글 정렬
-	public List<Course> selectWeeklyRanking(String region);
+	public List<Course> selectWeeklyRanking(int region);
 }

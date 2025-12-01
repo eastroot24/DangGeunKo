@@ -59,7 +59,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<Course> getWeeklyRanking(String region) {
+	public List<Course> getWeeklyRanking(int region) {
 		return courseDao.selectWeeklyRanking(region);
 	}
 	
