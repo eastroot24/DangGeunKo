@@ -27,4 +27,6 @@ public interface CourseService {
 	
 	// 게시글 정렬
 	public List<Course> getWeeklyRanking(String region);
+
+	public boolean addCourseWithPoints(Course course);
 }

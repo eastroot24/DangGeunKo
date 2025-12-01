@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.danggeunko.course.dao.CourseDao;
+import com.danggeunko.course.dao.CoursePointDao;
 import com.danggeunko.course.dto.Course;
+import com.danggeunko.course.dto.CoursePoint;
 import com.danggeunko.course.dto.SearchCondition;
 
 @Service
@@ -15,6 +17,9 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Autowired
 	private CourseDao courseDao;
+	
+	@Autowired
+	private CoursePointDao coursePointDao;
 
 	@Transactional
 	@Override
@@ -56,6 +61,27 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public List<Course> getWeeklyRanking(String region) {
 		return courseDao.selectWeeklyRanking(region);
+	}
+	
+	@Transactional
+	@Override
+	public boolean addCourseWithPoints(Course course) {
+		// 1. 코스 저장
+	    int result = courseDao.insertCourse(course);
+	    if(result <= 0) return false;
+
+	    // 2. course_id가 생성되었으므로 point에 세팅
+	    int courseId = course.getCourseId();
+
+	    for(CoursePoint point : course.getCoursePoints()) {
+	        point.setCourseId(courseId);
+	    }
+
+	    // 3. 코스 포인트 저장
+	    int count = coursePointDao.insertCoursePoints(course.getCoursePoints());
+	    if(count <= 0) return false;
+
+	    return true;
 	}
 
 }

@@ -12,7 +12,7 @@ public class Course {
     private Integer userId;
 
     // 좋아요 수
-    private Integer like;
+    private Integer likeCount;
 
     // 기본 정보
     private String courseName;
@@ -53,7 +53,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(Integer courseId, Integer userId, Integer like, String courseName,
+    public Course(Integer courseId, Integer userId, Integer likeCount, String courseName,
                      Integer courseRegion, String startAddress, String endAddress,
                      double distanceKm, double durationMin, double paceMin,
                      Integer courseType, String difficulty, String description,
@@ -62,12 +62,11 @@ public class Course {
 
         this.courseId = courseId;
         this.userId = userId;
-        this.like = like;
+        this.likeCount = likeCount;
         this.courseName = courseName;
         this.courseRegion = courseRegion;
         this.startAddress = startAddress;
         this.endAddress = endAddress;
-        this.distanceKm = distanceKm;
         this.durationMin = durationMin;
         this.paceMin = paceMin;
         this.courseType = courseType;
@@ -94,20 +93,20 @@ public class Course {
         this.courseId = courseId;
     }
 
-    public Integer getuserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setuserId(Integer userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public Integer getLike() {
-        return like;
+    public Integer getLikeCount() {
+        return likeCount;
     }
 
-    public void setLike(Integer like) {
-        this.like = like;
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 
     public String getCourseName() {
@@ -222,6 +221,14 @@ public class Course {
 		this.viewCnt = viewCnt;
 	}
 
+	public List<CoursePoint> getCoursePoints() {
+		return coursePoints;
+	}
+
+	public void setCoursePoints(List<CoursePoint> coursePoints) {
+		this.coursePoints = coursePoints;
+	}
+
 	public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -240,7 +247,7 @@ public class Course {
 
 	@Override
 	public String toString() {
-		return "CourseDto [courseId=" + courseId + ", userId=" + userId + ", like=" + like + ", courseName="
+		return "CourseDto [courseId=" + courseId + ", userId=" + userId + ", like=" + likeCount + ", courseName="
 				+ courseName + ", courseRegion=" + courseRegion + ", startAddress=" + startAddress + ", endAddress="
 				+ endAddress + ", distanceKm=" + distanceKm + ", durationMin=" + durationMin + ", paceMin=" + paceMin
 				+ ", courseType=" + courseType + ", difficulty=" + difficulty + ", description=" + description

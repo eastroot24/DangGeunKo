@@ -55,7 +55,7 @@ public class CourseController {
 	// 코스 등록
 	@PostMapping("/course")
 	public ResponseEntity<?> add(@RequestBody Course course){
-		boolean completed = courseService.addCourse(course);
+		boolean completed = courseService.addCourseWithPoints(course);
 		if(completed) {
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}else {
