@@ -3,8 +3,91 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.danggeunko.course.dao.CourseDao">
-	<select id="selectAll" resultType="Course">
-        SELECT * FROM course
+	<insert id="insertCourse" parameterType="Course">
+		INSERT INTO course (
+            user_id, course_name, course_region, start_address, end_address,
+            distance_km, duration_min, pace_min, course_type, difficulty,
+            description, has_crosswalk, has_toilet, like_count, avg_rating,
+            created_at, updated_at
+        ) VALUES (
+            #{userId}, #{courseName}, #{courseRegion}, #{startAddress}, #{endAddress},
+            #{distanceKm}, #{durationMin}, #{paceMin}, #{courseType}, #{difficulty},
+            #{description}, #{hasCrosswalk}, #{hasToilet}, 0, 0,
+            NOW(), NOW()
+        );
+	</insert>
+	
+	<select id="selectAllCousrses" resultType="Course">
+        SELECT user_id, like_Count, course_name, course_region, start_address, end_address, distance_km, duration_min, pace_min, course_type,
+        difficulty, description, has_crosswalk, has_toilet, avg_rating, view_cnt
+        FROM course
+        ORDER BY created_at DESC;
     </select>
+    
+    <select id="selectCourseById">
+    	SELECT user_id, like_Count, course_name, course_region, start_address, end_address, distance_km, duration_min, pace_min, course_type,
+        difficulty, description, has_crosswalk, has_toilet, avg_rating, view_cnt
+        FROM course
+        WHERE course_id = #{id}
+        ORDER BY created_at DESC;
+    </select>
+    
+    <update id="updateCourse">
+    	UPDATE course
+    	SET
+    		course_name = #{course.courseName},
+            course_region = #{course.courseRegion},
+            start_address = #{course.startAddress},
+            end_address = #{course.endAddress},
+            distance_km = #{course.distanceKm},
+            duration_min = #{course.durationMin},
+            pace_min = #{course.paceMin},
+            course_type = #{course.courseType},
+            difficulty = #{course.difficulty},
+            description = #{course.description},
+            has_crosswalk = #{course.hasCrosswalk},
+            has_toilet = #{course.hasToilet},
+            updated_at = NOW()
+        WHERE course_id = #{id};
+    </update>
+    
+    <delete id="deleteCourse">
+    	DELETE FROM course WHERE course_id=#{id}
+    </delete>
+    
+    <update id="updateViewCnt">
+    	UPDATE course
+    	SET view_cnt = view_cnt + 1
+    	WHERE course_id = #{id}
+    </update>
+    
+    <select id="search" resultType="Course">
+        SELECT *
+        FROM course
+        WHERE 1=1
+        <if test="keyword != null and keyword != ''">
+            AND course_name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="region != null and region != ''">
+            AND course_region = #{region}
+        </if>
+        <if test="minDistance != null">
+            AND distance_km &gt; #{minDistance}
+        </if>
+        <if test="maxDistance != null">
+            AND distance_km &lt; #{maxDistance}
+        </if>
+        ORDER BY created_at DESC;
+    </select>
+    
+    <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">
+    SELECT c.*
+    FROM course c
+    JOIN review r ON c.course_id = r.course_id
+    WHERE c.course_region = #{region}
+      AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    GROUP BY c.course_id
+    ORDER BY AVG(r.rating) DESC, COUNT(r.review_id) DESC;
+</select>
 
 </mapper>
