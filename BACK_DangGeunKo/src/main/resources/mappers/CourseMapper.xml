@@ -5,20 +5,18 @@
 <mapper namespace="com.danggeunko.course.dao.CourseDao">
 	<insert id="insertCourse" parameterType="Course">
 		INSERT INTO course (
-            user_id, course_name, course_region, start_address, end_address,
-            distance_km, duration_min, pace_min, course_type, difficulty,
-            description, has_crosswalk, has_toilet, like_count, avg_rating,
-            created_at, updated_at
-        ) VALUES (
-            #{userId}, #{courseName}, #{courseRegion}, #{startAddress}, #{endAddress},
-            #{distanceKm}, #{durationMin}, #{paceMin}, #{courseType}, #{difficulty},
-            #{description}, #{hasCrosswalk}, #{hasToilet}, 0, 0,
-            NOW(), NOW()
-        );
+		user_id, course_name, course_region, start_address, end_address,
+		distance_km, duration_min, pace_min, course_type, difficulty,
+		description, has_crosswalk, has_toilet
+		) VALUES (
+		#{userId}, #{courseName}, #{courseRegion}, #{startAddress},
+		#{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin}, #{courseType},
+		#{difficulty},#{description}, #{hasCrosswalk}, #{hasToilet}
+		)
 	</insert>
 	
-	<select id="selectAllCousrses" resultType="Course">
-        SELECT user_id, like_Count, course_name, course_region, start_address, end_address, distance_km, duration_min, pace_min, course_type,
+	<select id="selectAllCourses" resultType="Course">
+        SELECT user_id, like_count, course_name, course_region, start_address, end_address, distance_km, duration_min, pace_min, course_type,
         difficulty, description, has_crosswalk, has_toilet, avg_rating, view_cnt
         FROM course
         ORDER BY created_at DESC;
@@ -61,24 +59,46 @@
     	WHERE course_id = #{id}
     </update>
     
-    <select id="search" resultType="Course">
-        SELECT *
-        FROM course
-        WHERE 1=1
-        <if test="keyword != null and keyword != ''">
-            AND course_name LIKE CONCAT('%', #{keyword}, '%')
-        </if>
-        <if test="region != null and region != ''">
-            AND course_region = #{region}
-        </if>
-        <if test="minDistance != null">
-            AND distance_km &gt; #{minDistance}
-        </if>
-        <if test="maxDistance != null">
-            AND distance_km &lt; #{maxDistance}
-        </if>
-        ORDER BY created_at DESC;
-    </select>
+    <select id="search" parameterType="SearchCondition" resultType="Course">
+    SELECT 
+        course_id, user_id, like_count, course_name, course_region, 
+        start_address, end_address, distance_km, duration_min, pace_min, 
+        course_type, difficulty, description, has_crosswalk, has_toilet, 
+        avg_rating, view_cnt, created_at, updated_at
+    FROM course
+    WHERE 1=1
+    
+    
+    <if test="key != null and key != '' and value != null and value != ''">
+        AND #{key} LIKE CONCAT('%', #{value}, '%')
+    </if>
+    <if test="minRange != null">
+        AND distance_km &gt; #{minRange}
+    </if>
+    <if test="maxRange != null">
+        AND distance_km &lt; #{maxRange}
+    </if>
+    
+    ORDER BY 
+	    <choose>
+	        <when test="orderBy != null and orderBy != ''">
+	            <choose>
+	                <when test="orderBy == 'createdAt'">created_at</when>
+	                <when test="orderBy == 'distanceKm'">distance_km</when>
+	                <when test="orderBy == 'likeCount'">like_count</when>
+	                <when test="orderBy == 'viewCnt'">view_cnt</when>
+	                <otherwise>created_at</otherwise>
+	            </choose>
+	        </when>
+	        <otherwise>created_at</otherwise>
+	    </choose>
+	    
+	    <choose>
+	        <when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
+	        <when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
+	        <otherwise>DESC</otherwise>
+	    </choose>
+	</select>
     
     <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">
     SELECT c.*

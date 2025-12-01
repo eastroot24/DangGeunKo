@@ -34,7 +34,7 @@ public class CourseController {
 	@GetMapping("/course")
 	public ResponseEntity<?> list(){
 		List<Course> list = courseService.getAllCourses();
-		if(list == null || list.isEmpty()) {
+		if(list != null && !list.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(list);
 		}else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -87,10 +87,10 @@ public class CourseController {
 	}
 	
 	// 코스 검색
-	@GetMapping("/course/search")
+	@PostMapping("/course/search")
 	public ResponseEntity<?> search(@RequestBody SearchCondition condition){
 		List<Course> list = courseService.search(condition);
-	    if(list == null || list.isEmpty()) {
+	    if(list != null && !list.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(list);
 		}else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -99,9 +99,9 @@ public class CourseController {
 	
 	// 코스 정렬
 	@GetMapping("/course/ranking")
-	public ResponseEntity<?> weeklyRanking(@RequestParam String region){
+	public ResponseEntity<?> weeklyRanking(@RequestParam int region){
 	    List<Course> ranking = courseService.getWeeklyRanking(region);
-	    if(ranking == null || ranking.isEmpty()) {
+	    if(ranking != null && !ranking.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(ranking);
 		}else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
