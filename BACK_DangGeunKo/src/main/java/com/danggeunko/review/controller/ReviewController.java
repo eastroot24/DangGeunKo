@@ -42,12 +42,9 @@ public class ReviewController {
 	//코스에 대한 리뷰 목록 조회
 	@GetMapping
 	public ResponseEntity<List<Review>> getReviewsByCourse(
-	    @RequestParam("courseId") int courseId,
 	    @ModelAttribute ReviewSearchCondition condition) {
-	    
-	    // DTO에 courseId를 설정합니다. (url parameter로 받았지만 DTO에 최종적으로 통합)
-	    condition.setCourseId(courseId);
-	    
+	    int offset = (condition.getPage()-1) * condition.getSize();
+	    condition.setOffset(offset);
 	    // Service 계층에 SearchCondition 객체를 전달하여 동적 조회 요청
 	    List<Review> reviews = reviewService.getReviewsByCourse(condition);
 
@@ -60,9 +57,9 @@ public class ReviewController {
 	}
 	
 	//리뷰 수정
-	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable("id") int id, @RequestBody Review review){
-		boolean completed = reviewService.updateReview(id, review);
+	@PutMapping("/{reviewId}")
+	public ResponseEntity<?> updateUser(@PathVariable("reviewId") int reviewId, @RequestBody Review review){
+		boolean completed = reviewService.updateReview(reviewId, review);
 		if(completed) {
 			return ResponseEntity.status(HttpStatus.OK).build();
 		}else {

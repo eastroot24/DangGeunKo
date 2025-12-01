@@ -29,12 +29,9 @@ public class ReviewSearchCondition {
     // 페이지 당 항목 수
     private Integer size = 10; 
     
-    // --- 4. [선택적] 필터링 조건 (Optional Filter) ---
-    
-    // 최소 별점 필터링을 위한 필드 (예: 4점 이상 리뷰만 조회)
-    // private Integer minRating; 
-
-    // --- 5. Constructor (생성자) ---
+    //
+    private Integer offset;
+    // --- 4. Constructor (생성자) ---
     
     // 기본 생성자
     public ReviewSearchCondition() {
@@ -70,10 +67,10 @@ public class ReviewSearchCondition {
     public Integer getSize() {
         return size;
     }
-    
-    // public Integer getMinRating() {
-    //     return minRating;
-    // }
+    public Integer getOffset() {
+		return offset;
+	}
+
 
     // --- 7. Setter (값 설정) ---
 
@@ -100,7 +97,9 @@ public class ReviewSearchCondition {
         // 페이지 크기가 너무 크거나 작지 않도록 방어 코드 추가 가능
         this.size = size;
     }
-
+    public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
     // --- 8. toString (객체 상태 확인) ---
 
     @Override
@@ -113,5 +112,9 @@ public class ReviewSearchCondition {
                ", size=" + size +
                '}';
     }
+
+	
+
+	
 
 }
