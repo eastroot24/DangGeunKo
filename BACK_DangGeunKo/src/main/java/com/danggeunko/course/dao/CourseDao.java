@@ -30,4 +30,17 @@ public interface CourseDao {
 	
 	// 게시글 정렬
 	public List<Course> selectWeeklyRanking(String region);
+	
+	// 좋아요 여부 확인
+	int existsCourseLike(int userId, int courseId);
+
+	// 좋아요 추가
+	int insertCourseLike(int userId, int courseId);
+
+	// 좋아요 삭제
+	 int deleteCourseLike(int userId, int courseId);
+
+	// 좋아요 개수 조회
+	int countCourseLike(int courseId);
+
 }

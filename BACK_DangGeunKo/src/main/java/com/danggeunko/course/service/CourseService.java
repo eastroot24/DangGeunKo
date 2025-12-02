@@ -29,4 +29,7 @@ public interface CourseService {
 	public List<Course> getWeeklyRanking(String region);
 
 	public boolean addCourseWithPoints(Course course);
+	
+	boolean addLike(int userId, int courseId);
+
 }
