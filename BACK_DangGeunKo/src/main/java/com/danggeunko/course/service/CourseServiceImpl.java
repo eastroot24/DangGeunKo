@@ -42,8 +42,8 @@ public class CourseServiceImpl implements CourseService {
 
 	@Transactional
 	@Override
-	public boolean updateCourse(int id, Course course) {
-		return courseDao.updateCourse(id, course) > 0;
+	public boolean updateCourse(Course course) {
+		return courseDao.updateCourse(course) > 0;
 	}
 
 	@Transactional

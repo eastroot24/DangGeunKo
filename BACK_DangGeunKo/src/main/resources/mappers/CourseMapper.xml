@@ -5,17 +5,22 @@
 <mapper namespace="com.danggeunko.course.dao.CourseDao">
 
     <!-- 코스 등록 -->
-    <insert id="insertCourse" parameterType="Course">
-        INSERT INTO course (
-            user_id, course_name, course_region, start_address, end_address,
-            distance_km, duration_min, pace_min, course_type, difficulty,
-            description, has_crosswalk, has_toilet
-        ) VALUES (
-            #{userId}, #{courseName}, #{courseRegion}, #{startAddress},
-            #{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin}, #{courseType},
-            #{difficulty}, #{description}, #{hasCrosswalk}, #{hasToilet}
-        )
-    </insert>
+    <insert id="insertCourse" parameterType="Course"
+        useGeneratedKeys="true"
+        keyProperty="courseId"
+        keyColumn="course_id">
+    INSERT INTO course (
+        user_id, course_name, course_region, start_address, end_address,
+        distance_km, duration_min, pace_min, course_type, difficulty,
+        description, has_crosswalk, has_toilet
+    ) VALUES (
+        #{userId}, #{courseName}, #{courseRegion}, #{startAddress},
+        #{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin},
+        #{courseType}, #{difficulty}, #{description},
+        #{hasCrosswalk}, #{hasToilet}
+    )
+</insert>
+
 
     <!-- 전체 코스 조회 -->
     <select id="selectAllCourses" resultType="Course">
@@ -68,24 +73,25 @@
     </select>
 
     <!-- 코스 수정 -->
-    <update id="updateCourse">
-        UPDATE course
-        SET
-            course_name   = #{course.courseName},
-            course_region = #{course.courseRegion},
-            start_address = #{course.startAddress},
-            end_address   = #{course.endAddress},
-            distance_km   = #{course.distanceKm},
-            duration_min  = #{course.durationMin},
-            pace_min      = #{course.paceMin},
-            course_type   = #{course.courseType},
-            difficulty    = #{course.difficulty},
-            description   = #{course.description},
-            has_crosswalk = #{course.hasCrosswalk},
-            has_toilet    = #{course.hasToilet},
-            updated_at    = NOW()
-        WHERE course_id = #{id}
-    </update>
+    <update id="updateCourse" parameterType="Course">
+    UPDATE course
+    SET
+        course_name   = #{courseName},
+        course_region = #{courseRegion},
+        start_address = #{startAddress},
+        end_address   = #{endAddress},
+        distance_km   = #{distanceKm},
+        duration_min  = #{durationMin},
+        pace_min      = #{paceMin},
+        course_type   = #{courseType},
+        difficulty    = #{difficulty},
+        description   = #{description},
+        has_crosswalk = #{hasCrosswalk},
+        has_toilet    = #{hasToilet},
+        updated_at    = NOW()
+    WHERE course_id = #{courseId}
+</update>
+
 
     <!-- 코스 삭제 -->
     <delete id="deleteCourse">
@@ -126,7 +132,7 @@
         
         <if test="key != null and key != '' and value != null and value != ''">
             <!-- 주의: 컬럼명에는 보통 ${key} 를 쓰고, value에는 #{value} 를 씀 -->
-            ${key} LIKE CONCAT('%', #{value}, '%')
+            AND ${key} LIKE CONCAT('%', #{value}, '%')
         </if>
         <if test="minRange != null">
             AND distance_km &gt;= #{minRange}
