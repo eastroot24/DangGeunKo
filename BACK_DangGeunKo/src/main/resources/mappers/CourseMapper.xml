@@ -135,7 +135,7 @@
             AND ${key} LIKE CONCAT('%', #{value}, '%')
         </if>
         <if test="minRange != null">
-            AND distance_km &gt;= #{minRange}
+          	distance_km &gt;= #{minRange}
         </if>
         <if test="maxRange != null">
             AND distance_km &lt;= #{maxRange}
