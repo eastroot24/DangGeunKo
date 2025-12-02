@@ -15,7 +15,7 @@ public class User {
     private String userPassword; // 비밀번호 (user_password)
     private String gender; // 성별 (gender)
     private int age; // 나이 (age)
-    private int region; // 동네정보 (region)
+    private String region; // 동네정보 (region)
     private LocalDateTime createdAt; // 가입일자 (created_at)
     private LocalDateTime updatedAt; // 수정일자 (updated_at) 
 
@@ -31,7 +31,7 @@ public class User {
     }
 
     // 모든 필드를 포함하는 생성자 (비밀번호는 제외할 수 있음)
-    public User(int userId, String userName, String nickname, String userEmail, String userPassword, String gender, int age, int region, LocalDateTime createdAt, float prefDistance, String prefDifficulty, LocalDateTime updatedAt) {
+    public User(int userId, String userName, String nickname, String userEmail, String userPassword, String gender, int age, String region, LocalDateTime createdAt, float prefDistance, String prefDifficulty, LocalDateTime updatedAt) {
         this.userId = userId;
         this.userName = userName;
         this.nickname = nickname;
@@ -83,7 +83,7 @@ public class User {
         return age;
     }
 
-    public int getRegion() {
+    public String getRegion() {
         return region;
     }
 
@@ -128,7 +128,7 @@ public class User {
         this.age = age;
     }
 
-    public void setRegion(int region) {
+    public void setRegion(String region) {
         this.region = region;
     }
 

@@ -4,8 +4,8 @@ CREATE DATABASE IF NOT EXISTS danggeunko
   DEFAULT COLLATE utf8mb4_general_ci; --  대소문자 구분없이 정렬해줄려고 쓰는건데 없어도 괜춘!!!!!! 
 
 USE danggeunko;
-
 -- 1. 사용자
+drop table IF exists `USER`;
 CREATE TABLE `USER` (
     user_id        INT AUTO_INCREMENT PRIMARY KEY,          -- 유저 pk
     user_name      VARCHAR(30)  NOT NULL,                   -- 사용자 이름
@@ -23,6 +23,7 @@ CREATE TABLE `USER` (
 ) ENGINE=InnoDB;
 
 -- 2. 팔로우
+drop table IF exists `FOLLOW`;
 CREATE TABLE `FOLLOW` (
     following_id INT NOT NULL,                              -- 팔로잉(내가 팔로우 하는 사람)
     follower_id  INT NOT NULL,                              -- 팔로워(나를 팔로우 하는 사람) // 이거 순서 중요 안함
@@ -37,11 +38,12 @@ CREATE TABLE `FOLLOW` (
 ) ENGINE=InnoDB;
 
 -- 3. 러닝코스
+drop table IF exists `COURSE`;
 CREATE TABLE `COURSE` (
     course_id     INT AUTO_INCREMENT PRIMARY KEY,           -- 코스 pk
     user_id       INT NOT NULL,                             -- 유조 pk
     course_name   VARCHAR(50) NOT NULL,                     -- 코스 이름
-    course_region INT,                                      -- 코스 지역
+    course_region varchar(10),                                      -- 코스 지역
     start_address VARCHAR(200),                             -- 출발지 주소
     end_address   VARCHAR(200),                             -- 도착지 주소
     distance_km   FLOAT,                                    -- 전체 거리
@@ -63,6 +65,7 @@ CREATE TABLE `COURSE` (
 ) ENGINE=InnoDB;
 
 -- 4. 경로 상세 좌표
+drop table IF exists `COURSE_POINT`;
 CREATE TABLE `COURSE_POINT` (
     point_id   INT AUTO_INCREMENT PRIMARY KEY,              -- 좌표 pk
     course_id  INT NOT NULL,                                -- 코스 pk
@@ -76,6 +79,7 @@ CREATE TABLE `COURSE_POINT` (
 
 
 -- 5. 코스 좋아요
+drop table IF exists `COURSE_LIKE`;
 CREATE TABLE `COURSE_LIKE` (
     user_id    INT NOT NULL,                               -- 좋아요 누른 유저 pk
     course_id  INT NOT NULL,                               -- 좋아요 대상 코스 pk
@@ -90,6 +94,7 @@ CREATE TABLE `COURSE_LIKE` (
 
 
 -- 6. 코스 리뷰
+drop table IF exists `REVIEW`;
 CREATE TABLE `REVIEW` (
     review_id   INT AUTO_INCREMENT PRIMARY KEY,             -- 리뷰 pk
     course_id   INT NOT NULL,                               -- 코스 pk
@@ -133,20 +138,51 @@ VALUES
 (9, 5),
 (10, 1);
 
-INSERT INTO COURSE (user_id, course_name, course_region, start_address, end_address,
-distance_km, duration_min, pace_min, course_type, difficulty, description,
-has_crosswalk, has_toilet)
+INSERT INTO COURSE (
+    user_id, course_name, course_region, start_address, end_address,
+    distance_km, duration_min, pace_min, course_type, difficulty, 
+    description, has_crosswalk, has_toilet, avg_rating, view_cnt
+)
 VALUES
-(1, '광안리 해변 코스', 1, '광안리역 1번 출구', '광안대교 아래', 5.2, 35, 6.7, 1, '초급', '광안리 해변을 따라 뛰는 쉬운 코스', TRUE, TRUE),
-(2, '해운대 달맞이 코스', 1, '해운대 해수욕장', '달맞이고개 전망대', 7.8, 50, 6.4, 2, '중급', '오르막이 있는 도전 코스', TRUE, TRUE),
-(3, '부산 시민공원 코스', 2, '시민공원 정문', '시민공원 후문', 4.1, 28, 6.8, 1, '초급', '공원 내부 순환 코스', FALSE, TRUE),
-(4, '이기대 해안산책로', 3, '오륙도 스카이워크', '이기대 입구', 10.3, 70, 6.8, 2, '고급', '절벽 해안 따라 걷는 러닝', TRUE, FALSE),
-(5, '동래 온천천 코스', 4, '온천천역', '수안역 부근', 6.5, 42, 6.5, 1, '중급', '천을 따라 달리는 평지 코스', TRUE, TRUE),
-(6, '기장 해안 코스', 5, '임랑해수욕장', '기장군청 근처', 12.0, 80, 6.6, 3, '고급', '바다 보면서 장거리 러닝', TRUE, FALSE),
-(7, '금정산 초입 코스', 6, '범어사 입구', '금정산 초입', 3.3, 25, 7.5, 2, '초급', '산책로 기반의 짧은 코스', FALSE, FALSE),
-(8, '사직동 둘레 코스', 7, '사직야구장', '사직운동장', 8.2, 55, 6.7, 1, '중급', '운동장 근처 도심 러닝', TRUE, TRUE),
-(9, '송정 해수욕장 코스', 1, '송정 서핑구역', '구덕포', 6.1, 40, 6.5, 1, '초급', '해안 길 따라 달리기 좋음', TRUE, TRUE),
-(10, '감천문화마을 코스', 8, '감천문화마을 입구', '전망대', 4.8, 38, 7.1, 2, '중급', '계단과 언덕이 많은 코스', TRUE, FALSE);
+-- 1. 해변 평지 초급 (user_id 1)
+(1, '광안리 해변 평지 코스', '수영구', '광안리 해변 입구', '민락 수변공원', 
+ 5.0, 30.0, 6.0, 1, '초급', '바다를 보며 달리는 완만한 평지 코스로 초보자에게 적합합니다.', TRUE, TRUE, 4.8, 150),
+
+-- 2. 도심 공원 중급 (user_id 2)
+(2, '부산 시민공원 순환로', '부산진구', '시민공원 정문', '시민공원 음악분수', 
+ 7.5, 45.0, 6.0, 1, '중급', '도심 속에서 안전하게 뛸 수 있는 긴 순환 코스입니다.', FALSE, TRUE, 4.5, 210),
+
+-- 3. 산책로 장거리 고급 (user_id 3)
+(3, '온천천 장거리 왕복 코스', '동래구', '온천천 교대역', '안락동 롯데백화점', 
+ 15.0, 95.0, 6.3, 1, '고급', '긴 거리를 꾸준히 달리는 훈련에 최적화된 코스입니다.', TRUE, FALSE, 4.2, 85),
+
+-- 4. 야간 조명 코스 (user_id 4)
+(4, '마린시티 야경 러닝 코스', '해운대', '마린시티 아이파크', '동백섬 입구', 
+ 3.5, 20.0, 5.7, 3, '초급', '화려한 야경을 즐기며 짧고 빠르게 뛸 수 있는 코스입니다.', TRUE, FALSE, 4.9, 320),
+
+-- 5. 오르막 도전 코스 (user_id 5)
+(5, '달맞이 고개 힐 트레이닝', '해운대', '해월정 입구', '달맞이길 정상', 
+ 6.0, 40.0, 6.7, 2, '중급', '언덕 경사가 있어 근력과 지구력을 기르기에 좋은 코스입니다.', FALSE, TRUE, 4.1, 110),
+
+-- 6. 해안선 트레일 (user_id 6)
+(6, '이기대 해안 절벽 트레일', '남구', '오륙도 해맞이 공원', '이기대 입구', 
+ 10.5, 75.0, 7.1, 2, '고급', '해안 절경을 따라가는 험준하고 아름다운 트레일 코스입니다.', TRUE, FALSE, 4.7, 180),
+
+-- 7. 대학가 주변 순환 (user_id 7)
+(7, '부경대/경성대 주변 코스', '남구', '부경대 정문', '경성대 아트홀', 
+ 4.2, 25.0, 5.9, 1, '초급', '대학가 주변의 활기찬 분위기를 느끼며 가볍게 달릴 수 있습니다.', TRUE, TRUE, 4.6, 95),
+
+-- 8. 강변 길 (user_id 8)
+(8, '낙동강변 자전거 도로 일부', '사상구', '삼락생태공원 입구', '구포대교 하단', 
+ 11.0, 70.0, 6.4, 1, '중급', '차량 없이 안전하게 장거리 훈련이 가능한 강변 코스.', FALSE, FALSE, 4.0, 60),
+
+-- 9. 관광 명소 (user_id 9)
+(9, '태종대 전망대 순환', '영도구', '태종대 유원지 입구', '영도 등대', 
+ 8.5, 60.0, 7.0, 2, '고급', '경사가 심하고 관광객이 많아 난이도가 높은 코스입니다.', TRUE, TRUE, 3.9, 50),
+
+-- 10. 짧고 빠른 인터벌 (user_id 10)
+(10, '아시아드 주 경기장 주변', '연제구', '아시아드 보조 경기장', '주 경기장 동문', 
+ 2.5, 12.5, 5.0, 3, '중급', '인터벌 트레이닝이나 빠른 속도 훈련에 적합한 짧은 코스입니다.', FALSE, FALSE, 4.4, 130);
 
 INSERT INTO COURSE_POINT (course_id, sequence, latitude, longitude)
 VALUES
@@ -186,3 +222,9 @@ VALUES
 (8, '사직동 러닝 조아요!', 4, 8),
 (9, '바다 보고 달리는 게 힐링입니다.', 5, 9),
 (10, '계단이 많지만 재미있었어요.', 4, 10);
+
+select * 
+FROM USER;
+
+select * 
+from course;

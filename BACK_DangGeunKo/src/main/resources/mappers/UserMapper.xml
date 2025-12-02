@@ -51,11 +51,11 @@
 			pref_difficulty = #{user.prefDifficulty},
 		</if>
 	</set>
-	WHERE user_id = #{id}
+	WHERE user_id = #{userId}
 </update>
 	<!-- 회원 정보 삭제 -->
 	<delete id="deleteUser" parameterType="int">
 		DELETE FROM user
-		WHERE user_id = #{id};
+		WHERE user_id = #{userId};
 	</delete>
 </mapper>

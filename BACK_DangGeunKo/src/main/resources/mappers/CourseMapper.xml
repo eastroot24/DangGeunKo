@@ -1,113 +1,170 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.danggeunko.course.dao.CourseDao">
-	<insert id="insertCourse" parameterType="Course">
-		INSERT INTO course (
-		user_id, course_name, course_region, start_address, end_address,
-		distance_km, duration_min, pace_min, course_type, difficulty,
-		description, has_crosswalk, has_toilet
-		) VALUES (
-		#{userId}, #{courseName}, #{courseRegion}, #{startAddress},
-		#{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin}, #{courseType},
-		#{difficulty},#{description}, #{hasCrosswalk}, #{hasToilet}
-		)
-	</insert>
-	
-	<select id="selectAllCourses" resultType="Course">
-        SELECT user_id, like_count, course_name, course_region, start_address, end_address, distance_km, duration_min, pace_min, course_type,
-        difficulty, description, has_crosswalk, has_toilet, avg_rating, view_cnt
+
+    <!-- 코스 등록 -->
+    <insert id="insertCourse" parameterType="Course">
+        INSERT INTO course (
+            user_id, course_name, course_region, start_address, end_address,
+            distance_km, duration_min, pace_min, course_type, difficulty,
+            description, has_crosswalk, has_toilet
+        ) VALUES (
+            #{userId}, #{courseName}, #{courseRegion}, #{startAddress},
+            #{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin}, #{courseType},
+            #{difficulty}, #{description}, #{hasCrosswalk}, #{hasToilet}
+        )
+    </insert>
+
+    <!-- 전체 코스 조회 -->
+    <select id="selectAllCourses" resultType="Course">
+        SELECT
+            course_id,
+            user_id,
+            course_name,
+            course_region,
+            start_address,
+            end_address,
+            distance_km,
+            duration_min,
+            pace_min,
+            course_type,
+            difficulty,
+            description,
+            has_crosswalk,
+            has_toilet,
+            avg_rating,
+            view_cnt,
+            created_at,
+            updated_at
         FROM course
-        ORDER BY created_at DESC;
+        ORDER BY created_at DESC
     </select>
-    
-    <select id="selectCourseById">
-    	SELECT user_id, like_Count, course_name, course_region, start_address, end_address, distance_km, duration_min, pace_min, course_type,
-        difficulty, description, has_crosswalk, has_toilet, avg_rating, view_cnt
+
+    <!-- 코스 단건 조회 -->
+    <select id="selectCourseById" resultType="Course">
+        SELECT
+            course_id,
+            user_id,
+            course_name,
+            course_region,
+            start_address,
+            end_address,
+            distance_km,
+            duration_min,
+            pace_min,
+            course_type,
+            difficulty,
+            description,
+            has_crosswalk,
+            has_toilet,
+            avg_rating,
+            view_cnt,
+            created_at,
+            updated_at
         FROM course
         WHERE course_id = #{id}
-        ORDER BY created_at DESC;
     </select>
-    
+
+    <!-- 코스 수정 -->
     <update id="updateCourse">
-    	UPDATE course
-    	SET
-    		course_name = #{course.courseName},
+        UPDATE course
+        SET
+            course_name   = #{course.courseName},
             course_region = #{course.courseRegion},
             start_address = #{course.startAddress},
-            end_address = #{course.endAddress},
-            distance_km = #{course.distanceKm},
-            duration_min = #{course.durationMin},
-            pace_min = #{course.paceMin},
-            course_type = #{course.courseType},
-            difficulty = #{course.difficulty},
-            description = #{course.description},
+            end_address   = #{course.endAddress},
+            distance_km   = #{course.distanceKm},
+            duration_min  = #{course.durationMin},
+            pace_min      = #{course.paceMin},
+            course_type   = #{course.courseType},
+            difficulty    = #{course.difficulty},
+            description   = #{course.description},
             has_crosswalk = #{course.hasCrosswalk},
-            has_toilet = #{course.hasToilet},
-            updated_at = NOW()
-        WHERE course_id = #{id};
+            has_toilet    = #{course.hasToilet},
+            updated_at    = NOW()
+        WHERE course_id = #{id}
     </update>
-    
+
+    <!-- 코스 삭제 -->
     <delete id="deleteCourse">
-    	DELETE FROM course WHERE course_id=#{id}
+        DELETE FROM course
+        WHERE course_id = #{id}
     </delete>
-    
+
+    <!-- 조회수 증가 -->
     <update id="updateViewCnt">
-    	UPDATE course
-    	SET view_cnt = view_cnt + 1
-    	WHERE course_id = #{id}
+        UPDATE course
+        SET view_cnt = view_cnt + 1
+        WHERE course_id = #{id}
     </update>
-    
+
+    <!-- 코스 검색 -->
     <select id="search" parameterType="SearchCondition" resultType="Course">
-    SELECT 
-        course_id, user_id, like_count, course_name, course_region, 
-        start_address, end_address, distance_km, duration_min, pace_min, 
-        course_type, difficulty, description, has_crosswalk, has_toilet, 
-        avg_rating, view_cnt, created_at, updated_at
-    FROM course
-    WHERE 1=1
-    
-    
-    <if test="key != null and key != '' and value != null and value != ''">
-        AND #{key} LIKE CONCAT('%', #{value}, '%')
-    </if>
-    <if test="minRange != null">
-        AND distance_km &gt; #{minRange}
-    </if>
-    <if test="maxRange != null">
-        AND distance_km &lt; #{maxRange}
-    </if>
-    
-    ORDER BY 
-	    <choose>
-	        <when test="orderBy != null and orderBy != ''">
-	            <choose>
-	                <when test="orderBy == 'createdAt'">created_at</when>
-	                <when test="orderBy == 'distanceKm'">distance_km</when>
-	                <when test="orderBy == 'likeCount'">like_count</when>
-	                <when test="orderBy == 'viewCnt'">view_cnt</when>
-	                <otherwise>created_at</otherwise>
-	            </choose>
-	        </when>
-	        <otherwise>created_at</otherwise>
-	    </choose>
-	    
-	    <choose>
-	        <when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
-	        <when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
-	        <otherwise>DESC</otherwise>
-	    </choose>
-	</select>
-    
+        SELECT 
+            course_id,
+            user_id,
+            course_name,
+            course_region,
+            start_address,
+            end_address,
+            distance_km,
+            duration_min,
+            pace_min,
+            course_type,
+            difficulty,
+            description,
+            has_crosswalk,
+            has_toilet,
+            avg_rating,
+            view_cnt,
+            created_at,
+            updated_at
+        FROM course
+        WHERE 1=1
+        
+        <if test="key != null and key != '' and value != null and value != ''">
+            <!-- 주의: 컬럼명에는 보통 ${key} 를 쓰고, value에는 #{value} 를 씀 -->
+            ${key} LIKE CONCAT('%', #{value}, '%')
+        </if>
+        <if test="minRange != null">
+            AND distance_km &gt;= #{minRange}
+        </if>
+        <if test="maxRange != null">
+            AND distance_km &lt;= #{maxRange}
+        </if>
+
+        ORDER BY 
+        <choose>
+            <when test="orderBy != null and orderBy != ''">
+                <choose>
+                    <when test="orderBy == 'createdAt'">created_at</when>
+                    <when test="orderBy == 'distanceKm'">distance_km</when>
+                    <when test="orderBy == 'viewCnt'">view_cnt</when>
+                    <!-- 'likeCount'는 더 이상 컬럼이 없으므로 제거 -->
+                    <otherwise>created_at</otherwise>
+                </choose>
+            </when>
+            <otherwise>created_at</otherwise>
+        </choose>
+
+        <choose>
+            <when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
+            <when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+    </select>
+
+    <!-- 주간 랭킹 (리뷰 기준) -->
     <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">
-    SELECT c.*
-    FROM course c
-    JOIN review r ON c.course_id = r.course_id
-    WHERE c.course_region = #{region}
-      AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-    GROUP BY c.course_id
-    ORDER BY AVG(r.rating) DESC, COUNT(r.review_id) DESC;
-</select>
+        SELECT c.*
+        FROM course c
+        JOIN review r ON c.course_id = r.course_id
+        WHERE c.course_region = #{region}
+          AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        GROUP BY c.course_id
+        ORDER BY AVG(r.rating) DESC, COUNT(r.review_id) DESC
+    </select>
 
 </mapper>

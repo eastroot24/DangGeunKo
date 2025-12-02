@@ -61,9 +61,9 @@ public class UserController {
 	}
 	
 	//회원 정보 수정
-	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable("id") int id, @RequestBody User user){
-		boolean completed = userService.updateUser(id, user);
+	@PutMapping("/{userId}")
+	public ResponseEntity<?> updateUser(@PathVariable("userId") int userId, @RequestBody User user){
+		boolean completed = userService.updateUser(userId, user);
 		if(completed) {
 			return ResponseEntity.status(HttpStatus.OK).build();
 		}else {
