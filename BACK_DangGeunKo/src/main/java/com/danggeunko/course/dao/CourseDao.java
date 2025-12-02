@@ -17,7 +17,7 @@ public interface CourseDao {
 	public Course selectCourseById(int id);
 	
 	// 코스 업데이트
-	public int updateCourse(int id, Course course);
+	public int updateCourse(Course course);
 	
 	// 코스 삭제
 	public int deleteCourse(int id);

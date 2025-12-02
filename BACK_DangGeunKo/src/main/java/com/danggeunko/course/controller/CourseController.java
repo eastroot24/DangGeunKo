@@ -67,7 +67,7 @@ public class CourseController {
 	@PutMapping("/course/{id}")
 	public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody Course course){
 		course.setCourseId(id);
-		boolean completed = courseService.updateCourse(id, course);
+		boolean completed = courseService.updateCourse(course);
 		if(completed) {
 			return ResponseEntity.status(HttpStatus.CREATED).build();
 		}else {

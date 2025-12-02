@@ -9,7 +9,7 @@ public class Course {
     private Integer userId;
 
     private String courseName;
-    private Integer courseRegion;
+    private String courseRegion;
     private String startAddress;
     private String endAddress;
 
@@ -36,7 +36,7 @@ public class Course {
     }
 
     public Course(Integer courseId, Integer userId, String courseName,
-    		Integer courseRegion, String startAddress, String endAddress,
+                  String courseRegion, String startAddress, String endAddress,
                   Double distanceKm, Double durationMin, Double paceMin,
                   Integer courseType, String difficulty, String description,
                   Boolean hasCrosswalk, Boolean hasToilet,
@@ -72,8 +72,8 @@ public class Course {
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }
 
-    public Integer getCourseRegion() { return courseRegion; }
-    public void setCourseRegion(Integer courseRegion) { this.courseRegion = courseRegion; }
+    public String getCourseRegion() { return courseRegion; }
+    public void setCourseRegion(String courseRegion) { this.courseRegion = courseRegion; }
 
     public String getStartAddress() { return startAddress; }
     public void setStartAddress(String startAddress) { this.startAddress = startAddress; }

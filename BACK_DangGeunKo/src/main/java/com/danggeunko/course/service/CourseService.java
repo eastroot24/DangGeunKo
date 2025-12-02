@@ -17,7 +17,7 @@ public interface CourseService {
 	public Course getCourseById(int id);
 		
 	// 코스 업데이트
-	public boolean updateCourse(int id, Course course);
+	public boolean updateCourse(Course course);
 		
 	// 코스 삭제
 	public boolean deleteCourse(int id);
