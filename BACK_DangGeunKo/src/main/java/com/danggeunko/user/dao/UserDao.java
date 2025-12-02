@@ -2,6 +2,7 @@ package com.danggeunko.user.dao;
 
 import java.util.List;
 
+import com.danggeunko.user.dto.Follow;
 import com.danggeunko.user.dto.User;
 
 public interface UserDao {
@@ -16,4 +17,12 @@ public interface UserDao {
 	//유저 삭제
 	public int deleteUser(int userId);
 	
+	//팔로우 추가
+	public boolean addFollow(Follow follow);
+	//팔로우 삭제
+	public boolean deleteFollow(Follow follow);
+	//팔로잉 조회
+	public List<User> getFollowingById(int userId);
+	//팔로워 조회
+	public List<User> getFollowerById(int userId);
 }

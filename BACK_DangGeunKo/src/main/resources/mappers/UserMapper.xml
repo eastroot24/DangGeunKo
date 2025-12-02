@@ -52,10 +52,41 @@
 		</if>
 	</set>
 	WHERE user_id = #{userId}
-</update>
+	</update>
 	<!-- 회원 정보 삭제 -->
 	<delete id="deleteUser" parameterType="int">
 		DELETE FROM user
 		WHERE user_id = #{userId};
 	</delete>
+	
+	<!-- 팔로우 추가 -->
+	<insert id="addFollow" parameterType="Follow">
+		INSERT INTO Follow (following_id, follower_id)
+		VALUES(#{followingId}, #{followerId})
+	</insert>
+	<!-- 팔로우 삭제 -->
+	<delete id="deleteFollow" parameterType="Follow">
+	    DELETE FROM Follow
+	    WHERE following_id = #{followingId} and follower_id = #{followerId}
+	</delete>
+	<!-- 팔로잉 조회 -->
+	<select id="getFollowingById" parameterType="int" resultType="User">
+     SELECT u.user_id, u.user_name, u.nickname
+     FROM Follow f  -- 기준 테이블: Follow 관계
+     INNER JOIN User u
+     ON u.user_id = f.following_id 
+     WHERE f.follower_id = #{userId} 
+	</select>
+	<!-- 팔로워 조회 -->	
+	<select id="getFollowerById" parameterType="int" resultType="User">
+     SELECT u.user_id, u.user_name, u.nickname
+     FROM Follow f 
+     INNER JOIN User u
+     ON u.user_id = f.follower_id 
+     WHERE f.following_id = #{userId}
+</select>
+	
+	
+	
+	
 </mapper>
