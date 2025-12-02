@@ -126,10 +126,10 @@
         
         <if test="key != null and key != '' and value != null and value != ''">
             <!-- 주의: 컬럼명에는 보통 ${key} 를 쓰고, value에는 #{value} 를 씀 -->
-            ${key} LIKE CONCAT('%', #{value}, '%')
+           AND ${key} LIKE CONCAT('%', #{value}, '%')
         </if>
         <if test="minRange != null">
-            AND distance_km &gt;= #{minRange}
+          	distance_km &gt;= #{minRange}
         </if>
         <if test="maxRange != null">
             AND distance_km &lt;= #{maxRange}

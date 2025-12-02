@@ -36,7 +36,7 @@ public class Course {
     }
 
     public Course(Integer courseId, Integer userId, String courseName,
-                  Integer courseRegion, String startAddress, String endAddress,
+    		Integer courseRegion, String startAddress, String endAddress,
                   Double distanceKm, Double durationMin, Double paceMin,
                   Integer courseType, String difficulty, String description,
                   Boolean hasCrosswalk, Boolean hasToilet,
