@@ -1,6 +1,7 @@
 package com.danggeunko.course.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,5 +108,20 @@ public class CourseController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 	}
+	
+	// 코스 좋아요
+	@PostMapping("/course/{courseId}/like")
+	public ResponseEntity<?> addLike(@PathVariable int courseId, @RequestParam int userId) {
+		boolean liked = courseService.addLike(userId, courseId);
+
+	    return ResponseEntity.ok(
+	            Map.of(
+	                "courseId", courseId,
+	                "userId", userId,
+	                "liked", liked
+	            )
+	    );
+	}
+
 	
 }

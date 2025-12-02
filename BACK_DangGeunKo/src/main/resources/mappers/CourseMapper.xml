@@ -172,5 +172,31 @@
         GROUP BY c.course_id
         ORDER BY AVG(r.rating) DESC, COUNT(r.review_id) DESC
     </select>
+    
+    <!-- 좋아요 여부 확인 -->
+<select id="existsCourseLike" resultType="int">
+    SELECT COUNT(*)
+    FROM course_like
+    WHERE user_id = #{userId} AND course_id = #{courseId}
+</select>
+
+<!-- 좋아요 추가 -->
+<insert id="insertCourseLike">
+    INSERT INTO course_like (user_id, course_id)
+    VALUES (#{userId}, #{courseId})
+</insert>
+
+<!-- 좋아요 삭제 -->
+<delete id="deleteCourseLike">
+    DELETE FROM course_like
+    WHERE user_id = #{userId} AND course_id = #{courseId}
+</delete>
+
+<!-- 특정 코스의 좋아요 개수 -->
+<select id="countCourseLike" resultType="int">
+    SELECT COUNT(*)
+    FROM course_like
+    WHERE course_id = #{courseId}
+</select>
 
 </mapper>

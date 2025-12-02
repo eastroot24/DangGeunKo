@@ -83,5 +83,19 @@ public class CourseServiceImpl implements CourseService {
 
 	    return true;
 	}
+	
+	@Transactional
+	@Override
+	public boolean addLike(int userId, int courseId) {
+		int exists = courseDao.existsCourseLike(userId, courseId);
+
+	    if (exists > 0) {
+	        courseDao.deleteCourseLike(userId, courseId);
+	        return false; // 좋아요 취소됨
+	    } else {
+	        courseDao.insertCourseLike(userId, courseId);
+	        return true; // 좋아요 추가됨
+	    }
+	}
 
 }
