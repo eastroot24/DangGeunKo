@@ -99,7 +99,7 @@ public class CourseController {
 	
 	// 코스 정렬
 	@GetMapping("/course/ranking")
-	public ResponseEntity<?> weeklyRanking(@RequestParam int region){
+	public ResponseEntity<?> weeklyRanking(@RequestParam String region){
 	    List<Course> ranking = courseService.getWeeklyRanking(region);
 	    if(ranking != null && !ranking.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(ranking);

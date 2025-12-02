@@ -59,7 +59,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<Course> getWeeklyRanking(int region) {
+	public List<Course> getWeeklyRanking(String region) {
 		return courseDao.selectWeeklyRanking(region);
 	}
 	
@@ -72,7 +72,7 @@ public class CourseServiceImpl implements CourseService {
 
 	    // 2. course_id가 생성되었으므로 point에 세팅
 	    int courseId = course.getCourseId();
-
+	    //여기서 null이 잡히는 것 같음..
 	    for(CoursePoint point : course.getCoursePoints()) {
 	        point.setCourseId(courseId);
 	    }
