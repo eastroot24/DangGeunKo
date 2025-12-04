@@ -24,50 +24,14 @@
 
     <!-- 전체 코스 조회 -->
     <select id="selectAllCourses" resultType="Course">
-        SELECT
-            course_id,
-            user_id,
-            course_name,
-            course_region,
-            start_address,
-            end_address,
-            distance_km,
-            duration_min,
-            pace_min,
-            course_type,
-            difficulty,
-            description,
-            has_crosswalk,
-            has_toilet,
-            avg_rating,
-            view_cnt,
-            created_at,
-            updated_at
+        SELECT *
         FROM course
         ORDER BY created_at DESC
     </select>
 
     <!-- 코스 단건 조회 -->
     <select id="selectCourseById" resultType="Course">
-        SELECT
-            course_id,
-            user_id,
-            course_name,
-            course_region,
-            start_address,
-            end_address,
-            distance_km,
-            duration_min,
-            pace_min,
-            course_type,
-            difficulty,
-            description,
-            has_crosswalk,
-            has_toilet,
-            avg_rating,
-            view_cnt,
-            created_at,
-            updated_at
+        SELECT *
         FROM course
         WHERE course_id = #{id}
     </select>
@@ -108,25 +72,7 @@
 
     <!-- 코스 검색 -->
     <select id="search" parameterType="SearchCondition" resultType="Course">
-        SELECT 
-            course_id,
-            user_id,
-            course_name,
-            course_region,
-            start_address,
-            end_address,
-            distance_km,
-            duration_min,
-            pace_min,
-            course_type,
-            difficulty,
-            description,
-            has_crosswalk,
-            has_toilet,
-            avg_rating,
-            view_cnt,
-            created_at,
-            updated_at
+        SELECT *
         FROM course
         WHERE 1=1
         
@@ -135,7 +81,7 @@
             AND ${key} LIKE CONCAT('%', #{value}, '%')
         </if>
         <if test="minRange != null">
-          	distance_km &gt;= #{minRange}
+          	AND distance_km &gt;= #{minRange}
         </if>
         <if test="maxRange != null">
             AND distance_km &lt;= #{maxRange}
