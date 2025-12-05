@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>코스 등록하기 - 지도</title>
+
+<style>
+    body { margin:0; background:#eee; font-family:sans-serif; display:flex; justify-content:center;}
+    .app { width:390px; height:100vh; background:#fff; position:relative; overflow:hidden;}
+
+    /* 상단 바 */
+    .top {
+        padding:12px 14px;
+        display:flex; align-items:center; gap:10px;
+    }
+    .back-btn { cursor:pointer; font-size:20px;}
+    .title { flex:1; text-align:center; font-size:17px; font-weight:600;}
+
+    /* 지도 영역 */
+    .map-box{
+        position:absolute; top:50px; bottom:120px; left:0; right:0;
+        background:#d6d6d6 url('https://i.imgur.com/u7D2kwb.png') center/cover no-repeat;
+    }
+
+    /* 마커 이미지 예시 */
+    .marker{
+        width:34px; height:34px;
+        background:#ff7a00; border-radius:50%;
+        position:absolute; cursor:pointer;
+        animation:pop .2s ease;
+    }
+    @keyframes pop { from{transform:scale(.7)} to{transform:scale(1)} }
+
+    /* 하단 버튼 */
+    .bottom-btn{
+        position:absolute; left:50%; bottom:72px; transform:translateX(-50%);
+        width:300px; height:48px; border-radius:30px;
+        background:#ff7a00; color:#fff; font-size:15px; font-weight:600;
+        border:none; cursor:pointer;
+    }
+
+    .navbar{
+        position:absolute; bottom:0; width:100%; height:62px;
+        display:flex; justify-content:space-around; align-items:center;
+        border-top:1px solid #ececec; background:#fff;
+    }
+    .nav-item{ text-align:center; font-size:11px; color:#bfbfbf;}
+    .nav-item.active{ color:#ff7a00; }
+    .nav-item .ic{
+        width:18px;height:18px;border:2px solid currentColor;border-radius:5px;margin:auto;
+    }
+    .nav-item.course .ic{ border-radius:4px;}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <div class="top">
+        <div class="back-btn" onclick="history.back()">←</div>
+        <div class="title">코스 등록하기</div>
+    </div>
+
+    <!-- 지도 (API 연결 전 더미) -->
+    <div class="map-box" id="mapBox">
+        <div style="position:absolute;top:20px;left:110px;color: #ffff; background:#ff7a00;padding:7px 11px;font-size:12px;border-radius:20px;">
+            마커를 찍어 코스를 그려보세요!
+        </div>
+    </div>
+
+    <button class="bottom-btn" onclick="location.href='addCourse.html'">코스 그리기 완료</button>
+
+    <div class="navbar">
+        <div class="nav-item"><div class="ic"></div> MYPAGE</div>
+        <div class="nav-item course active"><div class="ic"></div> COURSE</div>
+        <div class="nav-item"><div class="ic"></div> RANKING</div>
+    </div>
+</div>
+
+<script>
+document.getElementById("mapBox").addEventListener("click", (e)=>{
+    let mk = document.createElement("div");
+    mk.className="marker";
+    mk.style.left=(e.offsetX-17)+"px";
+    mk.style.top=(e.offsetY-17)+"px";
+    document.getElementById("mapBox").appendChild(mk);
+});
+</script>
+</body>
+</html>

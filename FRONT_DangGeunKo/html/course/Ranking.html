@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>랭킹</title>
+
+<style>
+    body{margin:0;background:#eee;font-family:sans-serif;display:flex;justify-content:center;}
+    .app{width:390px;height:100vh;background:#fff;position:relative;}
+
+    .top{padding:20px 16px;font-size:18px;font-weight:700;}
+
+
+.category-tabs {
+    display: flex;
+    padding: 0 16px 10px; /* 탭 목록 아래 여백 */
+    gap: 8px;
+    }
+    .category-item {
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #666;
+        border: 1px solid #ddd;
+        cursor: pointer;
+    }
+/* '거리' 탭 (선택된 스타일 1 - 배경색) */
+.category-item.active-style1 {
+         background: #ff7a00;
+         color: white;
+         border-color: #ff7a00;
+    }
+
+
+    .ranking-list{padding:16px;height:72vh;overflow-y:auto;}
+
+    .rank-card{background:white;border-radius:14px;margin-bottom:14px;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+    .rank-banner{background:#ffe8c4;padding:8px 12px;font-size:12px;border-radius:10px;margin-bottom:12px;}
+    .first{border:2px solid #ff7a00;}
+
+    .thumb{background:#e8e8e8;height:120px;}
+    .info{padding:10px;}
+    .name{font-size:14px;font-weight:700;}
+    .meta{font-size:11px;color:#666;margin-top:2px;}
+    .heart{float:right;margin-top:-18px;margin-right:10px;font-size:16px;cursor:pointer;}
+
+    .plus{position:fixed;right:calc(50% - 390px/2 + 16px);bottom:78px;width:48px;height:48px;background:#ff7a00;
+          color:white;border-radius:50%;font-size:28px;border:none;box-shadow:0 6px 12px rgba(0,0,0,.2);cursor:pointer;}
+
+    .navbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:390px;height:62px;background:white;border-top:1px solid #eee;
+            display:flex;justify-content:space-around;align-items:center;font-size:11px;}
+    .nav-item{color:#bfbfbf;text-align:center;}
+    .nav-item.active{color:#ff7a00;}
+    .ic{width:18px;height:18px;border:2px solid currentColor;margin:auto;border-radius:5px;}
+    .course .ic{border-radius:4px;}
+    
+    .first-rank-container {
+      display: flex; /* 좌우 배치를 위해 Flexbox 사용 */ 
+      margin-bottom: 14px; /* 다음 카드와의 간격 */
+      gap: 10px; /* 두 요소 사이의 간격 */
+    }
+    .dkImg{
+        width: 100px;
+    }
+    
+    .firstDesc{
+        /* bottom: 200px; left: 200px; 제거 */
+        display: flex;
+        flex-direction: column; /* 내부 요소 세로 정렬 */
+        align-items: center; /* 이미지와 텍스트 가운데 정렬 */
+        justify-content: center; /* 세로 가운데 정렬 */
+        text-align: center;
+        font-size: 14px;
+        flex-shrink: 0; /* 크기 줄어들지 않게 함 */
+        width: 130px; /* 설명 영역의 너비를 지정하여 카드의 너비를 확보 */
+    }
+    /* 🥕 말풍선 스타일 */
+    .bubble-speech {
+        background: white;
+        border: 2px solid #ff7a00;
+        border-radius: 10px;
+        padding: 10px;
+        position: relative; /* 꼬리를 위한 기준점 */
+        line-height: 1.4;
+    }
+    .bubble-speech::after {
+        content: '';
+        position: absolute;
+        right: 100%; /* 왼쪽 끝으로 이동 */
+        top: 50%;
+        transform: translateY(-50%);
+        border: 10px solid transparent;
+        border-right-color: #ff7a00; /* 테두리 색상과 동일 */
+        border-left: 0;
+    }
+    .bubble-speech::before {
+        content: '';
+        position: absolute;
+        right: calc(100% - 2px); /* 꼬리 내부 흰색 영역 */
+        top: 50%;
+        transform: translateY(-50%);
+        border: 9px solid transparent;
+        border-right-color: white;
+        border-left: 0;
+    }
+    
+</style>
+
+<script>
+function toggleHeart(el){
+    el.textContent = el.textContent==="♡" ? "♥" : "♡";
+    el.style.color = el.textContent==="♥" ? "#ff7a00" : "#bbb";
+}
+</script>
+
+<body>
+<div class="app">
+
+    <div class="top">이주의 코스 🥕</div>
+        <div class="category-tabs">
+        <span class="category-item active-style1">거리</span>
+        <span class="category-item ">지역</span>
+        <span class="category-item">난이도</span>
+    </div>
+    <div class="ranking-list">
+
+        <!-- 1위 강조 -->
+         <div class="first-rank-container">
+            <div class="rank-card first">
+            <div class="rank-banner">🥇 당근코 한 줄 추천 — 러너들이 가장 많이 선택한 코스!</div>
+            <div class="thumb"></div>
+            <span class="heart" onclick="toggleHeart(this)">♡</span>
+            <div class="info">
+                <div class="name">아산 곡교천 10km</div>
+                <div class="meta">평균 ★4.8 | 리뷰 28 | 거리 10km | 조회 4,210</div>
+            </div>
+        </div>
+        <div class="firstDesc">
+            <span class="bubble-speech">이 코스는 많은 사람들에게 인기를 끌었고, 초보자들에게 추천해요!</span>
+            <img class="dkImg" src="./image.png" alt="">
+        </div>
+
+        </div>
+        
+
+        <!-- 2위 이하 -->
+        <div class="rank-card">
+            <div class="thumb"></div>
+            <span class="heart" onclick="toggleHeart(this)">♡</span>
+            <div class="info">
+                <div class="name">양재천 러닝코스</div>
+                <div class="meta">★4.5 | 리뷰 18 | 6.3km</div>
+            </div>
+        </div>
+
+        <div class="rank-card">
+            <div class="thumb"></div>
+            <span class="heart" onclick="toggleHeart(this)">♡</span>
+            <div class="info">
+                <div class="name">한강 밤거리 코스</div>
+                <div class="meta">★4.2 | 리뷰 30 | 8.1km</div>
+            </div>
+        </div>
+    </div>
+
+    <button class="plus">＋</button>
+
+    <div class="navbar">
+        <div class="nav-item"><div class="ic"></div>MYPAGE</div>
+        <div class="nav-item course"><div class="ic"></div>COURSE</div>
+        <div class="nav-item active"><div class="ic"></div>RANKING</div>
+    </div>
+
+</div>
+</body>
+</html>
