@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>당근코 - 우리 동네 코스 구경하기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --orange: #ff7a00;
+      --light-orange: #ffe4c4;
+      --bg: #f7f7f7;
+      --gray: #dddddd;
+      --text-main: #222222;
+      --text-sub: #888888;
+      --card-bg: #f3f3f3;
+      --nav-gray: #c7c7c7;
+      --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --radius-large: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 모바일 화면 프레임 느낌 */
+    .app {
+      position: relative;
+      width: 390px;
+      min-height: 100vh;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    /* 지도 배경 느낌 */
+    .map-bg {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+          0deg,
+          #f9f9f9,
+          #f9f9f9 20px,
+          #efefef 21px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          #f9f9f9,
+          #f9f9f9 20px,
+          #efefef 21px
+        );
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      padding: 12px 12px 80px;
+    }
+
+    /* 상단 검색 영역 */
+    .top-search-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .category-btn {
+      position: relative;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: none;
+      background: var(--orange);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      flex-shrink: 0;
+    }
+
+    .category-btn span.caret {
+      font-size: 10px;
+      margin-top: 1px;
+    }
+
+    .category-dropdown {
+      position: absolute;
+      top: 110%;
+      left: 0;
+      width: 120px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: var(--shadow-soft);
+      padding: 6px 0;
+      display: none;
+      z-index: 10;
+    }
+
+    .category-dropdown.open {
+      display: block;
+    }
+
+    .category-dropdown button {
+      width: 100%;
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .category-dropdown button:hover {
+      background: #f3f3f3;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 34px 9px 12px;
+      border-radius: 999px;
+      border: none;
+      box-shadow: var(--shadow-soft);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--orange);
+    }
+
+    /* 메인 카드 패널 */
+    .panel {
+      margin-top: 4px;
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      padding: 18px 16px 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    /* 필터 버튼들 */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .pill-btn {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #e4e4e4;
+      background: #fafafa;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .pill-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+    }
+
+    .pill-btn .caret {
+      font-size: 9px;
+      margin-top: 1px;
+    }
+
+    .sort-wrap {
+      position: relative;
+      font-size: 12px;
+    }
+
+    .sort-btn {
+      border: none;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .sort-dropdown {
+      position: absolute;
+      right: 0;
+      top: 130%;
+      width: 150px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow-soft);
+      padding: 6px 0;
+      display: none;
+      z-index: 10;
+    }
+
+    .sort-dropdown.open {
+      display: block;
+    }
+
+    .sort-dropdown button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: left;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .sort-dropdown button:hover {
+      background: #f5f5f5;
+    }
+
+    /* 거리 / 지역 / 난이도 옵션 영역 */
+    .filter-options {
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .distance-control,
+    .region-control,
+    .difficulty-control {
+      display: none;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: #fafafa;
+      border: 1px solid #ededed;
+      margin-bottom: 6px;
+    }
+
+    .distance-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .distance-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .distance-slider-row input[type="range"] {
+      flex: 1;
+    }
+
+    .distance-btn {
+      padding: 4px 6px;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      background: #fff;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .region-selects {
+      display: flex;
+      gap: 6px;
+    }
+
+    .region-selects select {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px solid #dddddd;
+      font-size: 11px;
+      background: #fff;
+    }
+
+    .difficulty-chips {
+      display: flex;
+      gap: 6px;
+    }
+
+    .difficulty-chip {
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid #e0e0e0;
+      background: #fff;
+      font-size: 11px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .difficulty-chip.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+    }
+
+    /* 코스 리스트 패널 (드래그로 높이 조절) */
+    .course-panel-wrapper {
+      margin-top: 4px;
+    }
+
+    .drag-handle {
+      width: 40%;
+      height: 4px;
+      margin: 0 auto 8px;
+      border-radius: 999px;
+      background: #e0e0e0;
+      cursor: ns-resize;
+    }
+
+    .course-panel {
+      background: #fff;
+      border-radius: 20px;
+      padding: 8px 2px 6px;
+      height: 360px; /* 기본 높이 */
+      overflow-y: auto;
+      transition: height 0.1s ease-out;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 4px 10px 10px;
+    }
+
+    .course-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      font-size: 11px;
+    }
+
+    .course-img {
+      position: relative;
+      background: var(--card-bg);
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 단순한 도형들로 목업 느낌 */
+    .shape-wrap {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .shape-triangle,
+    .shape-square,
+    .shape-circle {
+      background: #e0e0e0;
+      opacity: 0.9;
+    }
+
+    .shape-triangle {
+      width: 40px;
+      height: 40px;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    .shape-square {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+    }
+
+    .shape-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+
+    .card-heart {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #bbbbbb;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-heart.active {
+      color: var(--orange);
+    }
+
+    .course-info {
+      padding: 6px 8px 8px;
+    }
+
+    .course-name {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .course-meta {
+      font-size: 10px;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+
+    /* 플로팅 + 버튼 */
+    .fab {
+      position: fixed;
+      right: calc(50% - 390px / 2 + 16px);
+      bottom: 76px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
+      z-index: 20;
+    }
+
+    /* 하단 내브바 */
+    .navbar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 390px;
+      height: 60px;
+      background: #ffffff;
+      border-top: 1px solid #eeeeee;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      font-size: 10px;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      color: var(--nav-gray);
+      cursor: pointer;
+    }
+
+    .nav-item .icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 2px solid currentColor;
+    }
+
+    .nav-item.course .icon {
+      border-radius: 4px;
+    }
+
+    .nav-item.active {
+      color: var(--orange);
+    }
+
+    /* 스크롤바 살짝만 보이게 */
+    .course-panel::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .course-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .course-panel::-webkit-scrollbar-thumb {
+      background: #e0e0e0;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="map-bg"></div>
+
+    <div class="content">
+      <!-- 상단 검색 -->
+      <div class="top-search-row">
+        <button class="category-btn" id="categoryBtn">
+          <span id="categoryLabel">제목</span>
+          <span class="caret">▾</span>
+
+          <div class="category-dropdown" id="categoryDropdown">
+            <button data-value="제목">제목</button>
+            <button data-value="작성자">작성자</button>
+            <button data-value="내용">내용</button>
+          </div>
+        </button>
+
+        <div class="search-input-wrap">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="코스 제목을 입력하세요"
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+
+      <!-- 메인 패널 -->
+      <div class="panel">
+        <div class="panel-title">우리 동네 코스 구경하기</div>
+
+        <!-- 필터 -->
+        <div class="filter-row">
+          <div class="filter-buttons">
+            <button class="pill-btn active" id="distanceBtn">
+              거리
+              <span class="caret">▾</span>
+            </button>
+            <button class="pill-btn" id="regionBtn">
+              지역
+              <span class="caret">▾</span>
+            </button>
+            <button class="pill-btn" id="levelBtn">
+              난이도
+              <span class="caret">▾</span>
+            </button>
+          </div>
+
+          <div class="sort-wrap">
+            <button class="sort-btn" id="sortBtn">
+              <span id="sortLabel">최신순</span>
+              <span class="caret">▾</span>
+            </button>
+            <div class="sort-dropdown" id="sortDropdown">
+              <button data-value="최신순">최신순</button>
+              <button data-value="오래된 순">오래된 순</button>
+              <button data-value="조회수 많은 순">조회수많은순</button>
+              <button data-value="조회수 적은 순">조회수 적은순</button>
+              <button data-value="별점 높은 순">별점 높은순</button>
+              <button data-value="별점 낮은 순">별점 낮은 순</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 거리 / 지역 / 난이도 옵션 박스들 -->
+        <div class="filter-options">
+          <!-- 거리 -->
+          <div class="distance-control" id="distanceControl">
+            <div class="distance-top">
+              <span>거리 설정 (km)</span>
+              <span id="distanceValue">3 km</span>
+            </div>
+            <div class="distance-slider-row">
+              <input
+                type="range"
+                id="distanceRange"
+                min="1"
+                max="10"
+                value="3"
+                step="1"
+              />
+              <button class="distance-btn" id="minDistanceBtn">최소값</button>
+              <button class="distance-btn" id="maxDistanceBtn">최대값</button>
+            </div>
+          </div>
+
+          <!-- 지역 -->
+          <div class="region-control" id="regionControl">
+            <div style="margin-bottom: 4px; color: var(--text-sub)">
+              도시 / 지역구 선택
+            </div>
+            <div class="region-selects">
+              <select id="citySelect">
+                <option value="">도시 선택</option>
+                <option>서울특별시</option>
+                <option>부산광역시</option>
+                <option>대구광역시</option>
+                <option>인천광역시</option>
+                <option>광주광역시</option>
+                <option>대전광역시</option>
+                <option>울산광역시</option>
+              </select>
+              <select id="districtSelect">
+                <option value="">지역구 선택</option>
+                <option>강남구</option>
+                <option>서초구</option>
+                <option>마포구</option>
+                <option>해운대구</option>
+                <option>수영구</option>
+                <option>동래구</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 난이도 -->
+          <div class="difficulty-control" id="levelControl">
+            <div style="margin-bottom: 4px; color: var(--text-sub)">
+              난이도 선택
+            </div>
+            <div class="difficulty-chips">
+              <button class="difficulty-chip" data-level="런린이">런린이</button>
+              <button class="difficulty-chip" data-level="러너">러너</button>
+              <button class="difficulty-chip" data-level="런고수">런고수</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 코스 리스트 패널 (드래그로 높이 조절) -->
+        <div class="course-panel-wrapper">
+          <div class="drag-handle" id="dragHandle"></div>
+          <div class="course-panel" id="coursePanel">
+            <div class="course-grid">
+              <!-- 카드 1 -->
+              <div class="course-card">
+                <div class="course-img">
+                  <div class="shape-wrap">
+                    <div class="shape-triangle"></div>
+                    <div>
+                      <div class="shape-circle"></div>
+                      <div class="shape-square" style="margin-top: 4px"></div>
+                    </div>
+                  </div>
+                  <div class="card-heart">♡</div>
+                </div>
+                <div class="course-info">
+                  <div class="course-name">코스 이름</div>
+                  <div class="course-meta">
+                    평균 별점 | 조회수 | 거리 | 난이도 | 게시일
+                  </div>
+                </div>
+              </div>
+
+              <!-- 카드 2 -->
+              <div class="course-card">
+                <div class="course-img">
+                  <div class="shape-wrap">
+                    <div class="shape-triangle"></div>
+                    <div>
+                      <div class="shape-circle"></div>
+                      <div class="shape-square" style="margin-top: 4px"></div>
+                    </div>
+                  </div>
+                  <div class="card-heart">♡</div>
+                </div>
+                <div class="course-info">
+                  <div class="course-name">Title</div>
+                  <div class="course-meta">
+                    평균 별점 | 조회수 | 거리 | 난이도 | 게시일
+                  </div>
+                </div>
+              </div>
+
+              <!-- 카드 3 -->
+              <div class="course-card">
+                <div class="course-img">
+                  <div class="shape-wrap">
+                    <div class="shape-triangle"></div>
+                    <div>
+                      <div class="shape-circle"></div>
+                      <div class="shape-square" style="margin-top: 4px"></div>
+                    </div>
+                  </div>
+                  <div class="card-heart">♡</div>
+                </div>
+                <div class="course-info">
+                  <div class="course-name">코스 이름</div>
+                  <div class="course-meta">
+                    평균 별점 | 조회수 | 거리 | 난이도 | 게시일
+                  </div>
+                </div>
+              </div>
+
+              <!-- 카드 4 -->
+              <div class="course-card">
+                <div class="course-img">
+                  <div class="shape-wrap">
+                    <div class="shape-triangle"></div>
+                    <div>
+                      <div class="shape-circle"></div>
+                      <div class="shape-square" style="margin-top: 4px"></div>
+                    </div>
+                  </div>
+                  <div class="card-heart">♡</div>
+                </div>
+                <div class="course-info">
+                  <div class="course-name">Title</div>
+                  <div class="course-meta">
+                    평균 별점 | 조회수 | 거리 | 난이도 | 게시일
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 플로팅 + 버튼 -->
+    <button class="fab" id="fabBtn">＋</button>
+
+    <!-- 내브바 -->
+    <div class="navbar">
+      <div class="nav-item" id="navMy">
+        <div class="icon"></div>
+        <div>MYPAGE</div>
+      </div>
+      <div class="nav-item course active" id="navCourse">
+        <div class="icon"></div>
+        <div>COURSE</div>
+      </div>
+      <div class="nav-item" id="navRank">
+        <div class="icon"></div>
+        <div>RANKING</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 카테고리 드롭다운
+    (function () {
+      const btn = document.getElementById("categoryBtn");
+      const dropdown = document.getElementById("categoryDropdown");
+      const label = document.getElementById("categoryLabel");
+
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("open");
+      });
+
+      dropdown.querySelectorAll("button").forEach((item) => {
+        item.addEventListener("click", () => {
+          label.textContent = item.dataset.value;
+          dropdown.classList.remove("open");
+        });
+      });
+
+      document.addEventListener("click", () => {
+        dropdown.classList.remove("open");
+      });
+    })();
+
+    // 정렬 드롭다운
+    (function () {
+      const sortBtn = document.getElementById("sortBtn");
+      const sortDropdown = document.getElementById("sortDropdown");
+      const sortLabel = document.getElementById("sortLabel");
+
+      sortBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sortDropdown.classList.toggle("open");
+      });
+
+      sortDropdown.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          sortLabel.textContent = btn.dataset.value;
+          sortDropdown.classList.remove("open");
+        });
+      });
+
+      document.addEventListener("click", () => {
+        sortDropdown.classList.remove("open");
+      });
+    })();
+
+    // 필터 버튼 & 옵션 토글
+    (function () {
+      const distanceBtn = document.getElementById("distanceBtn");
+      const regionBtn = document.getElementById("regionBtn");
+      const levelBtn = document.getElementById("levelBtn");
+
+      const distanceControl = document.getElementById("distanceControl");
+      const regionControl = document.getElementById("regionControl");
+      const levelControl = document.getElementById("levelControl");
+
+      function resetOthers(except) {
+        if (except !== "distance") {
+          distanceBtn.classList.remove("active");
+          distanceControl.style.display = "none";
+        }
+        if (except !== "region") {
+          regionBtn.classList.remove("active");
+          regionControl.style.display = "none";
+        }
+        if (except !== "level") {
+          levelBtn.classList.remove("active");
+          levelControl.style.display = "none";
+        }
+      }
+
+      distanceBtn.addEventListener("click", () => {
+        const willActive = !distanceBtn.classList.contains("active");
+        resetOthers("distance");
+        distanceBtn.classList.toggle("active", willActive);
+        distanceControl.style.display = willActive ? "block" : "none";
+      });
+
+      regionBtn.addEventListener("click", () => {
+        const willActive = !regionBtn.classList.contains("active");
+        resetOthers("region");
+        regionBtn.classList.toggle("active", willActive);
+        regionControl.style.display = willActive ? "block" : "none";
+      });
+
+      levelBtn.addEventListener("click", () => {
+        const willActive = !levelBtn.classList.contains("active");
+        resetOthers("level");
+        levelBtn.classList.toggle("active", willActive);
+        levelControl.style.display = willActive ? "block" : "none";
+      });
+
+      // 처음엔 거리 옵션만 보이게
+      distanceControl.style.display = "block";
+    })();
+
+    // 거리 슬라이더 값 표시 & min/max 버튼
+    (function () {
+      const range = document.getElementById("distanceRange");
+      const valueLabel = document.getElementById("distanceValue");
+      const minBtn = document.getElementById("minDistanceBtn");
+      const maxBtn = document.getElementById("maxDistanceBtn");
+
+      function update() {
+        valueLabel.textContent = range.value + " km";
+      }
+
+      range.addEventListener("input", update);
+      minBtn.addEventListener("click", () => {
+        range.value = range.min;
+        update();
+      });
+      maxBtn.addEventListener("click", () => {
+        range.value = range.max;
+        update();
+      });
+
+      update();
+    })();
+
+    // 난이도 선택
+    (function () {
+      const chips = document.querySelectorAll(".difficulty-chip");
+      chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          chips.forEach((c) => c.classList.remove("active"));
+          chip.classList.add("active");
+        });
+      });
+    })();
+
+    // 코스 패널 높이 드래그
+    (function () {
+      const handle = document.getElementById("dragHandle");
+      const panel = document.getElementById("coursePanel");
+
+      let dragging = false;
+      let startY = 0;
+      let startHeight = 0;
+      const minHeight = 220;
+      const maxHeight = 520;
+
+      function onMove(e) {
+        if (!dragging) return;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const diff = startY - clientY;
+        let newHeight = startHeight + diff;
+        newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+        panel.style.height = newHeight + "px";
+      }
+
+      function endDrag() {
+        dragging = false;
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("touchmove", onMove);
+        document.removeEventListener("mouseup", endDrag);
+        document.removeEventListener("touchend", endDrag);
+      }
+
+      function startDrag(e) {
+        dragging = true;
+        startY = e.touches ? e.touches[0].clientY : e.clientY;
+        startHeight = panel.getBoundingClientRect().height;
+
+        document.addEventListener("mousemove", onMove);
+        document.addEventListener("touchmove", onMove, { passive: false });
+        document.addEventListener("mouseup", endDrag);
+        document.addEventListener("touchend", endDrag);
+      }
+
+      handle.addEventListener("mousedown", startDrag);
+      handle.addEventListener("touchstart", startDrag, { passive: true });
+    })();
+
+    // 찜 하트 토글
+    (function () {
+      document.querySelectorAll(".card-heart").forEach((heart) => {
+        heart.addEventListener("click", (e) => {
+          e.stopPropagation();
+          heart.classList.toggle("active");
+          heart.textContent = heart.classList.contains("active") ? "♥" : "♡";
+        });
+      });
+    })();
+
+    // 플로팅 + 버튼 (등록하기 페이지로 이동하는 위치는 나중에 연결)
+    (function () {
+      const fab = document.getElementById("fabBtn");
+      fab.addEventListener("click", () => {
+        // 실제 서비스에서는 등록 페이지로 이동하도록 변경
+        alert("등록하기 페이지로 이동합니다 (링크 연결 예정)");
+        // location.href = "/course/new";  // 예시
+      });
+    })();
+
+    // 내브바 색상 토글
+    (function () {
+      const items = document.querySelectorAll(".nav-item");
+      items.forEach((item) => {
+        item.addEventListener("click", () => {
+          items.forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
