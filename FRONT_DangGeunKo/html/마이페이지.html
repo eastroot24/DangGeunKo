@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>마이페이지</title>
+
+<style>
+    body{margin:0; background:#eee;font-family:sans-serif;display:flex;justify-content:center;padding-bottom:65px}
+    .app{width:390px;min-height:100vh;background:#fff;position:relative;overflow:hidden;}
+
+    /* 상단 타이틀 */
+    .top{
+        text-align:left;font-size:18px;font-weight:700;padding:24px 20px 10px;
+    }
+
+    /* 프로필 카드 */
+    .profile-card{
+        background:white;border-radius:18px;margin:0 16px;padding:16px;
+        display:flex;align-items:flex-start;gap:14px;
+        box-shadow:0 4px 10px rgba(0,0,0,0.03);
+    }
+    .profile-img{width:55px;height:55px;border-radius:50%;background:#ddd;}
+    .profile-info{flex:1;font-size:13px;line-height:1.4;}
+    .profile-btn{
+        margin-top:10px;width:100%;border:none;height:34px;border-radius:20px;
+        background:#ff7a00;color:white;font-weight:600;font-size:13px;cursor:pointer;
+    }
+
+    /* 섹션 */
+    .section-title{
+        margin:22px 18px 8px;font-weight:600;font-size:14px;display:flex;justify-content:space-between;
+    }
+    .more-btn{font-size:12px;color:#999;cursor:pointer;}
+
+    /* 코스 박스 */
+    .course-row{
+        padding:0 16px;display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;
+    }
+    .course-item{
+        min-width:120px;border-radius:12px;background:#fafafa;padding-bottom:6px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.05);overflow:hidden;
+    }
+    .thumb{
+        background:#e3e3e3;height:70px;display:flex;align-items:center;justify-content:center;
+    }
+    .shape{background:#d7d7d7;border-radius:6px;width:22px;height:22px;}
+
+    .course-name{font-size:12px;font-weight:600;padding:6px 6px 2px;}
+    .course-date{font-size:10px;color:#777;padding:0 6px 4px;}
+
+    /* 플로팅 + */
+    .plus{
+        position:absolute;right:22px;bottom:78px;width:44px;height:44px;border:none;
+        border-radius:50%;background:#ff7a00;color:white;font-size:28px;font-weight:600;
+        display:flex;align-items:center;justify-content:center;cursor:pointer;
+        box-shadow:0 6px 12px rgba(0,0,0,0.18);
+    }
+
+    /* NAVBAR */
+    .navbar{
+        position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+        width:390px;height:62px;background:#fff;border-top:1px solid #eee;
+        display:flex;justify-content:space-around;align-items:center;font-size:11px;
+    }
+    .nav-item{color:#bfbfbf;text-align:center;cursor:pointer;}
+    .nav-item.active{color:#ff7a00;}
+    .ic{width:18px;height:18px;border:2px solid currentColor;border-radius:5px;margin-bottom:3px;}
+    .course .ic{border-radius:4px;}
+
+    /* 비밀번호 확인 팝업 */
+    .popup-bg{
+        position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.35);
+        display:none;justify-content:center;align-items:center;z-index:20;
+    }
+    .popup{
+        width:280px;background:white;border-radius:14px;padding:20px;text-align:center;
+        box-shadow:0 6px 20px rgba(0,0,0,.2);
+    }
+    .popup-title{font-weight:700;margin-bottom:10px;}
+    .popup input{
+        width:100%;border:1px solid #ddd;border-radius:10px;padding:10px;font-size:12px;margin-bottom:12px;
+    }
+    .popup button{
+        width:100%;height:36px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;
+    }
+    .confirm-btn{background:#ff7a00;color:white;}
+    .close-btn{background:#ddd;margin-top:6px;}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <div class="top">나의 정보</div>
+
+    <!-- 프로필 카드 -->
+    <div class="profile-card">
+        <img src="https://i.imgur.com/7b3cP6e.png" class="profile-img">
+        <div class="profile-info">
+            <b>양당근</b>
+            <p>ydg1234@gmail.com</p>
+            <span>10 팔로잉</span> · <span>14 팔로워</span>
+            <button class="profile-btn" id="editProfileBtn">프로필 수정</button>
+        </div>
+    </div>
+
+    <!-- 등록코스 -->
+    <div class="section-title">
+        등록 코스
+        <span class="more-btn" onclick="location.href='course-list.html'">더보기 ></span>
+    </div>
+    <div class="course-row">
+        <div class="course-item">
+            <div class="thumb"><div class="shape"></div></div>
+            <div class="course-name">Title</div>
+            <div class="course-date">Updated to..</div>
+        </div>
+        <div class="course-item">
+            <div class="thumb"><div class="shape"></div></div>
+            <div class="course-name">Title</div>
+            <div class="course-date">Updated to..</div>
+        </div>
+        <div class="course-item">
+            <div class="thumb"><div class="shape"></div></div>
+            <div class="course-name">Title</div>
+            <div class="course-date">Updated to..</div>
+        </div>
+    </div>
+
+    <!-- 찜코스 -->
+    <div class="section-title">
+        찜 코스
+        <span class="more-btn" onclick="location.href='course-list.html?like=true'">더보기 ></span>
+    </div>
+    <div class="course-row">
+        <div class="course-item">
+            <div class="thumb"><div class="shape"></div></div>
+            <div class="course-name">Title</div>
+            <div class="course-date">Updated to..</div>
+        </div>
+        <div class="course-item">
+            <div class="thumb"><div class="shape"></div></div>
+            <div class="course-name">Title</div>
+            <div class="course-date">Updated to..</div>
+        </div>
+        <div class="course-item">
+            <div class="thumb"><div class="shape"></div></div>
+            <div class="course-name">Title</div>
+            <div class="course-date">Updated to..</div>
+        </div>
+    </div>
+
+    <button class="plus">＋</button>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-item active"><div class="ic"></div>MYPAGE</div>
+        <div class="nav-item course" onclick="location.href='index.html'"><div class="ic"></div>COURSE</div>
+        <div class="nav-item"><div class="ic"></div>RANKING</div>
+    </div>
+
+    <!-- 비밀번호 확인 팝업 -->
+    <div class="popup-bg" id="popupBg">
+        <div class="popup">
+            <div class="popup-title">비밀번호 확인</div>
+            <input type="password" placeholder="비밀번호를 입력하세요">
+            <button class="confirm-btn">확인</button>
+            <button class="close-btn" onclick="closePopup()">취소</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const pop = document.getElementById("popupBg");
+document.getElementById("editProfileBtn").onclick=()=> pop.style.display="flex";
+function closePopup(){ pop.style.display="none"; }
+</script>
+
+</body>
+</html>
