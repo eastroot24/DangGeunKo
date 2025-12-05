@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<title>팔로잉</title>
+
+<style>
+.follow-tabs{
+    display:flex;justify-content:center;gap:30px;margin-top:12px;font-size:13px;
+}
+.follow-tabs div{cursor:pointer;font-weight:600;}
+.follow-tabs .active{color:#ff7a00;border-bottom:2px solid #ff7a00;padding-bottom:3px;}
+
+.search-bar{
+    margin:18px auto 8px;width:86%;position:relative;
+}
+.search-bar input{
+    width:100%;padding:10px 12px;border-radius:10px;border:1px solid #ddd;font-size:13px;
+}
+.search-bar .icon{
+    position:absolute;right:10px;top:8px;font-size:18px;color:#666;
+}
+
+/* 유저 리스트 */
+.user-list{padding:0 18px;height:72vh;overflow-y:auto;margin-top:6px;}
+.user-card{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 0;border-bottom:1px solid #f1f1f1;
+}
+.user-left{display:flex;align-items:center;gap:10px;}
+.user-img{width:38px;height:38px;border-radius:50%;background:#ddd;}
+.user-name{font-size:13px;font-weight:700;}
+.user-meta{font-size:11px;color:#666;}
+.follow-btn{
+    padding:6px 16px;border-radius:999px;font-size:12px;border:1px solid #ff7a00;
+    background:#fff;color:#ff7a00;cursor:pointer;font-weight:600;
+    transition:.25s;
+}
+.follow-btn:hover{background:#ff7a00;color:#fff;}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <div class="top-bar">
+        <div class="back" onclick="history.back()">←</div>
+        <div class="title">팔로잉</div>
+    </div>
+
+    <div class="follow-tabs">
+        <div class="active">10 팔로잉</div>
+        <div onclick="location.href='followers.html'">99 팔로워</div>
+    </div>
+
+    <div class="search-bar">
+        <input placeholder="보고 싶은 사람을 검색하세요">
+        <div class="icon">🔍</div>
+    </div>
+
+    <div class="user-list">
+
+        <!-- 반복 카드 -->
+        <div class="user-card">
+            <div class="user-left">
+                <img src="https://i.imgur.com/7b3cP6e.png" class="user-img">
+                <div>
+                    <div class="user-name">인어공주</div>
+                    <div class="user-meta">서울시 서초구</div>
+                </div>
+            </div>
+            <button class="follow-btn">팔로잉</button>
+        </div>
+
+        <div class="user-card">
+            <div class="user-left">
+                <img src="https://i.imgur.com/7b3cP6e.png" class="user-img">
+                <div>
+                    <div class="user-name">인어공주</div>
+                    <div class="user-meta">서울시 서초구</div>
+                </div>
+            </div>
+            <button class="follow-btn">팔로잉</button>
+        </div>
+
+    </div>
+
+
+    <button class="plus">＋</button>
+
+    <div class="navbar">
+        <div class="nav-item active"><div class="ic"></div>MYPAGE</div>
+        <div class="nav-item course" onclick="location.href='index.html'"><div class="ic"></div>COURSE</div>
+        <div class="nav-item"><div class="ic"></div>RANKING</div>
+    </div>
+
+</div>
+</body>
+</html>
