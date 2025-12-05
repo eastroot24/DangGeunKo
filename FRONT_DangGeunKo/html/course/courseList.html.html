@@ -525,6 +525,102 @@
       background: #e0e0e0;
       border-radius: 999px;
     }
+    .range-slider-group {
+    position: relative; /* 중요: 내부 요소를 배치하기 위한 기준점 */
+    height: 20px; /* 슬라이더가 들어갈 공간 확보 */
+
+}
+
+/* ================================== */
+/* 🛠️ 이중 범위 슬라이더 커스텀 스타일 수정 */
+/* ================================== */
+
+/* 컨테이너는 relative로 설정하여 내부 요소들의 absolute 기준점이 되도록 함 */
+.distance-slider-row.range-slider-group {
+    position: relative;
+    /* height를 충분히 확보하여 thumb가 잘리지 않도록 합니다. */
+    height: 36px; 
+    display: block; /* input[type=range]가 absolute로 겹치도록 block으로 변경 */
+    align-items: center;
+    padding: 0 12px; /* thumb가 좌우로 완전히 나오도록 여백 추가 (thumb 너비의 절반) */
+}
+
+/* 회색 트랙 배경 (::before 사용) */
+.distance-slider-row.range-slider-group::before {
+    content: '';
+    position: absolute;
+    /* padding을 고려하여 left/right 조정 */
+    left: 0px; 
+    right: 0px;
+    height: 8px; /* 트랙 높이 */
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--gray); /* 회색 트랙 배경 */
+    border-radius: 4px;
+    z-index: 1; /* 채움 요소보다 아래 */
+}
+
+/* 채움 요소 스타일 */
+.slider-range-fill {
+    position: absolute;
+    height: 8px; /* 트랙 높이 */
+    /* padding을 고려하여 left/right 조정 */
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--orange); /* 오렌지색 */
+    border-radius: 4px;
+    z-index: 2; /* 두 슬라이더 핸들 사이에 위치 */
+    pointer-events: none; /* 클릭 방지 (핸들 조작을 위해) */
+}
+
+/* 기본 슬라이더 인풋 스타일 (포지션 설정 및 기본 스타일 제거) */
+.range-slider-group input[type="range"] {
+    position: absolute;
+    width: calc(100% + 3px); /* 패딩을 고려하여 너비 조정 */
+    top: 50%;
+    left: -1px; /* 패딩만큼 좌측 이동 */
+    transform: translateY(-50%);
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none; /* WebKit 기본 스타일 제거 */
+    pointer-events: none; /* 기본적으로 클릭 방지 (thumb만 허용) */
+    z-index: 3; /* thumb가 채움/트랙 위에 오도록 */
+}
+
+/* WebKit/Blink (Chrome, Safari) Thumb 스타일 */
+.range-slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px; /* thumb 크기 통일 */
+    width: 24px; /* thumb 크기 통일 */
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--orange); /* 오렌지색 테두리 추가 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+    pointer-events: all; /* Thumb만 클릭 가능하도록 설정 */
+    margin-top: -8px; /* 트랙(8px) 중앙에 오도록 조정: (24px/2 - 8px/2) - 8px = 12-4-8 = 0 이지만, 브라우저별 차이로 인해 조정이 필요. 보통 -8px ~ -12px 사이 */
+    z-index: 4;
+}
+
+/* Firefox Thumb 스타일 */
+.range-slider-group input[type="range"]::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--orange);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+    pointer-events: all;
+    /* Firefox는 margin-top 대신 vertical-align: middle 등으로 조정하지만, 여기서는 -moz-appearance: none;만으로도 위치가 잘 잡히도록 시도합니다. */
+}
+
+/* Firefox에서 기본 트랙/채움 스타일 제거 */
+.range-slider-group input[type="range"]::-moz-range-track,
+.range-slider-group input[type="range"]::-moz-range-progress {
+    background: transparent;
+}
   </style>
 </head>
 <body>
@@ -534,7 +630,14 @@
     <div class="content">
       <!-- 상단 검색 -->
       <div class="top-search-row">
-        <button class="category-btn" id="categoryBtn">
+        <div>
+              <select class="category-btn" id="categorySelect">
+                <option value="courseName">제목</option>
+                <option value="userName">작성자</option>
+                <option value="content">내용</option>
+              </select>
+          </div>
+        <!-- <button class="category-btn" id="categoryBtn">
           <span id="categoryLabel">제목</span>
           <span class="caret">▾</span>
 
@@ -543,7 +646,7 @@
             <button data-value="작성자">작성자</button>
             <button data-value="내용">내용</button>
           </div>
-        </button>
+        </button> -->
 
         <div class="search-input-wrap">
           <input
@@ -557,6 +660,7 @@
 
       <!-- 메인 패널 -->
       <div class="panel">
+        <div class="drag-handle" id="dragHandle"></div>
         <div class="panel-title">우리 동네 코스 구경하기</div>
 
         <!-- 필터 -->
@@ -595,7 +699,38 @@
         <!-- 거리 / 지역 / 난이도 옵션 박스들 -->
         <div class="filter-options">
           <!-- 거리 -->
-          <div class="distance-control" id="distanceControl">
+           <div class="distance-control" id="distanceControl">
+   <div class="distance-top">
+    <span>거리 설정 (km)</span>
+    <span id="distanceValue">1 km ~ 10 km</span> 
+</div>
+<div class="distance-slider-row range-slider-group">
+    <div class="slider-range-fill" id="sliderRangeFill"></div> 
+    
+    <input
+        type="range"
+        id="minDistanceRange"
+        min="1"
+        max="10"
+        value="1" 
+        step="1"
+        class="range-min"
+    />
+    <input
+        type="range"
+        id="maxDistanceRange"
+        min="1"
+        max="10"
+        value="10"
+        step="1"
+        class="range-max"
+    />
+</div>
+<div class="distance-slider-buttons" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+    <button class="distance-btn" id="resetDistanceBtn">초기화</button>
+    </div>
+</div>
+          <!-- <div class="distance-control" id="distanceControl">
             <div class="distance-top">
               <span>거리 설정 (km)</span>
               <span id="distanceValue">3 km</span>
@@ -612,7 +747,7 @@
               <button class="distance-btn" id="minDistanceBtn">최소값</button>
               <button class="distance-btn" id="maxDistanceBtn">최대값</button>
             </div>
-          </div>
+          </div> -->
 
           <!-- 지역 -->
           <div class="region-control" id="regionControl">
@@ -657,7 +792,7 @@
 
         <!-- 코스 리스트 패널 (드래그로 높이 조절) -->
         <div class="course-panel-wrapper">
-          <div class="drag-handle" id="dragHandle"></div>
+          
           <div class="course-panel" id="coursePanel">
             <div class="course-grid">
               <!-- 카드 1 -->
@@ -767,27 +902,28 @@
 
   <script>
     // 카테고리 드롭다운
-    (function () {
-      const btn = document.getElementById("categoryBtn");
-      const dropdown = document.getElementById("categoryDropdown");
-      const label = document.getElementById("categoryLabel");
+    // 기존 카테고리 드롭다운 관련 JS 함수를 모두 삭제하고 이 코드로 대체하세요.
 
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle("open");
-      });
+// 카테고리 SELECT 변경 처리
+(function () {
+  const select = document.getElementById("categorySelect");
 
-      dropdown.querySelectorAll("button").forEach((item) => {
-        item.addEventListener("click", () => {
-          label.textContent = item.dataset.value;
-          dropdown.classList.remove("open");
-        });
-      });
+  if (!select) return; // 요소가 없으면 실행하지 않음 (오류 방지)
 
-      document.addEventListener("click", () => {
-        dropdown.classList.remove("open");
-      });
-    })();
+  select.addEventListener("change", (e) => {
+    const selectedValue = e.target.value;
+    // 선택된 값(courseName, userName, content)을 사용하여 검색 로직을 업데이트하는 코드를 여기에 작성합니다.
+    console.log("검색 카테고리가 변경됨:", selectedValue);
+    
+    // **참고:** input placeholder도 함께 변경하려면 아래 코드를 사용하세요.
+    const searchInput = document.querySelector(".search-input");
+    const selectedText = select.options[select.selectedIndex].textContent;
+    if (searchInput) {
+        searchInput.placeholder = `${selectedText}을(를) 입력하세요`;
+    }
+  });
+})();
+
 
     // 정렬 드롭다운
     (function () {
@@ -863,28 +999,113 @@
     })();
 
     // 거리 슬라이더 값 표시 & min/max 버튼
-    (function () {
-      const range = document.getElementById("distanceRange");
-      const valueLabel = document.getElementById("distanceValue");
-      const minBtn = document.getElementById("minDistanceBtn");
-      const maxBtn = document.getElementById("maxDistanceBtn");
 
-      function update() {
-        valueLabel.textContent = range.value + " km";
-      }
+    // 거리 범위 슬라이더 로직
+// 거리 범위 슬라이더 로직
+(function () {
+    const minRange = document.getElementById("minDistanceRange");
+    const maxRange = document.getElementById("maxDistanceRange");
+    const sliderRangeFill = document.getElementById("sliderRangeFill"); 
+    const valueLabel = document.getElementById("distanceValue");
+    const resetBtn = document.getElementById("resetDistanceBtn");
+    
+    // 슬라이더의 min, max, step을 숫자형으로 가져옵니다.
+    const min = parseFloat(minRange.min);
+    const max = parseFloat(minRange.max); 
+    const step = parseFloat(minRange.step);
+    const range = max - min;
+    
+    // 핸들 너비의 절반(12px)을 %로 변환하여 보정합니다. (시각적 일치)
+    // 390px 앱 너비, 390-24px 컨텐츠 너비, 390-24-32px 실제 슬라이더 영역을 기준으로 
+    // 핸들 너비 24px의 절반인 12px을 보정해야 함.
+    const containerWidth = 390 - 24 - 15 * 2; // 앱 너비 - 패딩 - 슬라이더 좌우 패딩
+    const halfThumbWidthCorrection = (12 / containerWidth) * 100; // 12px을 %로 변환
 
-      range.addEventListener("input", update);
-      minBtn.addEventListener("click", () => {
-        range.value = range.min;
-        update();
-      });
-      maxBtn.addEventListener("click", () => {
-        range.value = range.max;
-        update();
-      });
+    function updateValue() {
+        let minVal = parseFloat(minRange.value);
+        let maxVal = parseFloat(maxRange.value);
 
-      update();
-    })();
+        // 1. 최소값 > 최대값 체크 (최소값이 최대값보다 커지지 않도록)
+        if (minVal > maxVal) {
+            // 만약 min이 max를 넘으려고 하면 maxRange.value를 minRange.value와 같게 설정
+            minRange.value = maxVal; 
+            minVal = maxVal;
+        }
+
+        // 2. 최대값 < 최소값 체크 (최대값이 최소값보다 작아지지 않도록)
+        if (maxVal < minVal) {
+            // max가 min보다 작아지려고 하면 minRange.value를 maxRange.value와 같게 설정
+            maxRange.value = minVal;
+            maxVal = minVal;
+        }
+
+        // 값 표시 업데이트
+        valueLabel.textContent = `${minVal} km ~ ${maxVal} km`;
+        
+        // 3. 🌟 슬라이더 채우기 로직 (핵심) 🌟
+        
+        // a. 최소값의 퍼센트 위치 계산 (left)
+        // (현재 값 - 최소값) / 전체 범위 * 100
+        let minPercent = ((minVal - min) / range) * 100;
+        
+        // b. 두 값 사이의 퍼센트 거리 계산 (width)
+        let maxPercent = ((maxVal - min) / range) * 100;
+        
+        // 핸들의 중앙과 일치시키기 위한 보정 적용 (옵션: 정확도를 높이려면)
+        // minPercent = minPercent + halfThumbWidthCorrection;
+        // maxPercent = maxPercent - halfThumbWidthCorrection;
+        
+        sliderRangeFill.style.left = `${minPercent}%`;
+        sliderRangeFill.style.width = `${maxPercent - minPercent}%`;
+        
+        // Z-Index 조정 (옵션: 더 부드러운 핸들 이동을 위해)
+        // 두 핸들이 겹칠 때(값이 같을 때) max 핸들이 앞으로 오도록 설정
+        if (minVal === maxVal) {
+             minRange.style.zIndex = '4';
+             maxRange.style.zIndex = '5';
+        } else {
+             minRange.style.zIndex = '5';
+             maxRange.style.zIndex = '4';
+        }
+    }
+
+    // 이벤트 리스너
+    minRange.addEventListener("input", updateValue);
+    maxRange.addEventListener("input", updateValue);
+    
+    // 초기화 버튼
+    resetBtn.addEventListener("click", () => {
+        minRange.value = min;
+        maxRange.value = max;
+        updateValue();
+    });
+    
+    // 초기 로드 시 값 설정
+    updateValue();
+})();
+
+    // (function () {
+    //   const range = document.getElementById("distanceRange");
+    //   const valueLabel = document.getElementById("distanceValue");
+    //   const minBtn = document.getElementById("minDistanceBtn");
+    //   const maxBtn = document.getElementById("maxDistanceBtn");
+
+    //   function update() {
+    //     valueLabel.textContent = range.value + " km";
+    //   }
+
+    //   range.addEventListener("input", update);
+    //   minBtn.addEventListener("click", () => {
+    //     range.value = range.min;
+    //     update();
+    //   });
+    //   maxBtn.addEventListener("click", () => {
+    //     range.value = range.max;
+    //     update();
+    //   });
+
+    //   update();
+    // })();
 
     // 난이도 선택
     (function () {
