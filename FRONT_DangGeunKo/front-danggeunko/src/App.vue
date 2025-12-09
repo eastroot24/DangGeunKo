@@ -1,7 +1,7 @@
 
 <template>
     <div>
-       <Map/>
+      <Map/>
         <RouterView></RouterView>
       <Footer/>
     </div>
