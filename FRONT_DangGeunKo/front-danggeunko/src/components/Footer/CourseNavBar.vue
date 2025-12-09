@@ -1,9 +1,8 @@
 <template>
-    <div>
-        <h3>내브바</h3>
-        <RouterLink to="/myInfo">MYPAGE</RouterLink> |
-        <RouterLink to="/course">COURSE</RouterLink> |
-        <RouterLink to="/course/ranking">RANKING</RouterLink>
+    <div class="navbar">
+        <RouterLink to="/myInfo" class="nav-item">MYPAGE</RouterLink> 
+        <RouterLink to="/course" class="nav-item">COURSE</RouterLink> 
+        <RouterLink to="/course/ranking" class="nav-item">RANKING</RouterLink>
     </div>
 </template>
 
@@ -12,5 +11,7 @@
 </script>
 
 <style scoped>
-
+ .nav-item{
+    text-decoration: none;
+ }
 </style>

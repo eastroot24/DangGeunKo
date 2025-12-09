@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h2>리뷰 영역</h2>
         <ReviewForm></ReviewForm>
         <ReviewCard></ReviewCard>
     </div>

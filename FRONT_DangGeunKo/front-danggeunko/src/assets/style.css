@@ -1,0 +1,192 @@
+/* =======================
+    기본 세팅
+======================= */
+.body {
+    margin: 0;
+    font-family: sans-serif;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+}
+
+.app {
+    width: 390px;
+    min-height: 100vh;
+    background: #fff;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* =======================
+    상단 타이틀 / NAV 공통
+======================= */
+.top-bar {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.back {
+    font-size: 22px;
+    cursor: pointer;
+}
+.title, .panel-title {
+    flex: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* =======================
+    텍스트 / 입력 UI
+======================= */
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    margin-bottom: 14px;
+    outline: none;
+}
+textarea { resize: none; }
+
+/* 라벨 */
+label { 
+    display: block; 
+    font-size: 12px; 
+    font-weight: 600; 
+    margin-bottom: 6px; 
+}
+
+/* =======================
+    버튼 컴포넌트 공통
+======================= */
+.btn-orange {
+    width: 85%;
+    height: 46px;
+    background: #ff7a00;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    display: block;
+    margin: 12px auto;
+}
+.btn-orange, RouterLink{
+    text-decoration: none;
+    text-align: center;
+}
+.btn-gray {
+    width: 85%;
+    height: 42px;
+    background: #bfbfbf;
+    color: #fff;
+    border: none;
+    border-radius: 22px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+/* 필터 버튼 */
+.filter-btn {
+    padding: 6px 12px;
+    background: #fafafa;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+/* =======================
+    카드 / 리스트 공통
+======================= */
+.course-list {
+    padding: 14px;
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+}
+
+.item, .card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+/* 이미지 플레이스홀더 */
+.thumb {
+    background: #e8e8e8;
+    height: 120px;
+}
+
+/* 텍스트 */
+.name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.meta { font-size: 10px; color: #666; }
+
+/* =======================
+    찜·하트 공통
+======================= */
+.heart {
+    font-size: 16px;
+    cursor: pointer;
+    float: right;
+    margin-top: -18px;
+    margin-right: 10px;
+    color: #bbb;
+}
+.heart.active {
+    color: #ff7a00;
+}
+
+/* =======================
+    Floating + 공통
+======================= */
+.plus {
+    position: fixed;
+    right: calc(50% - 390px/2 + 16px);
+    bottom: 78px;
+    width: 48px;
+    height: 48px;
+    background: #ff7a00;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 28px;
+    border: none;
+    box-shadow: 0 6px 12px rgba(0,0,0,.18);
+    cursor: pointer;
+}
+
+/* =======================
+    하단 네비게이션
+======================= */
+.navbar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 390px;
+    height: 62px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 11px;
+}
+.nav-item { color: #bfbfbf; text-align: center; cursor: pointer; }
+.nav-item.active { color: #ff7a00; }
+
+.ic {
+    width: 18px;
+    height: 18px;
+    border: 2px solid currentColor;
+    margin: auto;
+    border-radius: 5px;
+}
+.ic.course { border-radius: 4px; }

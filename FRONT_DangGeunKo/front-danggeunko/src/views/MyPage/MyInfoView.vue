@@ -9,8 +9,8 @@
 
 <script setup>
 import Profile from '@/components/MyPage/Profile.vue';
-import RegistCourse from '@/components/RegistCourse.vue';
-import LikeCourse from '@/components/LikeCourse.vue';
+import RegistCourse from '@/components/MyPage/RegistCourse.vue';
+import LikeCourse from '@/components/MyPage/LikeCourse.vue';
 </script>
 
 <style scoped>

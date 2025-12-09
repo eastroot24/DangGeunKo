@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h2>코스 상세페이지 입니다.</h2>
         <hr>
         <CourseDetail></CourseDetail>
         <hr>

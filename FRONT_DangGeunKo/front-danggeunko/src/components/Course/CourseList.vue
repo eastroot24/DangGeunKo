@@ -1,8 +1,11 @@
 <template>
-    <div>
-        <h2>코스카드 리스트</h2>
-        <div>
-            <CourseCard @click="goDetail"></CourseCard>
+    <div class="course-panel-wrapper">
+        <div class="course-panel" id="coursePanel">
+            <div class="course-grid">
+                <div class="course-card">
+                    <CourseCard @click="goDetail"></CourseCard>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -16,6 +19,30 @@ const goDetail = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+
+    .course-panel {
+      background: #fff;
+      border-radius: 20px;
+      padding: 8px 2px 6px;
+      height: 360px; /* 기본 높이 */
+      overflow-y: auto;
+      transition: height 0.1s ease-out;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 4px 10px 10px;
+    }
+
+    .course-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      font-size: 11px;
+    }
 
 </style>

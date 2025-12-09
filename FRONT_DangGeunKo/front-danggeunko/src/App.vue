@@ -1,9 +1,12 @@
 
 <template>
-    <div>
-       <Map/>
+    <div class="body">
+      <div class="app">
+      <Map />
         <RouterView></RouterView>
-      <Footer/>
+      <Footer />
+      </div>
+      
     </div>
 </template>
 
@@ -13,6 +16,5 @@ import Map from './components/Main/CourseMap.vue';
 import Footer from './components/Footer/CousreFooter.vue';
 </script>
 
-<style scoped>
-
+<style src="@/assets/style.css">
 </style>

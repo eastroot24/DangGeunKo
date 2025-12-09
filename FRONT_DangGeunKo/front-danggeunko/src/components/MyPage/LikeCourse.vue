@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import CourseCard from './Course/CourseCard.vue';
+import CourseCard from '../Course/CourseCard.vue';
 </script>
 
 <style scoped>
