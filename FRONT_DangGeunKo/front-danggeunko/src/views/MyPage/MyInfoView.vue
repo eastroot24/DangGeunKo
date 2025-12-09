@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import Profile from '@/components/Profile.vue';
+import Profile from '@/components/MyPage/Profile.vue';
 import RegistCourse from '@/components/RegistCourse.vue';
 import LikeCourse from '@/components/LikeCourse.vue';
 </script>

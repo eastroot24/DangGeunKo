@@ -7,10 +7,10 @@ import OnBoardingView from '@/views/OnBoardingView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import App from '@/App.vue'
-import MyInfoView from '@/views/MyInfoView.vue'
-import EditProfileView from '@/views/EditProfileView.vue'
-import FollowView from '@/views/FollowView.vue'
-import MyCourseListView from '@/views/MyCourseListView.vue'
+import MyInfoView from '@/views/MyPage/MyInfoView.vue'
+import EditProfileView from '@/views/MyPage/EditProfileView.vue'
+import FollowView from '@/views/MyPage/FollowView.vue'
+import MyCourseListView from '@/views/MyPage/MyCourseListView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

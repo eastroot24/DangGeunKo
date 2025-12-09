@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import Following from '@/components/Following.vue';
-import Follower from '@/components/Follower.vue';
+import Following from '@/components/MyPage/Following.vue';
+import Follower from '@/components/MyPage/Follower.vue';
 </script>
 
 <style scoped>

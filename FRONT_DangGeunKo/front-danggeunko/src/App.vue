@@ -9,8 +9,8 @@
 
 <script setup>
 
-import Map from './components/CourseMap.vue';
-import Footer from './components/CousreFooter.vue';
+import Map from './components/Main/CourseMap.vue';
+import Footer from './components/Footer/CousreFooter.vue';
 </script>
 
 <style scoped>

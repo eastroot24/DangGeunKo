@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import CourseSearchBar from './CourseSearchBar.vue';
+import CourseSearchBar from './Main/CourseSearchBar.vue';
 </script>
 
 <style scoped>

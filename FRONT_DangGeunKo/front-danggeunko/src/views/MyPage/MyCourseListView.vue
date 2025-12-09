@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import CourseSearchBar from '@/components/CourseSearchBar.vue';
+import CourseSearchBar from '@/components/Main/CourseSearchBar.vue';
 import CourseFilter from '@/components/CourseFilter.vue';
 import RegistCourse from '@/components/RegistCourse.vue';
 import LikeCourse from '@/components/LikeCourse.vue';
