@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>홈 화면</h2>
+        <h2>리뷰 입력 폼</h2>
     </div>
 </template>
 
@@ -8,6 +8,6 @@
 
 </script>
 
-<style  scoped>
+<style lang="scss" scoped>
 
 </style>
