@@ -2,7 +2,7 @@
     <div>
         <h2>랭킹뷰</h2>
         <hr>
-        <h2>필터영역</h2>
+        <CourseFilter></CourseFilter>
         <hr>
         <CourseList></CourseList>
         <AIcomment></AIcomment>
@@ -11,6 +11,7 @@
 
 <script setup>
 import CourseList from '@/components/Course/CourseList.vue';
+import CourseFilter from '@/components/CourseFilter.vue';
 import AIcomment from '@/components/Ranking/AIcomment.vue';
 </script>
 

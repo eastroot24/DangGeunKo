@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <h3>푸터 입니다</h3>
+    <div> 
         <CreateCourseBtn/>
         <NavBar/>
     </div>
