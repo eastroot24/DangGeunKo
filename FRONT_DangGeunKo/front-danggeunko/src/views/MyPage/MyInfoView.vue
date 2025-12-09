@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>마이페이지 입니다</h2>
+        <div class="top">나의 정보</div>
         <Profile></Profile>
         <RegistCourse></RegistCourse>
         <LikeCourse></LikeCourse>
