@@ -1,12 +1,14 @@
+
 <template>
     <div>
-        <Map/>
+       <Map/>
         <RouterView></RouterView>
-        <Footer/>
+      <Footer/>
     </div>
 </template>
 
 <script setup>
+
 import Map from './components/CourseMap.vue';
 import Footer from './components/CousreFooter.vue';
 </script>
