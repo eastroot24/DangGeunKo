@@ -12,9 +12,9 @@
                   <div class="card-heart">♡</div>
                 </div>
                 <div class="course-info">
-                  <div class="course-name">코스 이름</div>
+                  <div class="course-name">{{course.courseName}}</div>
                   <div class="course-meta">
-                    평균 별점 | 조회수 | 거리 | 난이도 | 게시일
+                    평균 별점: {{ course.avgRating }} | 조회수: {{ course.viewCnt }} | 거리{{ course.distance_km }} | 난이도 {{ course.difficulty }}| 게시일{{ course.createdAt }}
                   </div>
                 </div>
             </div>
@@ -22,6 +22,11 @@
 </template>
 
 <script setup>
+
+const props = defineProps({
+  course: Object,
+})
+
 
 </script>
 

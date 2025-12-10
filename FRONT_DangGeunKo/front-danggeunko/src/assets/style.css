@@ -285,13 +285,26 @@ label {
       font-size: 13px;
       outline: none;
     }
-    .search-icon {
+    .search-btn {
       position: absolute;
       right: 10px;
-      top: 50%;
+      top: 35%;
       transform: translateY(-50%);
-      font-size: 16px;
-      color: var(--orange);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: none;
+      background: var(--orange);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      flex-shrink: 0;
+      height: 30px;
+      
     }
 
 

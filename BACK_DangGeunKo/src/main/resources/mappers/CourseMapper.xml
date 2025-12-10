@@ -72,41 +72,60 @@
 
     <!-- 코스 검색 -->
     <select id="search" parameterType="SearchCondition" resultType="Course">
-        SELECT *
-        FROM course
-        WHERE 1=1
-        
-        <if test="key != null and key != '' and value != null and value != ''">
-            <!-- 주의: 컬럼명에는 보통 ${key} 를 쓰고, value에는 #{value} 를 씀 -->
-            AND ${key} LIKE CONCAT('%', #{value}, '%')
-        </if>
-        <if test="minRange != null">
-          	AND distance_km &gt;= #{minRange}
-        </if>
-        <if test="maxRange != null">
-            AND distance_km &lt;= #{maxRange}
-        </if>
-
-        ORDER BY 
+    SELECT *
+    FROM course c
+    JOIN user u
+    ON c.user_id = u.user_id
+    WHERE 1=1
+    
+    <if test="key != null and key != '' and value != null and value != ''">
         <choose>
-            <when test="orderBy != null and orderBy != ''">
-                <choose>
-                    <when test="orderBy == 'createdAt'">created_at</when>
-                    <when test="orderBy == 'distanceKm'">distance_km</when>
-                    <when test="orderBy == 'viewCnt'">view_cnt</when>
-                    <!-- 'likeCount'는 더 이상 컬럼이 없으므로 제거 -->
-                    <otherwise>created_at</otherwise>
-                </choose>
-            </when>
-            <otherwise>created_at</otherwise>
+            <when test="key == 'courseName'">AND c.course_name LIKE CONCAT('%', #{value}, '%')</when>
+            
+            <when test="key == 'userName'">AND u.nickname LIKE CONCAT('%', #{value}, '%')</when> 
+            
+            <when test="key == 'description'">AND c.description LIKE CONCAT('%', #{value}, '%')</when>
         </choose>
+    </if>
+     <if test="courseCity != null and courseCity != ''">
+      	AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
+      	<!--도시가 있어야 구가 있음-->
+      	<if test="courseDistrict != null and courseDistrict != ''">
+      	AND c.course_district LIKE CONCAT('%', #{courseDistrict}, '%')
+    	</if>
+    </if>
+    
+    <if test="difficulty != null and difficulty != ''">
+      	AND c.difficulty LIKE CONCAT('%', #{difficulty}, '%')
+    </if>
+    
+    <if test="minRange != null and minRange != ''">
+      	AND c.distance_km &gt;= #{minRange}
+    </if>
+    
+    <if test="maxRange != null and maxRange != ''">
+        AND c.distance_km &lt;= #{maxRange}
+    </if>
 
-        <choose>
-            <when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
-            <when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
-            <otherwise>DESC</otherwise>
-        </choose>
-    </select>
+    ORDER BY 
+    <choose>
+        <when test="orderBy != null and orderBy != ''">
+            <choose>
+                <when test="orderBy == 'createdAt'">c.created_at</when>
+                <when test="orderBy == 'avgRating'">c.avg_rating</when>
+                <when test="orderBy == 'viewCnt'">c.view_cnt</when>
+                <otherwise>c.created_at</otherwise>
+            </choose>
+        </when>
+        <otherwise>c.created_at</otherwise>
+    </choose>
+
+    <choose>
+        <when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
+        <when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
+        <otherwise>DESC</otherwise>
+    </choose>
+</select>
 
     <!-- 주간 랭킹 (리뷰 기준) -->
     <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">

@@ -15,7 +15,11 @@ public class Review {
     private LocalDateTime updatedAt; // 리뷰 수정 일시
     private LocalDateTime createdAt; // 리뷰 작성 일시
 
-
+    
+    private String nickName;
+    private String region;
+    
+    
     /* ===============================
        생성자
     =============================== */
@@ -23,89 +27,120 @@ public class Review {
     public Review() {
     }
 
-    public Review(Integer reviewId,
-                     Integer courseId,
-                     String content,
-                     Integer rating,
-                     Integer userId,
-                     LocalDateTime updatedAt,
-                     LocalDateTime createdAt) {
 
-        this.reviewId = reviewId;
-        this.courseId = courseId;
-        this.content = content;
-        this.rating = rating;
-        this.userId = userId;
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-    }
+	public Review(Integer reviewId, Integer courseId, String content, Integer rating, Integer userId,
+			LocalDateTime updatedAt, LocalDateTime createdAt, String nickName, String region) {
+		super();
+		this.reviewId = reviewId;
+		this.courseId = courseId;
+		this.content = content;
+		this.rating = rating;
+		this.userId = userId;
+		this.updatedAt = updatedAt;
+		this.createdAt = createdAt;
+		this.nickName = nickName;
+		this.region = region;
+	}
 
 
-    /* ===============================
-       Getter / Setter
-    =============================== */
+	public Integer getReviewId() {
+		return reviewId;
+	}
 
-    public Integer getReviewId() {
-        return reviewId;
-    }
 
-    public void setReviewId(Integer reviewId) {
-        this.reviewId = reviewId;
-    }
+	public void setReviewId(Integer reviewId) {
+		this.reviewId = reviewId;
+	}
 
-    public Integer getCourseId() {
-        return courseId;
-    }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
-    }
+	public Integer getCourseId() {
+		return courseId;
+	}
 
-    public String getContent() {
-        return content;
-    }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
 
-    public Integer getRating() {
-        return rating;
-    }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public Integer getUserId() {
-        return userId;
-    }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+	public Integer getRating() {
+		return rating;
+	}
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+
+	public String getNickName() {
+		return nickName;
+	}
+
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+
+	public String getRegion() {
+		return region;
+	}
+
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
 
 	@Override
 	public String toString() {
 		return "Review [reviewId=" + reviewId + ", courseId=" + courseId + ", content=" + content + ", rating=" + rating
-				+ ", userId=" + userId + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt + "]";
+				+ ", userId=" + userId + ", updatedAt=" + updatedAt + ", createdAt=" + createdAt + ", nickName="
+				+ nickName + ", region=" + region + "]";
 	}
+
+   
     
 }
 

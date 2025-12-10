@@ -1,31 +1,43 @@
 <template>
     <div>
         <div class="content">
-            <div class="course-name">아산 곡교천 10km 러닝 코스</div>
+            <div class="course-name">{{course.courseName}}</div>
             <!-- 지도 -->
             <div class="map-area">지도 영역</div>
-        <div class="sub-info">출발 · 종료 : 곡교천 사거리 – 인주면</div>
+        <div class="sub-info">출발 · 종료 : {{course.startAddress}} – {{course.endAddress}}</div>
 
         <div class="tag-list">
-            <div class="tag">서울구</div>
-            <div class="tag">서초구</div>
-            <div class="tag">런린이</div>
-            <div class="tag">일반도로 있음</div>
-            <div class="tag">10km / 1시간 / 6:00 페이스</div>
+            <div class="tag">{{course.courseCity}}</div>
+            <div class="tag">{{course.courseDistrict}}</div>
+            <div class="tag">{{course.difficulty}}</div>
+            <div class="tag">화장실 여부 : {{course.hasToilet}}</div>
+            <div class="tag">{{course.distanceKm}}km / {{ course.duration_min }}시간 / {{course.coursePace}} 페이스</div>
         </div>
 
         <div class="desc">
-            본 코스는 풍경도 좋고, 러너들 사이에서 인기 많습니다.<br>
-            여유롭게 달리기 좋은 길입니다.
+            {{course.description}}
         </div>
     </div>
     </div>
 </template>
 
 <script setup>
+import { useCourseStore } from '@/stores/course';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const store = useCourseStore()
+
+
+const course = ref({})
+onMounted(() => {
+    store.getCourseDetailById(route.params.id)
+    course.value = store.course
+})
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 </style>

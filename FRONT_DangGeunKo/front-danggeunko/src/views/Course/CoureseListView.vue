@@ -2,11 +2,7 @@
     <div class="panel">
         <div  class="drag-handle" id="dragHandle"></div>
         <div class="panel-title">우리동네 코스 구경하기</div>
-        
-        
-        <hr>
         <CourseFilter></CourseFilter>
-        <hr>
         <CourseList></CourseList>
 
     </div>

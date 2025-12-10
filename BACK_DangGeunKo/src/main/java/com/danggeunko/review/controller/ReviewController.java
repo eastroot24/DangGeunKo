@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,9 +22,11 @@ import com.danggeunko.review.service.ReviewService;
 
 @RestController
 @RequestMapping("api-review/review")
+@CrossOrigin("*")
 public class ReviewController {
 	
 	private final ReviewService reviewService;
+	
 	public ReviewController(ReviewService reviewService) {
 		this.reviewService = reviewService;
 	}

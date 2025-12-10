@@ -26,9 +26,10 @@ const router = createRouter({
       component: CreateCourseView,
     },
     {
-      path: '/course/detail',
+      path: '/course/detail/:id',
       name: 'courseDetail',
       component: CourseDetailView,
+      props: true,
     },
     {
       path: '/course/ranking',
