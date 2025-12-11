@@ -29,7 +29,7 @@ public interface CourseDao {
 	public List<Course> search(SearchCondition condition);
 	
 	// 게시글 정렬
-	public List<Course> selectWeeklyRanking(String region);
+	public List<Course> selectWeeklyRanking(SearchCondition condition);
 	
 	// 좋아요 여부 확인
 	int existsCourseLike(int userId, int courseId);
