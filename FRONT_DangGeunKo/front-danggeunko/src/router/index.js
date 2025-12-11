@@ -11,6 +11,8 @@ import MyInfoView from '@/views/MyPage/MyInfoView.vue'
 import EditProfileView from '@/views/MyPage/EditProfileView.vue'
 import FollowView from '@/views/MyPage/FollowView.vue'
 import MyCourseListView from '@/views/MyPage/MyCourseListView.vue'
+import { useUserStore } from '@/stores/user'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +66,7 @@ const router = createRouter({
       path: "/editProfile",
       name: "editProfile",
       component: EditProfileView,
+      meta: { requiresPwCheck: true },
     },
     {
       path: "/follow",
@@ -76,6 +79,17 @@ const router = createRouter({
       component: MyCourseListView,
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const store = useUserStore()
+
+  if (to.meta.requiresPwCheck && !store.isPwVerified) {
+    alert("비밀번호 확인 후 접근 가능합니다.")
+    return next({ name: 'myInfo' })
+  }
+
+  next()
 })
 
 export default router

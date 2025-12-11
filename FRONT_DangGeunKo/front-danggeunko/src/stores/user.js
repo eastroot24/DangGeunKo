@@ -78,7 +78,7 @@ export const useUserStore = defineStore('user', () => {
     })
   }
   const updateUser = function(id, user){
-    axios.put(`${REST_USER_API_URL}${id}`, user.value)
+    axios.put(`${REST_USER_API_URL}${id}`, user)
     .then((res)=>{
       user.value = res.data
       console.log(res.data)
@@ -158,13 +158,19 @@ const getFollower = async (userId) => {
   }
 }
 
+const isPwVerified = ref(false)
 
+const verifyPassword = () => {
+  isPwVerified.value = true
+}
 
-
-
+const resetPwVerified = () => {
+  isPwVerified.value = false
+}
 
   return { userList,  getAllUsers, getUserById, addUser, updateUser, deleteUser,
     nicknameAvailable, emailAvailable, checkNickname, checkEmail,addFollow, deleteFollow, 
     followingList, followerList, 
-    getFollowing, getFollower, loginUserId, user}
+    getFollowing, getFollower, loginUserId, user, isPwVerified, verifyPassword, resetPwVerified,
+  }
 })
