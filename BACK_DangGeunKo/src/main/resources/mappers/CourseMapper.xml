@@ -34,6 +34,7 @@
         SELECT *
         FROM course
         WHERE course_id = #{id}
+        ORDER BY created_at DESC
     </select>
 
     <!-- 코스 수정 -->
@@ -129,14 +130,39 @@
 
     <!-- 주간 랭킹 (리뷰 기준) -->
     <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">
-        SELECT c.*
-        FROM course c
-        JOIN review r ON c.course_id = r.course_id
-        WHERE c.course_region = #{region}
-          AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-        GROUP BY c.course_id
-        ORDER BY AVG(r.rating) DESC, COUNT(r.review_id) DESC
-    </select>
+		SELECT
+		c.*,
+		(AVG(r.rating) * 5) AS rating_score,
+		(COUNT(l.course_id) * 3) AS like_score, (c.view_cnt * 2) AS view_score,
+		(IFNULL(AVG(r.rating), 0) * 5) + (COUNT(l.course_id) * 3) + (c.view_cnt
+		* 2) AS weighted_score
+		FROM course c
+		LEFT JOIN review r ON c.course_id = r.course_id
+		LEFT JOIN course_like l ON c.course_id = l.course_id
+		LEFT JOIN user u ON c.user_id = u.user_id
+
+
+		WHERE 1=1
+		AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    
+    <if test="courseCity != null and courseCity != ''">
+      	AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
+      	<if test="courseDistrict != null and courseDistrict != ''">
+      		AND c.course_district LIKE CONCAT('%', #{courseDistrict}, '%')
+    	</if>
+    </if>
+    
+    <if test="key != null and key != '' and value != null and value != ''">
+        <choose>
+            <when test="key == 'courseName'">AND c.course_name LIKE CONCAT('%', #{value}, '%')</when>
+            <when test="key == 'userName'">AND u.nickname LIKE CONCAT('%', #{value}, '%')</when> 
+            <when test="key == 'description'">AND c.description LIKE CONCAT('%', #{value}, '%')</when>
+        </choose>
+    </if>
+    
+    GROUP BY c.course_id
+    ORDER BY weighted_score DESC
+	</select>
     
     <!-- 좋아요 여부 확인 -->
 <select id="existsCourseLike" resultType="int">

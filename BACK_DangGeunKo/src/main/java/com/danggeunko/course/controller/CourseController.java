@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,8 +101,8 @@ public class CourseController {
 
 	// 코스 정렬
 	@GetMapping("/course/ranking")
-	public ResponseEntity<?> getWeeklyRanking(@RequestParam String region) {
-		List<Course> ranking = courseService.getWeeklyRanking(region);
+	public ResponseEntity<?> getWeeklyRanking(@ModelAttribute SearchCondition condition) {
+		List<Course> ranking = courseService.getWeeklyRanking(condition);
 		if (ranking != null && !ranking.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(ranking);
 		} else {
