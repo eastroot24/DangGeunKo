@@ -48,6 +48,19 @@ public class UserServiceImpl implements UserService {
 		return userDao.deleteUser(id) > 0;
 	}
 	
+	@Override
+	@Transactional
+	public boolean isNicknameAvailable(String nickname) {
+	    return userDao.countByNickname(nickname) == 0;
+	}
+	
+	@Override
+	@Transactional
+	public boolean isEmailAvailable(String email) {
+	    return userDao.countByEmail(email) == 0;
+	}
+
+	
 	
 	
 }

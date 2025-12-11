@@ -1,6 +1,7 @@
 package com.danggeunko.user.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import com.danggeunko.user.service.FollowService;
 import com.danggeunko.user.service.UserService;
 
 @RestController
-@RequestMapping("/api-user")
+@RequestMapping("/api-user/user")
 @CrossOrigin("*")
 public class UserController {
 
@@ -33,7 +34,7 @@ public class UserController {
 	}
 
 	// 회원 등록
-	@PostMapping("/user")
+	@PostMapping("/")
 	public ResponseEntity<?> addUser(@RequestBody User user) {
 		boolean completed = userService.addUser(user);
 		if (completed) {
@@ -44,7 +45,7 @@ public class UserController {
 	}
 
 	// 회원 검색
-	@GetMapping("/user/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable("id") int id) {
 		User user = userService.getUserById(id);
 		if (user != null) {
@@ -55,7 +56,7 @@ public class UserController {
 	}
 
 	// 회원 전체 조회
-	@GetMapping("/user")
+	@GetMapping("/")
 	public ResponseEntity<?> getAllUsers() {
 		List<User> list = userService.getAllUsers();
 		if (!list.isEmpty() && list.size() > 0) {
@@ -66,7 +67,7 @@ public class UserController {
 	}
 
 	// 회원 정보 수정
-	@PutMapping("/user/{userId}")
+	@PutMapping("/{userId}")
 	public ResponseEntity<?> updateUser(@PathVariable("userId") int userId, @RequestBody User user) {
 		boolean completed = userService.updateUser(userId, user);
 		if (completed) {
@@ -77,7 +78,7 @@ public class UserController {
 	}
 
 	// 회원 삭제
-	@DeleteMapping("/user/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
 		boolean completed = userService.deleteUser(id);
 		if (completed) {
@@ -100,7 +101,7 @@ public class UserController {
 
 	// 팔로우 삭제
 	@DeleteMapping("/follow")
-	public ResponseEntity<?> deleteFollow(Follow follow) {
+	public ResponseEntity<?> deleteFollow(@RequestBody Follow follow) {
 		boolean completed = followService.deleteFollow(follow);
 		if (completed) {
 			return ResponseEntity.status(HttpStatus.OK).build();
@@ -112,9 +113,9 @@ public class UserController {
 	// 팔로잉 목록 조회
 	@GetMapping("/follow/following/{userId}")
 	public ResponseEntity<?> getFollowingById(@PathVariable("userId") int userId) {
-		List<User> follower = followService.getFollowerById(userId);
-		if (follower != null) {
-			return ResponseEntity.status(HttpStatus.OK).body(follower);
+		List<User> following = followService.getFollowingById(userId);
+		if (following != null) {
+			return ResponseEntity.status(HttpStatus.OK).body(following);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
@@ -130,5 +131,20 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 	}
+	
+	// 닉네임 중복확인
+	@GetMapping("/check/nickname/{nickname}")
+	public ResponseEntity<?> checkNickname(@PathVariable String nickname) {
+	    boolean isAvailable = userService.isNicknameAvailable(nickname);
+	    return ResponseEntity.ok().body(Map.of("available", isAvailable));
+	}
+
+	// 이메일 중복확인
+	@GetMapping("/check/email/{email}")
+	public ResponseEntity<?> checkEmail(@PathVariable String email) {
+	    boolean isAvailable = userService.isEmailAvailable(email);
+	    return ResponseEntity.ok().body(Map.of("available", isAvailable));
+	}
+
 
 }

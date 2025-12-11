@@ -12,7 +12,7 @@
 	</insert>
 	<!-- 특정 회원 조회 -->
 	<select id="getUserById" parameterType="int" resultType="User">
-		SELECT user_name as name, nickname, user_email as email, user_password as password, gender,
+		SELECT user_name, nickname, user_email, user_password, gender,
 			age, region, pref_distance, pref_difficulty
 		FROM user
 		WHERE user_id = #{userId};
@@ -71,20 +71,29 @@
 	</delete>
 	<!-- 팔로잉 조회 -->
 	<select id="getFollowingById" parameterType="int" resultType="User">
-     SELECT u.user_id, u.user_name, u.nickname
+     SELECT *
      FROM Follow f  -- 기준 테이블: Follow 관계
      INNER JOIN User u
-     ON u.user_id = f.following_id 
-     WHERE f.follower_id = #{userId} 
+     ON u.user_id = f.follower_id 
+     WHERE f.following_id = #{userId} 
 	</select>
 	<!-- 팔로워 조회 -->	
 	<select id="getFollowerById" parameterType="int" resultType="User">
      SELECT u.user_id, u.user_name, u.nickname
      FROM Follow f 
      INNER JOIN User u
-     ON u.user_id = f.follower_id 
-     WHERE f.following_id = #{userId}
-</select>
+     ON u.user_id = f.following_id 
+     WHERE f.follower_id = #{userId}
+	</select>
+	
+	<select id="countByNickname" resultType="int">
+    SELECT COUNT(*) FROM user WHERE nickname = #{nickname}
+	</select>
+
+	<select id="countByEmail" resultType="int">
+    SELECT COUNT(*) FROM user WHERE user_email = #{userEmail}
+	</select>
+	
 	
 	
 	

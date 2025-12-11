@@ -25,4 +25,9 @@ public interface UserDao {
 	public List<User> getFollowingById(int userId);
 	//팔로워 조회
 	public List<User> getFollowerById(int userId);
+	
+	//닉네임 중복 확인
+	public int countByNickname(String nickname);
+	//이메일 중복 확인
+	public int countByEmail(String email);
 }
