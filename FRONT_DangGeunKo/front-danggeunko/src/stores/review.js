@@ -28,19 +28,5 @@ export const useReviewStore = defineStore('review', () => {
         })
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return { reviewList, review, searchInfo, getReviewsByCourse }
 })

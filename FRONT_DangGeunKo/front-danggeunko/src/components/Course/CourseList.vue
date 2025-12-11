@@ -20,7 +20,14 @@ import { useCourseStore } from '@/stores/course';
 import { onMounted } from 'vue';
 
 const router = useRouter()
-const goDetail = (course) => {
+const goDetail = async (course) => {
+    try {
+        await store.getCourseDetailById(course.courseId); 
+    } catch (error) {
+        console.error("상세 데이터 로드 실패:", error);
+        alert("코스 정보를 가져오는 데 실패했습니다.");
+        return; 
+    }
     router.push({name: "courseDetail", params: {id: course.courseId}})
 }
 
@@ -37,7 +44,7 @@ onMounted(()=>{
       background: hsl(0, 0%, 100%);
       border-radius: 20px;
       padding: 8px 2px 6px;
-      height: 360px; /* 기본 높이 */
+      height: 100%; /* 기본 높이 */
       overflow-y: auto;
       transition: height 0.1s ease-out;
     }

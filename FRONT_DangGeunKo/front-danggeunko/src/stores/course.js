@@ -42,16 +42,30 @@ export const useCourseStore = defineStore('course', () => {
     }
 
     //코스 상세 조회(단일)
-    const getCourseDetailById= (id) =>{
-        axios.get(`${REST_API_COURSE_URL}/${id}`)
-        .then((res)=>{
+    const getCourseDetailById = async (id) => { 
+        try {
+            const res = await axios.get(`${REST_API_COURSE_URL}/${id}`) 
             course.value = res.data
-        })
-        .catch((err) => {
-            console.log("상세 조회 오류:",  err)
-        })
-    }
+            return res.data; // Promise 반환을 위해 데이터 반환
+        } catch (err) {
+            console.log("상세 조회 오류:", err)
+            throw err; // 오류 발생 시 던져서 호출자가 알 수 있게 함
+        }
+    }   
 
+    //코스 랭킹 조회
+    const getWeeklyRanking= () =>{
+        axios.get(`${REST_API_COURSE_URL}/ranking`, {
+            params: searchInfo.value
+        })
+        .then((res)=>{
+            courseList.value = res.data
+        })
+        .catch((err)=>{
+            console.log("검색조건:", searchInfo)
+            console.log("랭킹 검색 오류:", err)
+        })
+    } 
 
     //코스 등록
 
@@ -63,7 +77,7 @@ export const useCourseStore = defineStore('course', () => {
     //코스 삭제
 
 
-    //코스 랭킹 조회
+    
 
 
     //코스 좋아요
@@ -81,5 +95,5 @@ export const useCourseStore = defineStore('course', () => {
 
 
 
-    return { course, searchInfo, courseList, getCourseDetailById, getCourseList, searchCourseList }
+    return { course, searchInfo, courseList, getCourseDetailById, getCourseList, searchCourseList, getWeeklyRanking }
 })
