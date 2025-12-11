@@ -51,6 +51,7 @@ const closePopup = () => {
 
 const checkPassword = () => {
   if (pwInput.value === store.user.userPassword) {
+    store.verifyPassword()
     closePopup()
     router.push({ name: "editProfile" })
   } else {

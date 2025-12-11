@@ -1,7 +1,7 @@
 <template>
     <div class="app">
         <div class="top-bar">
-        <div class="back" @click="goMyInfo">←</div>
+        <div class="back" @click="goBack">←</div>
         <div class="title">프로필 수정</div>
     </div>
 
@@ -100,14 +100,14 @@
 </select>
 
         <button class="btn-save" :disabled="!canSubmit"
-        :style="{ backgroundColor: canSubmit ? '#ff7f00' : '#b3b3b3' }" @click="goMyInfo">프로필 수정</button>
-        <button class="btn-cancel" @click="goMyInfo">취소</button>
+        :style="{ backgroundColor: canSubmit ? '#ff7f00' : '#b3b3b3' }" @click="saveProfile">프로필 수정</button>
+        <button class="btn-cancel" @click="goBack">취소</button>
     </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user';
 
@@ -140,11 +140,20 @@ const canSubmit = computed(() => {
         pwRule.value
 })
 
-const goMyInfo = () => {
-    if (!canSubmit.value) return
-  store.updateUser(store.loginUserId,user)
-    router.push({ name: "myInfo" })
+const goBack = () => {
+  router.push({ name: "myInfo" })
 }
+
+const saveProfile = async () => {
+  if (!canSubmit.value) return
+  await store.updateUser(store.loginUserId, user.value)
+  router.push({ name: "myInfo" })
+}
+
+
+onUnmounted(() => {
+  store.resetPwVerified()
+})
 
     const regionDB = {
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",
