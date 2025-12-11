@@ -43,20 +43,22 @@
     <div class="slider-range-fill" id="sliderRangeFill"></div> 
     
     <input
+        v-model="searchInfo.minRange"
         type="range"
         id="minDistanceRange"
         min="1"
-        max="10"
+        max="50"
         value="1" 
         step="1"
         class="range-min"
     />
     <input
+        v-model="searchInfo.maxRange"
         type="range"
         id="maxDistanceRange"
         min="1"
-        max="10"
-        value="10"
+        max="50"
+        value="50"
         step="1"
         class="range-max"
     />
@@ -71,8 +73,8 @@
         도시 / 지역구 선택
     </div>
     <div class="region-selects">
-        <select ref="city"></select>
-        <select ref="district"></select>
+        <select ref="city" placeholder="도시"></select>
+        <select v-model="searchInfo.courseRegion" ref="district" placeholder="지역구"></select>
     </div>
 </div>
 
@@ -82,17 +84,39 @@
               난이도 선택
             </div>
             <div class="difficulty-chips">
-              <button class="difficulty-chip" data-level="런린이">런린이</button>
-              <button class="difficulty-chip" data-level="러너">러너</button>
-              <button class="difficulty-chip" data-level="런고수">런고수</button>
+              <button  class="difficulty-chip" data-level="초급">런린이</button>
+              <button class="difficulty-chip" data-level="중급">러너</button>
+              <button  class="difficulty-chip" data-level="고급">런고수</button>
             </div>
           </div>
         </div>
 </template>
 
 <script setup>
-import {ref, onMounted } from 'vue'
+import { useCourseStore } from '@/stores/course'
+import { storeToRefs } from 'pinia'
+import {ref, onMounted, watch } from 'vue'
+
+//코스
+const store = useCourseStore()
+const { searchInfo } = storeToRefs(store);
+
+const searchCourseList = () => {
+  store.searchCourseList()
+}
+
+watch(
+  searchInfo,
+  () => {
+    searchCourseList()
+  },
+  {deep: true}
+)
+
+/////////////////////////////////////////////////////////////////////////
+
 const regionDB = {
+    "도시" : [],
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",
     "마포구","서대문구","서초구","성동구","성북구","송파구","양천구","영등포구","용산구","은평구","종로구","중구","중랑구"],
 
@@ -135,10 +159,20 @@ onMounted(() => {
 
   const loadDistricts = () => {
     district.value.innerHTML = ""
+    district.value.innerHTML += `<option value="">지역구 전체</option>`
     regionDB[city.value.value].forEach(gu => {
-      district.value.innerHTML += `<option>${gu}</option>`
+        district.value.innerHTML += `<option>${gu}</option>`
     })
+        
+     
+     searchInfo.value.courseCity = city.value.value === '도시'? '' : city.value.value;
+     searchInfo.value.courseDistrict = district.value.value
   }
+
+  district.value.addEventListener("change", () => {
+      searchInfo.value.courseCity = city.value.value;
+      searchInfo.value.courseDistrict = district.value.value;
+    });
 
   city.value.addEventListener("change", loadDistricts)
   loadDistricts()
@@ -160,6 +194,37 @@ onMounted(() => {
       btn.addEventListener("click", () => {
         sortLabel.textContent = btn.dataset.value
         sortDropdown.classList.remove("open")
+
+        //searchInfo.orderBy/Dir 값 업데이트
+        const value = btn.dataset.value;
+        switch(value) {
+          case '최신순':
+            searchInfo.value.orderBy = 'createdAt';
+            searchInfo.value.orderByDir = 'desc';
+            break;
+          case '오래된 순':
+            searchInfo.value.orderBy = 'createdAt';
+            searchInfo.value.orderByDir = 'asc';
+            break;
+          case '조회수 많은 순':
+            searchInfo.value.orderBy = 'viewCnt';
+            searchInfo.value.orderByDir = 'desc';
+            break;
+          case '조회수 적은 순':
+            searchInfo.value.orderBy = 'viewCnt';
+            searchInfo.value.orderByDir = 'asc';
+            break;
+          case '별점 높은 순':
+            searchInfo.value.orderBy = 'avgRating';
+            searchInfo.value.orderByDir = 'desc';
+            break;
+          case '별점 낮은 순':
+            searchInfo.value.orderBy = 'avgRating';
+            searchInfo.value.orderByDir = 'asc';
+          break;
+        }
+
+
       })
     })
 
@@ -197,19 +262,48 @@ onMounted(() => {
       }
     }
 
-    distanceBtn.addEventListener("click", () => {
-      const willActive = !distanceBtn.classList.contains("active")
-      resetOthers("distance")
-      distanceBtn.classList.toggle("active", willActive)
-      distanceControl.style.display = willActive ? "block" : "none"
-    })
+   distanceBtn.addEventListener("click", () => {
+    const willActive = !distanceBtn.classList.contains("active")
+    resetOthers("distance")
+    distanceBtn.classList.toggle("active", willActive)
+    distanceControl.style.display = willActive ? "block" : "none"
+    
+    // ⭐ 거리 필터가 닫힐 때 (willActive가 false일 때) 거리 조건을 초기화
+    if (!willActive) {
+        // minRange/maxRange가 null이면 백엔드에서 무시되도록 처리하는 것이 이상적
+        // 여기서는 초기값(1, 50)으로 되돌리되, 백엔드에서 이 범위는 전체 검색으로 간주해야 합니다.
+        searchInfo.value.minRange = 1;
+        searchInfo.value.maxRange = 50; 
+        
+        // 또는 만약 백엔드가 0, 0을 무시한다면 0으로 설정
+        // searchInfo.value.minRange = 0;
+        // searchInfo.value.maxRange = 0; 
+
+        // UI 초기화 로직도 실행
+        if (minRange && maxRange && resetBtn) {
+             minRange.value = minRange.min;
+             maxRange.value = maxRange.max;
+             updateValue(); // UI 및 Store 초기값 업데이트
+        }
+    }
+});
 
     regionBtn.addEventListener("click", () => {
-      const willActive = !regionBtn.classList.contains("active")
-      resetOthers("region")
-      regionBtn.classList.toggle("active", willActive)
-      regionControl.style.display = willActive ? "block" : "none"
-    })
+    const willActive = !regionBtn.classList.contains("active")
+    resetOthers("region")
+    regionBtn.classList.toggle("active", willActive)
+    regionControl.style.display = willActive ? "block" : "none"
+
+    // 지역 필터가 닫힐 때 (willActive가 false일 때) 값을 초기화
+    if (!willActive) {
+        // 지역 필터를 취소할 경우, Store의 지역 값을 비움
+        searchInfo.value.courseRegion = ''; 
+    } else {
+        if (district.value) {
+            searchInfo.value.courseRegion = district.value.value;
+        }
+    }
+})
 
     levelBtn.addEventListener("click", () => {
       const willActive = !levelBtn.classList.contains("active")
@@ -246,6 +340,10 @@ onMounted(() => {
         maxRange.value = maxVal
       }
 
+      //store 값 변경
+      searchInfo.value.minRange = minVal;
+      searchInfo.value.maxRange = maxVal;
+
       valueLabel.textContent = `${minVal} km ~ ${maxVal} km`
 
       const minPercent = ((minVal - min) / range) * 100
@@ -272,10 +370,21 @@ onMounted(() => {
   const chips = document.querySelectorAll(".difficulty-chip")
   chips.forEach((chip) => {
     chip.addEventListener("click", () => {
-      chips.forEach((c) => c.classList.remove("active"))
-      chip.classList.add("active")
+        const currentLevel = chip.getAttribute('data-level');
+        
+        if (chip.classList.contains("active")) {
+            // ⭐ 1. 이미 활성화된 칩을 다시 누르면 비활성화 (취소)
+            chip.classList.remove("active");
+            searchInfo.value.difficulty = ''; // ⭐ Store 값 비우기
+        } else {
+            // 2. 새로운 칩 활성화
+            chips.forEach((c) => c.classList.remove("active"))
+            chip.classList.add("active")
+            
+            searchInfo.value.difficulty = currentLevel; // ⭐ Store 값 설정
+        }
     })
-  })
+})
 })
 </script>
 

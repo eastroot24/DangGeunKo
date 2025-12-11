@@ -10,15 +10,17 @@
 	</insert>
 	<!-- 특정 코스에 대한 리뷰 조회-->
 	<select id="getReviewsByCourse" resultType="Review" parameterType="ReviewSearchCondition">
-	      SELECT user_id, content, rating
-	      FROM review
-	      WHERE course_id = #{courseId}
+	      SELECT r.*, u.nickName as nickName, u.region as region
+	      FROM review r
+	      JOIN user u
+	      ON r.user_id = u.user_id
+	      WHERE r.course_id = #{courseId}
 	      <if test="sortBy != null">
 	      ORDER BY 
 	      <choose>
-	      	<when test="sortBy == 'rating'">rating</when>
-	      	<when test="sortBy == 'createdAt'">created_at</when>
-	      	<otherwise>review_id</otherwise>
+	      	<when test="sortBy == 'rating'">r.rating</when>
+	      	<when test="sortBy == 'createdAt'">r.created_at</when>
+	      	<otherwise>r.review_id</otherwise>
 	      </choose>
 	      <if test="sortDirection == 'desc'">DESC</if>
 	      <if test="sortDirection == 'asc'">ASC</if>

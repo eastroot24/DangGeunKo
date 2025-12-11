@@ -1,9 +1,12 @@
 <template>
     <div class="course-panel-wrapper">
         <div class="course-panel" id="coursePanel">
-            <div class="course-grid">
-                <div class="course-card">
-                    <CourseCard @click="goDetail"></CourseCard>
+            <div class="course-grid" v-if="store.courseList && store.courseList.length > 0">
+                <div class="course-card"
+                v-for="course in store.courseList"
+                :key="course.courseId"
+                 @click="goDetail(course)">
+                    <CourseCard :course="course"></CourseCard>
                 </div>
             </div>
         </div>
@@ -13,19 +16,35 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import CourseCard from './CourseCard.vue';
+import { useCourseStore } from '@/stores/course';
+import { onMounted } from 'vue';
+
 const router = useRouter()
-const goDetail = () => {
-    router.push({name: "courseDetail"})
+const goDetail = async (course) => {
+    try {
+        await store.getCourseDetailById(course.courseId); 
+    } catch (error) {
+        console.error("상세 데이터 로드 실패:", error);
+        alert("코스 정보를 가져오는 데 실패했습니다.");
+        return; 
+    }
+    router.push({name: "courseDetail", params: {id: course.courseId}})
 }
+
+const store = useCourseStore()
+onMounted(()=>{
+    store.getCourseList()
+})
+
 </script>
 
 <style scoped>
 
     .course-panel {
-      background: #fff;
+      background: hsl(0, 0%, 100%);
       border-radius: 20px;
       padding: 8px 2px 6px;
-      height: 360px; /* 기본 높이 */
+      height: 100%; /* 기본 높이 */
       overflow-y: auto;
       transition: height 0.1s ease-out;
     }

@@ -1,10 +1,10 @@
 <template>
     <div class="top-search-row">
         <div>
-              <select class="category-btn" id="categorySelect">
+              <select v-model="searchInfo.key" class="category-btn" id="categorySelect">
                 <option value="courseName">제목</option>
                 <option value="userName">작성자</option>
-                <option value="content">내용</option>
+                <option value="description">내용</option>
               </select>
           </div>
 
@@ -13,14 +13,26 @@
             type="text"
             class="search-input"
             placeholder="코스 제목을 입력하세요"
+            v-model="searchInfo.value"
+            @keyup.enter="searchCourseList"
           />
-          <span class="search-icon">🔍</span>
+          <button @click="searchCourseList" class="search-btn">🔍검색</button>
         </div>
       </div>
 </template>
 
 <script setup>
+import { useCourseStore } from '@/stores/course'
+import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
 
+const store = useCourseStore()
+
+const {searchInfo} = storeToRefs(store)
+
+const searchCourseList = () => {
+  store.searchCourseList()
+}
 </script>
 
 <style scoped>
