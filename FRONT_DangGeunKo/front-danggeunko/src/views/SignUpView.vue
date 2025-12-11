@@ -1,77 +1,157 @@
 <template>
-    <div class="app">
-
-    <h2>회원가입</h2>
-
-    <label>이름</label>
-    <input type="text">
-
-    <label>별명</label>
-    <div class="row">
-        <input type="text">
-        <button class="btn-duple">중복확인</button>
+  <div class="app">
+        <div class="top-bar">
+        <div class="back" @click="goLogin">←</div>
+        <div class="title">회원가입</div>
     </div>
 
-    <label>이메일</label>
-    <div class="row">
-        <input type="email">
-        <button class="btn-duple">중복확인</button>
-    </div>
+    <div class="form">
+<label>이름</label>
+<input type="text" v-model="user.userName">
 
-    <label>비밀번호</label>
-    <input type="password">
+<label>이메일</label>
+<div class="row">
+    <input type="email" v-model="user.userEmail">
+    <button class="btn-duple" @click="store.checkEmail(user.userEmail)">중복확인</button>
+</div>
 
-    <label>비밀번호 확인</label>
-    <input type="password">
-    <div class="small">비밀번호가 일치합니다(예시 텍스트)</div>
+<label>별명</label>
+<div class="row">
+    <input type="text" v-model="user.nickname">
+    <button class="btn-duple" @click="store.checkNickname(user.nickname)">중복확인</button>
+</div>
 
-    <label>성별</label>
-    <div class="row gender">
-        <select><option>남성</option><option>여성</option><option>선택안함</option></select>
-    </div>
+<label>비밀번호</label>
+<input type="password" v-model="user.userPassword">
 
-    <label>나이</label>
-    <div class="row">
-        <input type="number" placeholder="숫자 입력">
-        <span style="padding-top:12px;font-size:13px;">세</span>
-    </div>
+<div class="small"
+     :style="{ color: user.userPassword ? (pwRule ? 'green' : 'red') : '#555' }">
+  {{
+    user.userPassword
+      ? (pwRule 
+          ? '사용 가능한 비밀번호입니다.' 
+          : '비밀번호는 영어, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다.'
+        )
+      : ''
+  }}
+</div>
 
-    <label>지역</label>
-    <div class="row">
-        <select ref="city"></select>
-        <select ref="district"></select>
-    </div>
+<label>비밀번호 확인</label>
+<input type="password" v-model="passwordCheck">
 
-    <label>최근 러닝 평균 거리</label>
-    <div class="row">
-        <input type="number" placeholder="숫자 입력">
-        <select style="flex:none;width:80px;">
-            <option>km</option>
-            <option>mile</option>
-        </select>
-    </div>
+<div class="small"
+     :style="{ color: passwordCheck ? (isPwMatch ? 'green' : 'red') : '#555' }">
+  {{ passwordCheck ? (isPwMatch ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다') : '' }}
+</div>
 
-    <label>실력 수준</label>
-    <select>
-        <option>초급</option>
-        <option>중급</option>
-        <option>상급</option>
+<label>성별</label>
+<div class="row gender">
+    <select v-model="user.gender">
+        <option value="M">남성</option>
+        <option value="F">여성</option>
+        <option value="N">선택안함</option>
     </select>
+</div>
 
-    <button class="btn-orange" @click="goHome">회원가입</button>
+<label>나이</label>
+<div class="row">
+    <input type="number" v-model="user.age" placeholder="숫자 입력">
+    <span style="padding-top:12px;font-size:13px;">세</span>
+</div>
 
+<label>지역</label>
+<div class="row">
+    <select v-model="selectedCity">
+    <option value="">시/도 선택</option>
+    <option v-for="city in Object.keys(regionDB)" :key="city" :value="city">
+      {{ city }}
+    </option>
+</select>
+
+<select v-model="user.region" :disabled="!selectedCity">
+    <option value="">시/군/구 선택</option>
+    <option v-for="gu in regionDB[selectedCity]" :key="gu" :value="gu">
+      {{ gu }}
+    </option>
+</select>
+
+</div>
+
+<label>최근 러닝 평균 거리</label>
+<div class="row">
+    <input type="number" v-model="user.prefDistance" placeholder="숫자 입력">
+    <span style="padding-top:12px;font-size:13px;">km</span>
+</div>
+
+<label>실력 수준</label>
+<select v-model="user.prefDifficulty">
+    <option>초급</option>
+    <option>중급</option>
+    <option>상급</option>
+</select>
+
+<button class="btn-orange"
+        :disabled="!canSubmit"
+        :style="{ backgroundColor: canSubmit ? '#ff7f00' : '#b3b3b3' }"
+        @click="goHome">
+  회원가입
+</button>
+</div>
 </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user';
+
+const store = useUserStore()
 const router = useRouter()
+const passwordCheck = ref('')
+const isPwMatch = computed(() => user.value.userPassword === passwordCheck.value)
+const pwRule = computed(() => {
+  const pw = user.value.userPassword
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/
+  return regex.test(pw)
+})
+
+const user = ref({
+  userName: '',
+  nickname: '',
+  userEmail: '',
+  userPassword: '',
+  gender: '',
+  age: null,
+  region: '',
+  prefDistance: '',
+  prefDifficulty: ''
+})
+
+const canSubmit = computed(() => {
+  return user.value.userName &&
+        user.value.nickname &&
+        user.value.userEmail &&
+        user.value.userPassword &&
+        user.value.gender &&
+        user.value.age &&
+        user.value.region &&
+        user.value.prefDistance &&
+        user.value.prefDifficulty &&
+        isPwMatch.value &&
+        store.nicknameAvailable === true &&
+        store.emailAvailable === true &&
+        pwRule.value
+})
 
 const goHome = () => {
-    router.push('/')   
+  if (!canSubmit.value) return
+  store.addUser(user.value)
+  router.push('/')
 }
 
+const goLogin = () => {
+  router.push({name:"login"})
+}
 
     const regionDB = {
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",
@@ -103,24 +183,8 @@ const goHome = () => {
     "제주특별자치도":[ "제주시","서귀포시" ]
 }
 
-const city = ref(null)
-const district = ref(null)
+const selectedCity = ref("")
 
-onMounted(() => {
-    Object.keys(regionDB).forEach(c => {
-        city.value.innerHTML += `<option>${c}</option>`
-    })
-
-    const loadDistricts = () => {
-        district.value.innerHTML = ""
-        regionDB[city.value.value].forEach(gu => {
-            district.value.innerHTML += `<option>${gu}</option>`
-        })
-    }
-
-    city.value.addEventListener("change", loadDistricts)
-    loadDistricts()
-})
 </script>
 <style scoped>
 

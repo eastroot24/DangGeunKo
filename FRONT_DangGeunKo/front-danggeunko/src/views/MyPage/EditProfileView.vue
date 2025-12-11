@@ -7,76 +7,144 @@
 
     <div class="form">
         <label>이름</label>
-        <input type="text">
+<input 
+  type="text" 
+  v-model="user.userName" 
+  disabled 
+  class="disabled-input"
+/>
 
-        <label>별명</label>
-        <div class="row">
-            <input type="text">
-            <button style="flex:none;padding:0 10px;border-radius:10px;border:1px solid #ddd;background:white;cursor:pointer;">중복확인</button>
-        </div>
+<label>이메일</label>
+<div class="row">
+  <input 
+    type="email" 
+    v-model="user.userEmail" 
+    disabled 
+    class="disabled-input"
+  >
+</div>
 
-        <label>이메일</label>
-        <div class="row">
-            <input type="email">
-            <button style="flex:none;padding:0 10px;border-radius:10px;border:1px solid #ddd;background:white;cursor:pointer;">중복확인</button>
-        </div>
+<label>별명</label>
+<div class="row">
+    <input type="text" v-model="user.nickname">
+    <button class="btn-duple" @click="store.checkNickname(user.nickname)">중복확인</button>
+</div>
 
-        <label>비밀번호 변경</label>
-        <input type="password" placeholder="새 비밀번호">
-        <input type="password" placeholder="비밀번호 확인">
+<label>비밀번호</label>
+<input type="password" v-model="user.userPassword">
 
-        <label>성별</label>
-        <select>
-            <option>남성</option>
-            <option>여성</option>
-            <option>선택 안함</option>
-        </select>
+<div class="small"
+     :style="{ color: user.userPassword ? (pwRule ? 'green' : 'red') : '#555' }">
+  {{
+    user.userPassword
+      ? (pwRule 
+          ? '사용 가능한 비밀번호입니다.' 
+          : '비밀번호는 영어, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다.'
+        )
+      : ''
+  }}
+</div>
 
-        <div class="row">
-            <div>
-                <label>나이</label>
-                <input type="number" placeholder="숫자 입력">
-            </div>
-            <div style="flex:none;padding-top:30px;font-size:12px;">세</div>
-        </div>
+<label>비밀번호 확인</label>
+<input type="password" v-model="passwordCheck">
 
-        <label>지역</label>
-    <div class="row">
-        <select ref="city"></select>
-        <select ref="district"></select>
-    </div>
+<div class="small"
+     :style="{ color: passwordCheck ? (isPwMatch ? 'green' : 'red') : '#555' }">
+  {{ passwordCheck ? (isPwMatch ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다') : '' }}
+</div>
 
-        <label>최근 평균 러닝 거리</label>
-        <div class="row">
-            <input type="number" placeholder="km">
-            <select style="flex:none;width:80px;">
-                <option>km</option>
-                <option>mile</option>
-            </select>
-        </div>
+<label>성별</label>
+<div class="row gender">
+    <select v-model="user.gender">
+        <option value="M">남성</option>
+        <option value="F">여성</option>
+        <option value="N">선택안함</option>
+    </select>
+</div>
 
-        <label>실력 수준</label>
-        <select>
-            <option>초급</option>
-            <option>중급</option>
-            <option>상급</option>
-        </select>
+<label>나이</label>
+<div class="row">
+    <input type="number" v-model="user.age" placeholder="숫자 입력">
+    <span style="padding-top:12px;font-size:13px;">세</span>
+</div>
 
-        <button class="btn-save" @click="goMyInfo">프로필 수정</button>
+<label>지역</label>
+<div class="row">
+    <select v-model="selectedCity">
+    <option value="">시/도 선택</option>
+    <option v-for="city in Object.keys(regionDB)" :key="city" :value="city">
+      {{ city }}
+    </option>
+</select>
+
+<select v-model="user.region" :disabled="!selectedCity">
+    <option value="">시/군/구 선택</option>
+    <option v-for="gu in regionDB[selectedCity]" :key="gu" :value="gu">
+      {{ gu }}
+    </option>
+</select>
+
+</div>
+
+<label>최근 러닝 평균 거리</label>
+<div class="row">
+    <input type="number" v-model="user.prefDistance" placeholder="숫자 입력">
+    <span style="padding-top:12px;font-size:13px;">km</span>
+</div>
+
+<label>실력 수준</label>
+<select v-model="user.prefDifficulty">
+    <option>초급</option>
+    <option>중급</option>
+    <option>상급</option>
+</select>
+
+        <button class="btn-save" :disabled="!canSubmit"
+        :style="{ backgroundColor: canSubmit ? '#ff7f00' : '#b3b3b3' }" @click="goMyInfo">프로필 수정</button>
         <button class="btn-cancel" @click="goMyInfo">취소</button>
     </div>
     </div>
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user';
 
+const store = useUserStore()
 const router = useRouter()
+const passwordCheck = ref('')
+const isPwMatch = computed(() => user.value.userPassword === passwordCheck.value)
+const pwRule = computed(() => {
+  const pw = user.value.userPassword
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/
+  return regex.test(pw)
+})
+
+const user = ref({ })
+onMounted(() => {
+  store.getUserById(store.loginUserId)
+  user.value = { ...store.user }  // 기존 정보 복사하여 편집용으로 사용
+})
+
+const canSubmit = computed(() => {
+  return user.value.nickname &&
+        user.value.userPassword &&
+        user.value.gender &&
+        user.value.age &&
+        user.value.region &&
+        user.value.prefDistance &&
+        user.value.prefDifficulty &&
+        isPwMatch.value &&
+        store.nicknameAvailable === true &&
+        pwRule.value
+})
 
 const goMyInfo = () => {
+    if (!canSubmit.value) return
+  store.updateUser(store.loginUserId,user)
     router.push({ name: "myInfo" })
 }
-import { ref, onMounted } from 'vue';
 
     const regionDB = {
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",
@@ -108,26 +176,13 @@ import { ref, onMounted } from 'vue';
     "제주특별자치도":[ "제주시","서귀포시" ]
 }
 
-const city = ref(null)
-const district = ref(null)
-
-onMounted(() => {
-    Object.keys(regionDB).forEach(c => {
-        city.value.innerHTML += `<option>${c}</option>`
-    })
-
-    const loadDistricts = () => {
-        district.value.innerHTML = ""
-        regionDB[city.value.value].forEach(gu => {
-            district.value.innerHTML += `<option>${gu}</option>`
-        })
-    }
-
-    city.value.addEventListener("change", loadDistricts)
-    loadDistricts()
-})
+const selectedCity = ref("")
 </script>
 
 <style scoped>
-
+.disabled-input {
+  background: #f2f2f2;
+  color: #777;
+  cursor: not-allowed;
+}
 </style>

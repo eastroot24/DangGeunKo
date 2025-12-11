@@ -2,30 +2,61 @@
     <div class="profile-card">
         <img src="https://i.imgur.com/7b3cP6e.png" class="profile-img">
         <div class="profile-info">
-            <b>양당근</b>
-            <p>ydg1234@gmail.com</p>
-            <span @click="goFollow('following')">10 팔로잉</span> · 
-            <span @click="goFollow('follower')">14 팔로워</span>
+            <b>{{ store.user.nickname }}</b>
+            <p>{{ store.user.userEmail }}</p>
+            <span @click="goFollow('following')">{{ store.followingList.length }} 팔로잉</span> · 
+            <span @click="goFollow('follower')">{{ store.followerList.length }} 팔로워</span>
             <button class="profile-btn" @click="isOpen=true">프로필 수정</button>
         </div>
 
         <div class="popup-bg" v-if="isOpen">
-        <div class="popup">
-            <div class="popup-title">비밀번호 확인</div>
-            <input type="password" placeholder="비밀번호를 입력하세요">
-            <button class="confirm-btn">확인</button>
-            <button class="close-btn" @click="isOpen = false">취소</button>
+            <div class="popup">
+                <div class="popup-title">비밀번호 확인</div>
+
+                <input 
+                    type="password" 
+                    v-model="pwInput"
+                    placeholder="비밀번호를 입력하세요"
+                    @keyup.enter="checkPassword"
+                >
+
+                <div class="error" v-if="pwError">
+                비밀번호가 일치하지 않습니다.
+                </div>
+
+                <button class="confirm-btn" @click="checkPassword">확인</button>
+                <button class="close-btn" @click="closePopup">취소</button>
+            </div>
         </div>
-    </div>
+
     </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { useUserStore } from "@/stores/user"
 
 const isOpen = ref(false)
 const router = useRouter()
+const store = useUserStore()
+const pwInput = ref("")
+const pwError = ref(false)
+
+const closePopup = () => {
+  isOpen.value = false
+  pwInput.value = ""
+  pwError.value = false
+}
+
+const checkPassword = () => {
+  if (pwInput.value === store.user.userPassword) {
+    closePopup()
+    router.push({ name: "editProfile" })
+  } else {
+    pwError.value = true
+  }
+}
 
 const goFollow = (type) => {
     router.push({ 
@@ -33,6 +64,15 @@ const goFollow = (type) => {
         query: { type }
     })
 }
+
+onMounted(async () => {
+    const myId = store.loginUserId
+
+    await store.getUserById(myId)
+    await store.getFollowing(myId)
+    await store.getFollower(myId)
+})
+
 </script>
 
 <style scoped>
@@ -60,5 +100,12 @@ const goFollow = (type) => {
 }
 .confirm-btn{background:#ff7a00;color:white;}
 .close-btn{background:#ddd;margin-top:6px;}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
 
 </style>

@@ -15,5 +15,9 @@ public interface UserService {
 	public boolean updateUser(int id, User user);
 	//회원 삭제
 	public boolean deleteUser(int id);
+	//닉네임 중복 확인
+	public boolean isNicknameAvailable(String nickname);
+	//이메일 중복 확인
+	public boolean isEmailAvailable(String email);
 	
 }
