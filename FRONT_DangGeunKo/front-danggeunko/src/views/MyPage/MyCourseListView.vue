@@ -23,8 +23,8 @@
         </div>
         <CourseSearchBar></CourseSearchBar>
         <CourseFilter></CourseFilter>
-        <RegistCourse v-if="tab==='registered'" />
-        <LikeCourse v-else></LikeCourse>
+        <RegistCourse v-if="tab==='registered'" :allView="true" />
+        <LikeCourse v-else :allView="true"></LikeCourse>
     </div>
 </template>
 
