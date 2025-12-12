@@ -44,6 +44,11 @@ export const useUserStore = defineStore('user', () => {
     prefDistance: '',
     prefDifficulty: ''
   })
+
+  const isAuthenticated = computed(() => {
+    return !!localStorage.getItem("accessToken") 
+  })
+
   const userLogin = function(id, password){
     axios.post(`${REST_AUTH_API_URL}/login`, {
      id, password
@@ -53,6 +58,7 @@ export const useUserStore = defineStore('user', () => {
 
       //loginUser 정보는 Back서버에서 토큰과 함께 데이터를 더 넘기는 것이 좋다. 편하다.
       const token = res.data["accessToken"]
+      const refreshToken = res.data["refreshToken"]
 
       const payloadEncoding = token.split(".")[1]
       const payloadDecoding = JSON.parse(base64UrlDecode(payloadEncoding))
@@ -61,6 +67,8 @@ export const useUserStore = defineStore('user', () => {
       loginUserId.value = userId
 
       localStorage.setItem("accessToken", token)
+      localStorage.setItem("refreshToken", refreshToken)
+      
       console.log("로그인 성공!")
       console.log("유저정보:", loginUserId)
     })
@@ -79,6 +87,7 @@ export const useUserStore = defineStore('user', () => {
       console.log(res.data)
       console.log("잘가라~!")
       localStorage.removeItem("accessToken") // 로컬 토큰 제거
+      localStorage.removeItem("refreshToken")
       // loginUser.value = null 등 Pinia 상태 초기화
     })
     .catch((err)=>{
@@ -242,6 +251,6 @@ const resetPwVerified = () => {
     nicknameAvailable, emailAvailable, checkNickname, checkEmail,addFollow, deleteFollow, 
     followingList, followerList, 
     getFollowing, getFollower, loginUserId, user, isPwVerified, verifyPassword, resetPwVerified, 
-    userLogin, userLogout,
+    userLogin, userLogout,isAuthenticated,
   }
 })

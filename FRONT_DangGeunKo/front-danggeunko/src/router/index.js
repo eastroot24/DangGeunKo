@@ -6,7 +6,6 @@ import RankingListView from '@/views/Course/RankingListView.vue'
 import OnBoardingView from '@/views/OnBoardingView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignUpView from '@/views/SignUpView.vue'
-import App from '@/App.vue'
 import MyInfoView from '@/views/MyPage/MyInfoView.vue'
 import EditProfileView from '@/views/MyPage/EditProfileView.vue'
 import FollowView from '@/views/MyPage/FollowView.vue'
@@ -18,11 +17,6 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: App,
-    },
-    {
       path: '/course',
       name: 'course',
       component: CoureseListView,
@@ -31,6 +25,7 @@ const router = createRouter({
       path: '/course/create',
       name: 'courseCreate',
       component: CreateCourseView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/course/detail/:id',
@@ -83,10 +78,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const store = useUserStore()
-
+  //비밀번호 확인 로직
   if (to.meta.requiresPwCheck && !store.isPwVerified) {
     alert("비밀번호 확인 후 접근 가능합니다.")
     return next({ name: 'myInfo' })
+  }
+
+  //로그인 인증
+  if(to.meta.requiresAuth && !store.isAuthenticated){
+    alert("로그인이 필요한 서비스입니다.")
+    return next({name: 'login'})
   }
 
   next()

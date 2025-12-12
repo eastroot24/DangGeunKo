@@ -4,7 +4,7 @@
          <!-- 입력 폼 -->
         <div class="form-wrap">
         <label style="font-weight: bold;">코스 이름</label>
-        <input type="text" placeholder="코스 이름">
+        <input v-model="courseInfo.courseName" type="text" placeholder="코스 이름">
 
         <label style="font-weight: bold;">지역구</label>
         <div class="row-3">
@@ -12,38 +12,47 @@
             <select ref="district"></select>
         </div>
         <label style="font-weight: bold;">출발지 주소</label>
-        <input type="text" placeholder="출발지 주소">
+        <input v-model="courseInfo.startAddress" type="text" placeholder="출발지 주소">
         <label style="font-weight: bold;">도착지 주소</label>
-        <input type="text" placeholder="도착지 주소">
+        <input v-model="courseInfo.endAddress" type="text" placeholder="도착지 주소">
 
         <div class="row-3">
             <label style="font-weight: bold;">전체거리</label>
-            <input type="number" placeholder="전체 거리 (km)">
-            <label style="font-weight: bold;">소요 시간</label>
-            <input type="number" placeholder="소요 시간 (분)">
+            <input v-model="courseInfo.distanceKm" type="number" placeholder="전체 거리 (km)">
+            <label  style="font-weight: bold;">소요 시간</label>
+            <input v-model="courseInfo.durationMin" type="number" placeholder="소요 시간 (분)">
             <label style="font-weight: bold;">평균 페이스</label>
-            <input type="number" placeholder="평균 페이스 (/km)">
+            <input v-model="courseInfo.paceMin" type="number" placeholder="평균 페이스 (/km)">
         </div>
 
         <div class="row-3">
             <label style="font-weight: bold;">러닝 유형</label>
-            <select><option>런닝 유형</option></select>
+            <select v-model="courseInfo.courseType">
+                <option value="1">인터벌</option>
+                <option value="2">템포</option>
+                <option value="3">파틀렉</option>
+                <option value="4">장거리</option>
+            </select>
             <label style="font-weight: bold;">코스 난이도</label>
-            <select><option>코스 난이도</option></select>
+            <select v-model="courseInfo.difficulty">
+                <option value="초급">런린이</option>
+                <option value="중급">러너</option>
+                <option value="고급">런고수</option>
+            </select>
         </div>
         <label style="font-weight: bold;">코스 설명 및 편의 시설</label>
-        <textarea placeholder="코스의 특징, 주의 사항 등을 적어주세요."></textarea>
+        <textarea v-model="courseInfo.description" placeholder="코스의 특징, 주의 사항 등을 적어주세요."></textarea>
 
         <div class="row-3" style="margin-top:10px;">
             <label style="font-weight: bold;">횡단보도 유무</label>
-            <select>
-                <option>있음</option>
-                <option>없음</option>
+            <select v-model="courseInfo.hasCrosswalk">
+                <option value="true">있음</option>
+                <option value="false">없음</option>
             </select>
              <label style="font-weight: bold;">공중화장실 유무</label>
-            <select>
-                <option>있음</option>
-                <option>없음</option>
+            <select v-model="courseInfo.hasToilet">
+                <option value="true">있음</option>
+                <option value="false">없음</option>
             </select>
         </div>
     </div>
@@ -52,7 +61,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { useCourseStore } from '@/stores/course';
+import { useUserStore } from '@/stores/user';
+import { ref, onMounted, toRaw } from 'vue'
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
@@ -60,11 +71,52 @@ const emit = defineEmits(["draw"])
 const retry = () =>{
     emit("isDone", false)
 }
-const addCourse = () =>{
-    alert('코스가 등록되었습니다.')
-    // 본인이 올린 곳으로 가게 할 예정
-    router.replace({path: "/"})
 
+const courseStore = useCourseStore()
+const userStore = useUserStore()
+const courseInfo = ref({
+    userId: userStore.loginUserId,
+    courseName: '',
+    courseCity: '',
+    courseDistrict: '',
+    startAddress: '',
+    endAddress: '',
+    distanceKm: Number,
+    durationMin: Number,
+    paceMin: Number,
+    courseType: Number,
+    difficulty: '',
+    description: '',
+    hasCrosswalk: Boolean,
+    hasToilet: Boolean,
+})
+
+
+const addCourse = async () => {
+    
+    try {
+        // 3. Action 호출 
+        const newCourse = await courseStore.registCourse(courseInfo); 
+
+        // 4. 성공 처리 및 라우팅
+        alert('코스가 등록되었습니다.');
+        
+        // 5. 반환된 새 코스 객체의 ID를 사용
+        router.replace({path: `/course/detail/${newCourse.courseId}`});
+
+    } catch (error) {
+        console.error("코스 등록 에러:", error);
+        
+        // 오류 알림
+        let errorMessage = '코스 등록에 실패했습니다.';
+        if (error.response && error.response.status === 403) {
+             errorMessage += ' (403: 서버 인증 오류)';
+        }
+        alert(errorMessage);
+        
+        // 실패 시 목록 접근 시도 방지
+        return;
+    }
 }
 
 const regionDB = {
@@ -110,10 +162,15 @@ onMounted(() => {
         regionDB[city.value.value].forEach(gu => {
             district.value.innerHTML += `<option>${gu}</option>`
         })
+        courseInfo.value.courseCity = city.value.value
+        courseInfo.value.courseDistrict = district.value.value
     }
 
     city.value.addEventListener("change", loadDistricts)
     loadDistricts()
+    if (district.value) {
+        courseInfo.value.courseDistrict = district.value.value;
+    }
 })
 
 </script>
