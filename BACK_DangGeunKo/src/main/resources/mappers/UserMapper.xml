@@ -94,7 +94,11 @@
     SELECT COUNT(*) FROM user WHERE user_email = #{userEmail}
 	</select>
 	
-	
+	<select id="login" parameterType="com.danggeunko.auth.dto.LoginRequest" resultType="User">
+	SELECT *
+	FROM USER
+	WHERE user_email = #{id}
+	</select>
 	
 	
 	

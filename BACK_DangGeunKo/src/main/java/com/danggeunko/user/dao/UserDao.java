@@ -2,6 +2,7 @@ package com.danggeunko.user.dao;
 
 import java.util.List;
 
+import com.danggeunko.auth.dto.LoginRequest;
 import com.danggeunko.user.dto.Follow;
 import com.danggeunko.user.dto.User;
 
@@ -30,4 +31,7 @@ public interface UserDao {
 	public int countByNickname(String nickname);
 	//이메일 중복 확인
 	public int countByEmail(String email);
+	
+	//로그인
+	public User login(LoginRequest loginRequest);
 }

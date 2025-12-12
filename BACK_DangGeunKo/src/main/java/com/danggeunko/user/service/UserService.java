@@ -2,6 +2,7 @@ package com.danggeunko.user.service;
 
 import java.util.List;
 
+import com.danggeunko.auth.dto.LoginRequest;
 import com.danggeunko.user.dto.User;
 
 public interface UserService {
@@ -19,5 +20,7 @@ public interface UserService {
 	public boolean isNicknameAvailable(String nickname);
 	//이메일 중복 확인
 	public boolean isEmailAvailable(String email);
+	//로그인
+	public User login(LoginRequest loginRequest);
 	
 }
