@@ -63,61 +63,48 @@
 <script setup>
 import { useCourseStore } from '@/stores/course';
 import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
 import { ref, onMounted, toRaw } from 'vue'
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
+
 const emit = defineEmits(["draw"])
 const retry = () =>{
     emit("isDone", false)
 }
 
-const courseStore = useCourseStore()
 const userStore = useUserStore()
+const courseStore = useCourseStore()
+const {loginUserId} = storeToRefs(userStore)
 const courseInfo = ref({
-    userId: userStore.loginUserId,
+    userId: loginUserId.value,
     courseName: '',
     courseCity: '',
     courseDistrict: '',
     startAddress: '',
     endAddress: '',
-    distanceKm: Number,
-    durationMin: Number,
-    paceMin: Number,
-    courseType: Number,
+    distanceKm: 0,
+    durationMin: 0,
+    paceMin: 0,
+    courseType: 0,
     difficulty: '',
     description: '',
-    hasCrosswalk: Boolean,
-    hasToilet: Boolean,
+    hasCrosswalk: false,
+    hasToilet: false,
+    //테스트용
+    coursePoints:  [ 
+    { "pointId": 1, "courseId": 1, "sequence": 1, "latitude": 37.5, "longitude": 127.0, "order": 1 },
+    { "pointId": 1, "courseId": 1, "sequence": 1, "latitude": 37.6, "longitude": 127.1, "order": 2 }
+  ],
 })
 
-
-const addCourse = async () => {
-    
-    try {
-        // 3. Action 호출 
-        const newCourse = await courseStore.registCourse(courseInfo); 
-
-        // 4. 성공 처리 및 라우팅
-        alert('코스가 등록되었습니다.');
-        
-        // 5. 반환된 새 코스 객체의 ID를 사용
-        router.replace({path: `/course/detail/${newCourse.courseId}`});
-
-    } catch (error) {
-        console.error("코스 등록 에러:", error);
-        
-        // 오류 알림
-        let errorMessage = '코스 등록에 실패했습니다.';
-        if (error.response && error.response.status === 403) {
-             errorMessage += ' (403: 서버 인증 오류)';
-        }
-        alert(errorMessage);
-        
-        // 실패 시 목록 접근 시도 방지
-        return;
-    }
+const addCourse = () => {
+    console.log(courseInfo.value)
+    courseStore.registCourse(courseInfo.value)
+    router.push({path: `/course/${1}`})
 }
+
 
 const regionDB = {
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",

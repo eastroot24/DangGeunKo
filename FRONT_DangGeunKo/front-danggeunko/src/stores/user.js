@@ -69,7 +69,7 @@ export const useUserStore = defineStore('user', () => {
       loginStatus.value = true
       const payload = JSON.parse(base64UrlDecode(token.split(".")[1]))
       loginUserId.value = payload.userId
-
+      console.log(loginUserId.value)
       return true
     } catch (err) {
       console.log("로그인 실패", err)
