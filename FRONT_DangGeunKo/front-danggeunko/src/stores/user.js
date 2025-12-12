@@ -43,8 +43,49 @@ export const useUserStore = defineStore('user', () => {
     prefDifficulty: ''
   })
 
-  const nicknameAvailable = ref(null)
-  const emailAvailable = ref(null)
+  /* 🔥 닉네임 중복확인 */
+const nicknameAvailable = ref(null)
+
+const checkNickname = async (nickname) => {
+  try {
+    const res = await api.get(`${REST_USER_API_URL}check/nickname/${nickname}`)
+    const data = res.data
+
+    nicknameAvailable.value =
+      typeof data === 'boolean' ? data : data.available
+
+    if (nicknameAvailable.value) {
+      alert("사용 가능한 닉네임입니다.")
+    } else {
+      alert("이미 사용 중인 닉네임입니다.")
+    }
+  } catch (e) {
+    nicknameAvailable.value = false
+    alert("닉네임 확인 중 오류가 발생했습니다.")
+  }
+}
+
+/* 🔥 이메일 중복확인 */
+const emailAvailable = ref(null)
+
+const checkEmail = async (email) => {
+  try {
+    const res = await api.get(`${REST_USER_API_URL}check/email/${email}`)
+    const data = res.data
+
+    emailAvailable.value =
+      typeof data === 'boolean' ? data : data.available
+
+    if (emailAvailable.value) {
+      alert("사용 가능한 이메일입니다.")
+    } else {
+      alert("이미 사용 중인 이메일입니다.")
+    }
+  } catch (e) {
+    emailAvailable.value = false
+    alert("이메일 확인 중 오류가 발생했습니다.")
+  }
+}
 
   const followingList = ref([])
   const followerList = ref([])
@@ -196,6 +237,8 @@ export const useUserStore = defineStore('user', () => {
     followingList,
     followerList,
     isPwVerified,
+    checkEmail,
+    checkNickname,
 
     // computed
     isLoggedIn,

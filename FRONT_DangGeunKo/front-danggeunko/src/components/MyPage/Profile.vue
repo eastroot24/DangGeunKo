@@ -2,6 +2,7 @@
     <div class="profile-card">
         <img src="https://i.imgur.com/7b3cP6e.png" class="profile-img">
         <div class="profile-info">
+            <button @click="logout">로그아웃</button>
             <b>{{ store.user.nickname }}</b>
             <p>{{ store.user.userEmail }}</p>
             <span @click="goFollow('following')">{{ store.followingList.length }} 팔로잉</span> · 
@@ -43,6 +44,11 @@ const store = useUserStore()
 const pwInput = ref("")
 const pwError = ref(false)
 
+const logout = () => {
+  store.userLogout()
+  router.replace('/')
+}
+
 const closePopup = () => {
   isOpen.value = false
   pwInput.value = ""
@@ -51,13 +57,14 @@ const closePopup = () => {
 
 const checkPassword = () => {
   if (pwInput.value === store.user.userPassword) {
-    sessionStorage.setItem('pwVerified', 'true') // 🔑 핵심
+    store.verifyPassword()   // ⭐ 핵심
     closePopup()
     router.push({ name: 'editProfile' })
   } else {
     pwError.value = true
   }
 }
+
 
 const goFollow = (type) => {
     router.push({ 
