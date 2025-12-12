@@ -6,7 +6,7 @@ import java.util.List;
 public class Course {
 
     private Integer courseId;
-    private Integer userId;
+    private int userId;
 
     private String courseName;
     private String courseCity;

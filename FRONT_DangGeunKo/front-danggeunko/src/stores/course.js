@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { defineStore } from "pinia"
+import { defineStore, storeToRefs } from "pinia"
 import axios from 'axios'
 
 const REST_API_COURSE_URL = "http://localhost:8080/api-course/course"
@@ -68,17 +68,15 @@ export const useCourseStore = defineStore('course', () => {
     } 
 
     //코스 등록
-    const registCourse = async function(course) {
-        try {
-            const response = await axios.post(REST_API_COURSE_URL, {
-                course,
-            });
-            return response.data; 
-        } catch (error) {
-            console.error("코스 등록 실패", error);
-            throw error; // 오류를 컴포넌트로 전달
-        }
-    };
+const registCourse =  function(course) {
+     axios.post(REST_API_COURSE_URL, course)
+    .then((res)=>{
+        console.log("코스등록 성공!", res.data)
+    })
+    .catch((err)=>{
+        console.log("코스 등록 실패:", err)
+    })
+};
 
 
     //코스 수정
