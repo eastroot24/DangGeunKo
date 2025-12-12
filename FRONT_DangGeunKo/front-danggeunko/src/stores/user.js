@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import api from '@/api/axios'
 
 /* ===============================
    JWT base64url 디코딩 (원본 유지)
@@ -50,12 +51,22 @@ export const useUserStore = defineStore('user', () => {
 
   const isPwVerified = ref(false)
 
-
+  /* 🔥 로그인 상태 (로컬스토리지 기반) */
   const loginStatus = ref(!!localStorage.getItem("accessToken"))
+
   /* ===============================
      computed
   ================================ */
   const isLoggedIn = computed(() => loginStatus.value)
+
+  /* ===============================
+     🔥 공통: token → userId 세팅
+  ================================ */
+  const setLoginUserFromToken = (token) => {
+    const payload = JSON.parse(base64UrlDecode(token.split(".")[1]))
+    loginUserId.value = payload.userId
+    loginStatus.value = true
+  }
 
   /* ===============================
      auth
@@ -66,10 +77,9 @@ export const useUserStore = defineStore('user', () => {
 
       const token = res.data.accessToken
       localStorage.setItem("accessToken", token)
-      loginStatus.value = true
-      const payload = JSON.parse(base64UrlDecode(token.split(".")[1]))
-      loginUserId.value = payload.userId
-      console.log(loginUserId.value)
+
+      setLoginUserFromToken(token)
+
       return true
     } catch (err) {
       console.log("로그인 실패", err)
@@ -84,22 +94,23 @@ export const useUserStore = defineStore('user', () => {
     user.value = {}
   }
 
-  // 🔥 새로고침 / 뒤로가기 대응
-  const restoreLoginFromToken = () => {
+  /* ===============================
+     🔥 핵심 추가: 새로고침 / 직접 접근 대응
+  ================================ */
+  const initAuth = () => {
     const token = localStorage.getItem("accessToken")
     if (!token) {
-        loginStatus.value = false
-        loginUserId.value = null
-        return
-      }
+      loginStatus.value = false
+      loginUserId.value = null
+      return
+    }
 
     try {
-      const payload = JSON.parse(base64UrlDecode(token.split(".")[1]))
-      loginUserId.value = payload.userId
+      setLoginUserFromToken(token)
     } catch (e) {
       localStorage.removeItem("accessToken")
-      loginUserId.value = null
       loginStatus.value = false
+      loginUserId.value = null
     }
   }
 
@@ -132,27 +143,6 @@ export const useUserStore = defineStore('user', () => {
   }
 
   /* ===============================
-     nickname / email check
-  ================================ */
-  const checkNickname = (nickname) => {
-    axios.get(`${REST_USER_API_URL}check/nickname/${nickname}`)
-      .then(res => {
-        nicknameAvailable.value = res.data === true || res.data?.available
-        alert(nicknameAvailable.value ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다.")
-      })
-      .catch(() => nicknameAvailable.value = false)
-  }
-
-  const checkEmail = (email) => {
-    axios.get(`${REST_USER_API_URL}check/email/${email}`)
-      .then(res => {
-        emailAvailable.value = res.data === true || res.data?.available
-        alert(emailAvailable.value ? "사용 가능한 이메일입니다." : "이미 사용 중인 이메일입니다.")
-      })
-      .catch(() => emailAvailable.value = false)
-  }
-
-  /* ===============================
      follow
   ================================ */
   const addFollow = async (targetId) => {
@@ -172,11 +162,13 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const getFollowing = async (id) => {
+    if (!id) return
     const res = await api.get(`${REST_USER_API_URL}follow/following/${id}`)
     followingList.value = res.data.map(u => ({ ...u, isFollowing: true }))
   }
 
   const getFollower = async (id) => {
+    if (!id) return
     await getFollowing(id)
     const res = await api.get(`${REST_USER_API_URL}follow/follower/${id}`)
     followerList.value = res.data.map(u => ({
@@ -211,7 +203,7 @@ export const useUserStore = defineStore('user', () => {
     // auth
     userLogin,
     userLogout,
-    restoreLoginFromToken,
+    initAuth,
 
     // user
     getAllUsers,
@@ -219,10 +211,6 @@ export const useUserStore = defineStore('user', () => {
     addUser,
     updateUser,
     deleteUser,
-
-    // check
-    checkNickname,
-    checkEmail,
 
     // follow
     addFollow,

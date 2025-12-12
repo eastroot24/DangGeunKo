@@ -141,15 +141,20 @@ const canSubmit = computed(() => {
 })
 
 const goBack = () => {
-  router.push({ name: "myInfo" })
+  sessionStorage.removeItem('pwVerified')
+  router.replace({ name: 'myInfo' })
 }
+
+
 
 const saveProfile = async () => {
   if (!canSubmit.value) return
-  await store.updateUser(store.loginUserId, user.value)
-  router.push({ name: "myInfo" })
-}
 
+  await store.updateUser(store.loginUserId, user.value)
+
+  sessionStorage.removeItem('pwVerified')
+  router.replace({ name: 'myInfo' })
+}
 
 onUnmounted(() => {
   store.resetPwVerified()
