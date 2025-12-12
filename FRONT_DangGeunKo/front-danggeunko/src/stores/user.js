@@ -1,7 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import api from '@/api/axios'   // 🔥 interceptor 적용 axios
 
 /* ===============================
    JWT base64url 디코딩 (원본 유지)
@@ -51,10 +50,12 @@ export const useUserStore = defineStore('user', () => {
 
   const isPwVerified = ref(false)
 
+
+  const loginStatus = ref(!!localStorage.getItem("accessToken"))
   /* ===============================
      computed
   ================================ */
-  const isLoggedIn = computed(() => !!localStorage.getItem("accessToken"))
+  const isLoggedIn = computed(() => loginStatus.value)
 
   /* ===============================
      auth
@@ -65,7 +66,7 @@ export const useUserStore = defineStore('user', () => {
 
       const token = res.data.accessToken
       localStorage.setItem("accessToken", token)
-
+      loginStatus.value = true
       const payload = JSON.parse(base64UrlDecode(token.split(".")[1]))
       loginUserId.value = payload.userId
 
@@ -78,6 +79,7 @@ export const useUserStore = defineStore('user', () => {
 
   const userLogout = async () => {
     localStorage.removeItem("accessToken")
+    loginStatus.value = false
     loginUserId.value = null
     user.value = {}
   }
@@ -85,7 +87,11 @@ export const useUserStore = defineStore('user', () => {
   // 🔥 새로고침 / 뒤로가기 대응
   const restoreLoginFromToken = () => {
     const token = localStorage.getItem("accessToken")
-    if (!token) return
+    if (!token) {
+        loginStatus.value = false
+        loginUserId.value = null
+        return
+      }
 
     try {
       const payload = JSON.parse(base64UrlDecode(token.split(".")[1]))
@@ -93,6 +99,7 @@ export const useUserStore = defineStore('user', () => {
     } catch (e) {
       localStorage.removeItem("accessToken")
       loginUserId.value = null
+      loginStatus.value = false
     }
   }
 
