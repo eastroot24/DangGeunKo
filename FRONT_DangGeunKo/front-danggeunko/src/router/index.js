@@ -25,7 +25,7 @@ const router = createRouter({
       path: '/course/create',
       name: 'courseCreate',
       component: CreateCourseView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
     {
       path: '/course/detail/:id',
@@ -56,6 +56,7 @@ const router = createRouter({
       path: "/myInfo",
       name: "myInfo",
       component: MyInfoView,
+      meta: { requiresAuth: true },
     },
     {
       path: "/editProfile",
@@ -84,8 +85,9 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'myInfo' })
   }
 
+
   //로그인 인증
-  if(to.meta.requiresAuth && !store.isAuthenticated){
+  if(to.meta.requiresAuth && !store.isLoggedIn){
     alert("로그인이 필요한 서비스입니다.")
     return next({name: 'login'})
   }

@@ -69,16 +69,16 @@ export const useCourseStore = defineStore('course', () => {
 
     //코스 등록
     const registCourse = async function(course) {
-    try {
-        const response = await axios.post(REST_API_COURSE_URL, {
-            course,
-        });
-        return response.data; 
-    } catch (error) {
-        console.error("코스 등록 실패", error);
-        throw error; // 오류를 컴포넌트로 전달
-    }
-};
+        try {
+            const response = await axios.post(REST_API_COURSE_URL, {
+                course,
+            });
+            return response.data; 
+        } catch (error) {
+            console.error("코스 등록 실패", error);
+            throw error; // 오류를 컴포넌트로 전달
+        }
+    };
 
 
     //코스 수정
