@@ -68,11 +68,13 @@ const router = createRouter({
       path: "/follow",
       name: "follow",
       component: FollowView,
+      meta: { requiresAuth: true },
     },
     {
       path: "/myCourseList",
       name: "myCourseList",
       component: MyCourseListView,
+      meta: { requiresAuth: true },
     },
   ],
 })

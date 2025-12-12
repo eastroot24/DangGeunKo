@@ -4,7 +4,7 @@
     <h2>로그인</h2>
 
     <input type="email" placeholder="이메일" v-model="id">
-    <input type="password" placeholder="비밀번호" v-model="password">
+    <input type="password" placeholder="비밀번호" v-model="password" @keyup.enter="login">
 
     <button class="login-btn" @click="login">로그인</button>
 
@@ -25,11 +25,15 @@ const id = ref("")
 const password = ref("")
 const store = useUserStore()
 
-const login = function(){
-  store.userLogin(id.value, password.value)
-  router.push('/') 
-}
+const login = async () => {
+  const success = await store.userLogin(id.value, password.value)
 
+  if (success) {
+    router.replace({ name: 'myInfo' })
+  } else {
+    alert("아이디 또는 비밀번호가 올바르지 않습니다.")
+  }
+}
 
 </script>
 

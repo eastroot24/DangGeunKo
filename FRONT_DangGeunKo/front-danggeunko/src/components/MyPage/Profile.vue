@@ -51,9 +51,9 @@ const closePopup = () => {
 
 const checkPassword = () => {
   if (pwInput.value === store.user.userPassword) {
-    store.verifyPassword()
+    sessionStorage.setItem('pwVerified', 'true') // 🔑 핵심
     closePopup()
-    router.push({ name: "editProfile" })
+    router.push({ name: 'editProfile' })
   } else {
     pwError.value = true
   }
