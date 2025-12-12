@@ -2,21 +2,91 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+// base64url 디코딩 함수 (한글 깨짐 방지)
+function base64UrlDecode(str) {
+  // base64url -> base64로 변환
+  str = str.replace(/-/g, "+").replace(/_/g, "/");
+  // 패딩 추가
+  while (str.length % 4) {
+    str += "=";
+  }
+  // 디코딩 (한글 지원)
+  try {
+    return decodeURIComponent(
+      Array.prototype.map
+        .call(
+          atob(str),
+          (c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+        )
+        .join("")
+    );
+  } catch (e) {
+    return atob(str);
+  }
+}
+
+
+
 const REST_USER_API_URL = "http://localhost:8080/api-user/user/"
-const loginUserId = ref(10)   // 예시값
-const user = ref({
-  userName: '',
-  nickname: '',
-  userEmail: '',
-  userPassword: '',
-  gender: '',
-  age: null,
-  region: '',
-  prefDistance: '',
-  prefDifficulty: ''
-})
+const REST_AUTH_API_URL = "http://localhost:8080/api-auth"
+
 export const useUserStore = defineStore('user', () => {
   const userList = ref([])
+  const loginUserId = ref(null)   // 예시값
+  const user = ref({
+    userName: '',
+    nickname: '',
+    userEmail: '',
+    userPassword: '',
+    gender: '',
+    age: null,
+    region: '',
+    prefDistance: '',
+    prefDifficulty: ''
+  })
+  const userLogin = function(id, password){
+    axios.post(`${REST_AUTH_API_URL}/login`, {
+     id, password
+    })
+    .then((res)=>{
+      console.log(res.data)
+
+      //loginUser 정보는 Back서버에서 토큰과 함께 데이터를 더 넘기는 것이 좋다. 편하다.
+      const token = res.data["accessToken"]
+
+      const payloadEncoding = token.split(".")[1]
+      const payloadDecoding = JSON.parse(base64UrlDecode(payloadEncoding))
+      const userId = payloadDecoding["userId"]
+
+      loginUserId.value = userId
+
+      localStorage.setItem("accessToken", token)
+      console.log("로그인 성공!")
+      console.log("유저정보:", loginUserId)
+    })
+    .catch((err)=>{
+      console.log("로그인에러", err)
+    })
+  }
+  //로그아웃
+  const userLogout = function(){
+    const refreshToken = localStorage.getItem("refreshToken") 
+    // const tokenToInvalidate = localStorage.getItem("accessToken") // 혹은 "refresh-token"
+    
+    // 백엔드가 @RequestParam을 사용하므로, 쿼리 스트링으로 전달합니다.
+    axios.post(`${REST_AUTH_API_URL}/logout?refreshToken=${refreshToken}`) 
+    .then((res)=>{
+      console.log(res.data)
+      console.log("잘가라~!")
+      localStorage.removeItem("accessToken") // 로컬 토큰 제거
+      // loginUser.value = null 등 Pinia 상태 초기화
+    })
+    .catch((err)=>{
+      console.log("로그아웃실패", err)
+    })
+}
+
+
   const getAllUsers = () => {
     axios.get(REST_USER_API_URL)
     .then((res) => {
@@ -171,6 +241,7 @@ const resetPwVerified = () => {
   return { userList,  getAllUsers, getUserById, addUser, updateUser, deleteUser,
     nicknameAvailable, emailAvailable, checkNickname, checkEmail,addFollow, deleteFollow, 
     followingList, followerList, 
-    getFollowing, getFollower, loginUserId, user, isPwVerified, verifyPassword, resetPwVerified,
+    getFollowing, getFollower, loginUserId, user, isPwVerified, verifyPassword, resetPwVerified, 
+    userLogin, userLogout,
   }
 })

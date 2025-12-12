@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.danggeunko.auth.dto.LoginRequest;
 import com.danggeunko.user.dao.UserDao;
 import com.danggeunko.user.dto.User;
 
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public boolean isEmailAvailable(String email) {
 	    return userDao.countByEmail(email) == 0;
+	}
+
+	@Override
+	public User login(LoginRequest loginRequest) {
+		return userDao.login(loginRequest);
 	}
 
 	
