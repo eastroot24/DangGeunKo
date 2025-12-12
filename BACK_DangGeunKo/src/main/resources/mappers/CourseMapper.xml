@@ -1,35 +1,33 @@
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.danggeunko.course.dao.CourseDao">
 
-    <!-- 코스 등록 -->
+	<!-- 코스 등록 -->
     <insert id="insertCourse" parameterType="Course"
         useGeneratedKeys="true"
         keyProperty="courseId"
         keyColumn="course_id">
     INSERT INTO course (
-        user_id, course_name, course_region, start_address, end_address,
+        user_id, course_name, course_city, course_district, start_address, end_address,
         distance_km, duration_min, pace_min, course_type, difficulty,
         description, has_crosswalk, has_toilet
     ) VALUES (
-        #{userId}, #{courseName}, #{courseRegion}, #{startAddress},
+        #{userId}, #{courseName}, #{courseCity}, #{courseDistrict}, #{startAddress},
         #{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin},
         #{courseType}, #{difficulty}, #{description},
         #{hasCrosswalk}, #{hasToilet}
     )
-</insert>
+	</insert>
 
 
-    <!-- 전체 코스 조회 -->
+	<!-- 전체 코스 조회 -->
     <select id="selectAllCourses" resultType="Course">
         SELECT *
         FROM course
         ORDER BY created_at DESC
     </select>
 
-    <!-- 코스 단건 조회 -->
+	<!-- 코스 단건 조회 -->
     <select id="selectCourseById" resultType="Course">
         SELECT *
         FROM course
@@ -37,7 +35,7 @@
         ORDER BY created_at DESC
     </select>
 
-    <!-- 코스 수정 -->
+	<!-- 코스 수정 -->
     <update id="updateCourse" parameterType="Course">
     UPDATE course
     SET
@@ -58,20 +56,20 @@
 </update>
 
 
-    <!-- 코스 삭제 -->
+	<!-- 코스 삭제 -->
     <delete id="deleteCourse">
         DELETE FROM course
         WHERE course_id = #{id}
     </delete>
 
-    <!-- 조회수 증가 -->
+	<!-- 조회수 증가 -->
     <update id="updateViewCnt">
         UPDATE course
         SET view_cnt = view_cnt + 1
         WHERE course_id = #{id}
     </update>
 
-    <!-- 코스 검색 -->
+	<!-- 코스 검색 -->
     <select id="search" parameterType="SearchCondition" resultType="Course">
     SELECT *
     FROM course c
@@ -90,7 +88,7 @@
     </if>
      <if test="courseCity != null and courseCity != ''">
       	AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
-      	<!--도시가 있어야 구가 있음-->
+			<!--도시가 있어야 구가 있음-->
       	<if test="courseDistrict != null and courseDistrict != ''">
       	AND c.course_district LIKE CONCAT('%', #{courseDistrict}, '%')
     	</if>
@@ -128,7 +126,7 @@
     </choose>
 </select>
 
-    <!-- 주간 랭킹 (리뷰 기준) -->
+	<!-- 주간 랭킹 (리뷰 기준) -->
     <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">
 		SELECT
 		c.*,
@@ -163,27 +161,27 @@
     GROUP BY c.course_id
     ORDER BY weighted_score DESC
 	</select>
-    
-    <!-- 좋아요 여부 확인 -->
+
+	<!-- 좋아요 여부 확인 -->
 <select id="existsCourseLike" resultType="int">
     SELECT COUNT(*)
     FROM course_like
     WHERE user_id = #{userId} AND course_id = #{courseId}
 </select>
 
-<!-- 좋아요 추가 -->
+	<!-- 좋아요 추가 -->
 <insert id="insertCourseLike">
     INSERT INTO course_like (user_id, course_id)
     VALUES (#{userId}, #{courseId})
 </insert>
 
-<!-- 좋아요 삭제 -->
+	<!-- 좋아요 삭제 -->
 <delete id="deleteCourseLike">
     DELETE FROM course_like
     WHERE user_id = #{userId} AND course_id = #{courseId}
 </delete>
 
-<!-- 특정 코스의 좋아요 개수 -->
+	<!-- 특정 코스의 좋아요 개수 -->
 <select id="countCourseLike" resultType="int">
     SELECT COUNT(*)
     FROM course_like
