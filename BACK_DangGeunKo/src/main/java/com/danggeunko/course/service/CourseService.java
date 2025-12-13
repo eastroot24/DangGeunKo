@@ -28,7 +28,7 @@ public interface CourseService {
 	// 게시글 정렬
 	public List<Course> getWeeklyRanking(SearchCondition condition);
 
-	public boolean addCourseWithPoints(Course course);
+	public int addCourseWithPoints(Course course);
 	
 	boolean addLike(int userId, int courseId);
 

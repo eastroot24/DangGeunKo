@@ -56,7 +56,7 @@
             </select>
         </div>
     </div>
-   <button @click="addCourse" class="submit">등록하기</button>
+   <button @click="updateCourse" class="submit">수정하기</button>
     </div>
 </template>
 
@@ -65,10 +65,10 @@ import { useCourseStore } from '@/stores/course';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { ref, onMounted, toRaw } from 'vue'
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
-
+const route = useRoute()
 const emit = defineEmits(["draw"])
 const retry = () =>{
     emit("isDone", false)
@@ -78,6 +78,7 @@ const userStore = useUserStore()
 const courseStore = useCourseStore()
 const {loginUserId} = storeToRefs(userStore)
 const courseInfo = ref({
+    courseId: route.params.id,
     userId: loginUserId.value,
     courseName: '',
     courseCity: '',
@@ -99,15 +100,14 @@ const courseInfo = ref({
   ],
 })
 
-const addCourse = async () => {
+const updateCourse = async () => {
     try {
-        const newCourseId = await courseStore.registCourse(courseInfo.value) 
-        if (newCourseId) {
-            // 새로 받은 ID를 사용해 상세 페이지로 이동
-           router.replace({name: "courseDetail", params: {id: newCourseId}}) 
+        const updated = await courseStore.updateCourseById(courseInfo.value) 
+        if (updated) {
+           router.replace({name: "courseDetail", params: {id: route.params.id}}) 
         }
     } catch (error) {
-        console.error("코스 등록 실패:", error);
+        console.error("코스 수정 실패:", error);
     }
 }
 
@@ -145,7 +145,9 @@ const regionDB = {
 const city = ref(null)
 const district = ref(null)
 
-onMounted(() => {
+// UpdateCourseView.vue <script setup> (수정 후)
+
+onMounted(async () => {
     Object.keys(regionDB).forEach(c => {
         city.value.innerHTML += `<option>${c}</option>`
     })
@@ -160,9 +162,36 @@ onMounted(() => {
     }
 
     city.value.addEventListener("change", loadDistricts)
-    loadDistricts()
-    if (district.value) {
+    
+    // 2. 코스 상세 데이터를 비동기로 로딩하고 기다립니다.
+    const fetchedCourse = await courseStore.getCourseDetailById(route.params.id)
+    
+    // 3. 데이터를 성공적으로 가져왔다면 courseInfo.value에 할당
+    if (fetchedCourse) {
+        // 가져온 데이터로 courseInfo 폼을 초기화합니다.
+        courseInfo.value = fetchedCourse;
+
+        // 4. 드롭다운을 해당 데이터의 지역으로 설정
+        // **중요:** 지역구 셀렉트 박스의 값도 수동으로 설정해야 합니다.
+        
+        // 시/도 설정
+        city.value.value = fetchedCourse.courseCity; 
+
+        // 해당 시/도에 맞는 구/군 목록을 로드 (fetchCourse.courseCity 기준)
+        loadDistricts();
+
+        district.value.addEventListener("change", () => {
+       if (district.value) {
         courseInfo.value.courseDistrict = district.value.value;
+        console.log(courseInfo.value.courseDistrict)
+        }
+    })
+       
+    } else {
+        // 데이터 로딩 실패 처리
+        console.error("코스 상세 데이터를 불러오지 못했습니다.");
+        // 기본값으로 초기 구/군 목록만 로드합니다.
+        loadDistricts();
     }
 })
 

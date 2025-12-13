@@ -28,5 +28,38 @@ export const useReviewStore = defineStore('review', () => {
         })
     }
 
-    return { reviewList, review, searchInfo, getReviewsByCourse }
+    //리뷰 등록
+    const addReview = async (review) => {
+        try{
+            await axios.post(`${REST_API_REVIEW_URL}`, review)
+            await getReviewsByCourse()
+        }
+        catch (err) {
+            console.log("리뷰 등록 오류:", err)
+        }
+    }
+    //리뷰 수정
+    const updateReview = async (review) => {
+        try{
+            await axios.put(`${REST_API_REVIEW_URL}/${review.reviewId}`, review)
+            await getReviewsByCourse()
+        }
+        catch (err) {
+            console.log("리뷰 수정 오류:", err)
+        }
+    }
+
+    //리뷰 삭제
+    const deleteReview = async (id) => {
+        try{
+            await  axios.delete(`${REST_API_REVIEW_URL}/${id}`)
+            await getReviewsByCourse()
+        }
+        catch (err) {
+            console.log("리뷰 삭제 오류:", err)
+        }
+    }
+
+    return { reviewList, review, searchInfo, 
+        getReviewsByCourse, addReview, updateReview, deleteReview }
 })

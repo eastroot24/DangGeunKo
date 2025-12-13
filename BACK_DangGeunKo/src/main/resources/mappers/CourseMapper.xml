@@ -29,18 +29,28 @@
 
 	<!-- 코스 단건 조회 -->
     <select id="selectCourseById" resultType="Course">
-        SELECT *
-        FROM course
-        WHERE course_id = #{id}
-        ORDER BY created_at DESC
-    </select>
+		SELECT
+		c.*,
+		COUNT(DISTINCT l.user_id) AS likeCount, COUNT(DISTINCT r.review_id) AS
+		reviewCount FROM
+		COURSE c
+		LEFT JOIN
+		COURSE_LIKE l ON c.course_id = l.course_id
+		LEFT JOIN
+		REVIEW r ON c.course_id = r.course_id
+		WHERE
+		c.course_id = #{id}
+		GROUP BY
+		c.course_id
+	</select>
 
 	<!-- 코스 수정 -->
     <update id="updateCourse" parameterType="Course">
     UPDATE course
     SET
         course_name   = #{courseName},
-        course_region = #{courseRegion},
+        course_city = #{courseCity},
+        course_district = #{courseDistrict},
         start_address = #{startAddress},
         end_address   = #{endAddress},
         distance_km   = #{distanceKm},

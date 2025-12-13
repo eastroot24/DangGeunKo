@@ -68,28 +68,50 @@ export const useCourseStore = defineStore('course', () => {
     } 
 
     //코스 등록
-const registCourse =  function(course) {
-     axios.post(REST_API_COURSE_URL, course)
-    .then((res)=>{
-        console.log("코스등록 성공!", res.data)
-    })
-    .catch((err)=>{
-        console.log("코스 등록 실패:", err)
-    })
-};
+    const registCourse = async function(course) {
+        const response = await axios.post(REST_API_COURSE_URL, course)
+        
+        return response.data.courseId;
+    };
 
 
     //코스 수정
-
+    const updateCourseById = async (course) => {
+       try{
+        await  axios.put(`${REST_API_COURSE_URL}/${course.courseId}`, course)
+        return true
+       }catch (err){
+        console.log("수정실패: ", err)
+        return false
+       }
+    }
 
     //코스 삭제
-
-
-    
+    const deleteCourseById = async (id) => {
+        try {
+            await axios.delete(`${REST_API_COURSE_URL}/${id}`)
+            return true 
+        } catch (err) {
+            console.error("삭제 실패:", err)
+            return false 
+        }
+    }
 
 
     //코스 좋아요
+    const addLike = async (courseId, userId) => {
+        
+        const url = `${REST_API_COURSE_URL}/${courseId}/like?userId=${userId}`; // ⭐️ 쿼리 파라미터로 userId 전달
 
+        try {
+            const response = await axios.post(url);
+            console.log(response.data)
+            return response.data
+        } catch (err) {
+            console.error("코스 좋아요 토글 에러:", err);
+            throw new Error("좋아요 상태 변경에 실패했습니다.");
+        }
+    };
 
 
 
@@ -105,5 +127,6 @@ const registCourse =  function(course) {
 
     return { course, searchInfo, courseList, 
         getCourseDetailById, getCourseList, searchCourseList, 
-        getWeeklyRanking, registCourse }
+        getWeeklyRanking, registCourse, updateCourseById,
+        deleteCourseById, addLike,  }
 })

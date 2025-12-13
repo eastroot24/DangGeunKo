@@ -57,12 +57,12 @@ public class CourseController {
 	// 코스 등록
 	@PostMapping("/course")
 	public ResponseEntity<?> registCourse(@RequestBody Course course) {
-		boolean completed = courseService.addCourseWithPoints(course);
-		if (completed) {
-			return ResponseEntity.status(HttpStatus.CREATED).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	    int newCourseId = courseService.addCourseWithPoints(course);
+	    if (newCourseId > 0) {
+	        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("courseId", newCourseId));
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
 
 	// 코스 수정

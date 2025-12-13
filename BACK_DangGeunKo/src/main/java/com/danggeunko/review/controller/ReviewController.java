@@ -61,7 +61,7 @@ public class ReviewController {
 	
 	//리뷰 수정
 	@PutMapping("/{reviewId}")
-	public ResponseEntity<?> updateUser(@PathVariable("reviewId") int reviewId, @RequestBody Review review){
+	public ResponseEntity<?> updateReview(@PathVariable("reviewId") int reviewId, @RequestBody Review review){
 		boolean completed = reviewService.updateReview(reviewId, review);
 		if(completed) {
 			return ResponseEntity.status(HttpStatus.OK).build();
@@ -72,7 +72,7 @@ public class ReviewController {
 	
 	//리뷰 삭제
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable("id") int id){
+	public ResponseEntity<?> deleteReview(@PathVariable("id") int id){
 		boolean completed = reviewService.deleteReivew(id);
 		if(completed) {
 			return ResponseEntity.status(HttpStatus.OK).build();
