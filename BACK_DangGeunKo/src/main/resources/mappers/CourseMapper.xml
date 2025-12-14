@@ -21,19 +21,48 @@
 
 
 	<!-- 전체 코스 조회 -->
-    <select id="selectAllCourses" resultType="Course">
-        SELECT *
-        FROM course
-        ORDER BY created_at DESC
-    </select>
+   <select id="selectAllCourses" parameterType="Integer" resultType="Course">
+    SELECT 
+        c.*,
+        (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt, 
+        (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
+        <choose>
+            <when test="userId != null">
+                CASE WHEN EXISTS (
+                    SELECT 1 
+                    FROM COURSE_LIKE cl 
+                    WHERE cl.course_id = c.course_id 
+                    AND cl.user_id = #{userId}
+                ) THEN TRUE ELSE FALSE END AS isLiked
+            </when>
+            <otherwise>
+                FALSE AS isLiked
+            </otherwise>
+        </choose>
+    FROM course c
+    ORDER BY c.created_at DESC
+</select>
 
 	<!-- 코스 단건 조회 -->
-    <select id="selectCourseById" resultType="Course">
+    <select id="selectCourseById" parameterType="Integer" resultType="Course">
 		SELECT
 		c.*,
-		COUNT(DISTINCT l.user_id) AS likeCount, COUNT(DISTINCT r.review_id) AS
-		reviewCount FROM
-		COURSE c
+		COUNT(DISTINCT l.user_id) AS likeCnt, COUNT(DISTINCT r.review_id) AS
+		reviewCount, 
+		 <choose>
+            <when test="userId != null">
+                CASE WHEN EXISTS (
+                    SELECT 1 
+                    FROM COURSE_LIKE cl 
+                    WHERE cl.course_id = c.course_id 
+                    AND cl.user_id = #{userId}
+                ) THEN TRUE ELSE FALSE END AS isLiked
+            </when>
+            <otherwise>
+                FALSE AS isLiked
+            </otherwise>
+        </choose>
+		FROM COURSE c
 		LEFT JOIN
 		COURSE_LIKE l ON c.course_id = l.course_id
 		LEFT JOIN

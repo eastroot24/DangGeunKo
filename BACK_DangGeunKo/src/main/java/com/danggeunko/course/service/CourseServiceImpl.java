@@ -29,14 +29,19 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Transactional
 	@Override
-	public List<Course> getAllCourses() {
-		return courseDao.selectAllCourses();
+	public List<Course> getAllCourses(Integer userId) {
+		return courseDao.selectAllCourses(userId);
 	}
 	
 	@Transactional
 	@Override
 	public Course getCourseById(int id) {
 		courseDao.updateViewCnt(id);
+		return courseDao.selectCourseById(id);
+	}
+	@Transactional
+	@Override
+	public Course updateCourseDetail(int id) {
 		return courseDao.selectCourseById(id);
 	}
 
@@ -110,5 +115,7 @@ public class CourseServiceImpl implements CourseService {
 	        return true; // 좋아요 추가됨
 	    }
 	}
+
+	
 
 }

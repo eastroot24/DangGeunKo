@@ -10,9 +10,9 @@
                     <CourseCard :course="course"></CourseCard>
                  </div>
                     <div class="card-heart"
-                    :class="{ active: course.isLiked }" 
+                    :class="{ active: course.liked }" 
                     @click.stop="toggleLike(course)" >
-                    {{ liked.courseId === course.courseId && liked.userId === loginUserId && liked.isLiked ? '♥' : '♡' }}
+                    {{ course.liked ? '♥' : '♡' }}
                     </div>
                 </div>
             </div>
@@ -34,8 +34,6 @@ const router = useRouter()
 const courseStore = useCourseStore()
 const userStore = useUserStore()
 const { loginUserId } = storeToRefs(userStore)
-
-const liked = ref(null)
 // 찜 하트 토글 함수
 const toggleLike = async (course) => { // ⭐️ async 추가
     if (!loginUserId.value) {
@@ -45,10 +43,7 @@ const toggleLike = async (course) => { // ⭐️ async 추가
     }
     
     try {
-        // ⭐️ await을 사용하여 서버 응답을 기다립니다.
-        const response = await courseStore.addLike(course.courseId, loginUserId.value);
-        liked.value = response
-        // UI 상태 업데이트는 store.toggleCourseLike 내부에서 처리됩니다.
+        await courseStore.addLike(course.courseId);
         
     } catch (error) {
         console.error("찜 토글 중 오류 발생:", error);
@@ -57,13 +52,6 @@ const toggleLike = async (course) => { // ⭐️ async 추가
 }
 
 const goDetail = async (course) => {
-    try {
-        await courseStore.getCourseDetailById(course.courseId); 
-    } catch (error) {
-        console.error("상세 데이터 로드 실패:", error);
-        alert("코스 정보를 가져오는 데 실패했습니다.");
-        return; 
-    }
     router.push({name: "courseDetail", params: {id: course.courseId}})
 }
 

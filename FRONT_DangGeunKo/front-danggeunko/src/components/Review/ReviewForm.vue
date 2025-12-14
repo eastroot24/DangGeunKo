@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+import { useCourseStore } from '@/stores/course';
 import { useReviewStore } from '@/stores/review';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
@@ -27,6 +28,7 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const reviewStore = useReviewStore()
+const courseStore = useCourseStore()
 const {loginUserId} = storeToRefs(userStore)
 //  리뷰 객체
 const review = ref({
@@ -52,6 +54,7 @@ const addReview = async () => {
         review.value.rating = 0;
         review.value.content = '';
         await reviewStore.getReviewsByCourse();
+        await courseStore.getCourseDetailById(review.value.courseId, true)
     }
 }
 

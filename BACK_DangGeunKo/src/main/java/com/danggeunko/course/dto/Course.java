@@ -31,6 +31,7 @@ public class Course {
     private Integer viewCnt;
     private Integer likeCnt;
     private Integer reviewCount;
+    private boolean isLiked;
     
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -42,7 +43,7 @@ public class Course {
 			String startAddress, String endAddress, List<CoursePoint> coursePoints, Double distanceKm,
 			Double durationMin, Double paceMin, Integer courseType, String difficulty, String description,
 			Boolean hasCrosswalk, Boolean hasToilet, Double avgRating, Integer viewCnt, Integer likeCnt,
-			Integer reviewCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+			Integer reviewCount, boolean isLiked, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super();
 		this.courseId = courseId;
 		this.userId = userId;
@@ -64,6 +65,7 @@ public class Course {
 		this.viewCnt = viewCnt;
 		this.likeCnt = likeCnt;
 		this.reviewCount = reviewCount;
+		this.isLiked = isLiked;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -228,6 +230,14 @@ public class Course {
 		this.reviewCount = reviewCount;
 	}
 
+	public boolean isLiked() {
+		return isLiked;
+	}
+
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
+	}
+
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -252,9 +262,10 @@ public class Course {
 				+ durationMin + ", paceMin=" + paceMin + ", courseType=" + courseType + ", difficulty=" + difficulty
 				+ ", description=" + description + ", hasCrosswalk=" + hasCrosswalk + ", hasToilet=" + hasToilet
 				+ ", avgRating=" + avgRating + ", viewCnt=" + viewCnt + ", likeCnt=" + likeCnt + ", reviewCount="
-				+ reviewCount + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ reviewCount + ", isLiked=" + isLiked + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 
+	
 	
 
    

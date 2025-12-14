@@ -11,7 +11,7 @@ public interface CourseDao {
 	public int insertCourse(Course course);
 	
 	// 코스 전체 조회
-	public List<Course> selectAllCourses();
+	public List<Course> selectAllCourses(Integer userId);
 	
 	// 코스 아이디 조회
 	public Course selectCourseById(int id);

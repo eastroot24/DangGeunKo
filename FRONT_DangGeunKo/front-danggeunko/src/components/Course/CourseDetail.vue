@@ -22,7 +22,14 @@
             {{course.description}}
         </div>
         <div class="stats">
-            <div><span class="heart" id="heart">♡</span> {{ course.likeCount || 0 }}</div>
+            <div>
+                <div class="card-heart"
+                    :class="{ active: course.liked }" 
+                    @click.stop="toggleLike(course)" >
+                    {{ course.liked ? '♥' : '♡' }}
+                </div>
+                <span>{{ course.likeCnt || 0 }}</span> 
+            </div>
             <div>💬 {{ course.reviewCount || 0 }}</div>
             <div>👁 {{ course.viewCnt }}</div>
         </div>
@@ -42,8 +49,9 @@ const router = useRouter()
 const courseStore = useCourseStore()
 const userStore = useUserStore()
 
-const {loginUserId} = storeToRefs(userStore)
-const course = ref({})
+const { course } = storeToRefs(courseStore) 
+const { loginUserId } = storeToRefs(userStore)
+// const course = ref({})
 
 const goUpdate = () => {
     router.push({name: 'courseUpdate', params: course.value.courseId})
@@ -62,20 +70,55 @@ const deleteCourse = async () => {
     }
 }
 
-onMounted(async () => {
-    await courseStore.getCourseDetailById(route.params.id);
-    course.value = courseStore.course
-});
+// 찜 하트 토글 함수
+const toggleLike = async (course) => { 
+    if (!loginUserId.value) {
+        alert("로그인이 필요합니다.");
+        router.push({name: 'login'})
+        return; 
+    }
+    
+    try {
+        await courseStore.addLike(course.courseId);
+        await courseStore.getCourseDetailById(course.courseId, true)
+        
+    } catch (error) {
+        console.error("찜 토글 중 오류 발생:", error);
+        alert("찜 상태 변경에 실패했습니다.");
+    }
+}
+
+
+onMounted(async ()=>{
+    await courseStore.getCourseDetailById(route.params.id)
+})
 
 </script>
 
 <style scoped>
     /* 좋아요 + 댓글 + 조회수 */
     .stats{
-        display:flex; align-items:center; gap:14px; margin-bottom:20px;
+        display:flex; align-items:center; gap:14px; margin-bottom:20px; 
     }
-    .stats div{ font-size:13px; display:flex; align-items:center; gap:4px;}
-    .heart{ color:#aaa; cursor:pointer; font-size:18px;}
-    .heart.active{ color:#ff7a00;}
+    .stats div{ font-size:13px; display:flex; align-items:center; gap:4px;  position: relative;}
+    .card-heart {
+      position: absolute;
+      top:1px;
+      left: 2px;
+      right: 0px;
+      bottom: 80px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--orange);
+      cursor: pointer;
+    }
+
+    .card-heart.active {
+      color: var(--orange);
+    }
 
 </style>
