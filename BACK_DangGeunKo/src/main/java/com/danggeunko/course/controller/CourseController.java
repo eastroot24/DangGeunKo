@@ -3,6 +3,7 @@ package com.danggeunko.course.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,8 +35,8 @@ public class CourseController {
 
 	// 코스 전체 조회
 	@GetMapping("/course")
-	public ResponseEntity<?> getCourseList() {
-		List<Course> list = courseService.getAllCourses();
+	public ResponseEntity<?> getCourseList(@RequestParam(required = false) Integer userId) {
+		List<Course> list = courseService.getAllCourses(userId);
 		if (list != null && !list.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.OK).body(list);
 		} else {
@@ -45,24 +46,30 @@ public class CourseController {
 
 	// 코스 상세 조회
 	@GetMapping("/course/{id}")
-	public ResponseEntity<?> getCourseDetailById(@PathVariable("id") int id) {
-		Course course = courseService.getCourseById(id);
+	public ResponseEntity<?> getCourseDetailById(@PathVariable("id") int id, @RequestParam(required = false) boolean visited) {
+		Course course = null;
+			if(visited) {
+				course = courseService.updateCourseDetail(id);
+			}else {
+				course = courseService.getCourseById(id);
+			}
 		if (course != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(course);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 	}
-
+	
+	
 	// 코스 등록
 	@PostMapping("/course")
 	public ResponseEntity<?> registCourse(@RequestBody Course course) {
-		boolean completed = courseService.addCourseWithPoints(course);
-		if (completed) {
-			return ResponseEntity.status(HttpStatus.CREATED).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	    int newCourseId = courseService.addCourseWithPoints(course);
+	    if (newCourseId > 0) {
+	        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("courseId", newCourseId));
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
 
 	// 코스 수정

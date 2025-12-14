@@ -11,6 +11,7 @@ import EditProfileView from '@/views/MyPage/EditProfileView.vue'
 import FollowView from '@/views/MyPage/FollowView.vue'
 import MyCourseListView from '@/views/MyPage/MyCourseListView.vue'
 import { useUserStore } from '@/stores/user'
+import UpdateCourseView from '@/views/Course/UpdateCourseView.vue'
 
 
 const router = createRouter({
@@ -31,6 +32,12 @@ const router = createRouter({
       path: '/course/detail/:id',
       name: 'courseDetail',
       component: CourseDetailView,
+      props: true,
+    },
+    {
+      path: '/course/update/:id',
+      name: 'courseUpdate',
+      component: UpdateCourseView,
       props: true,
     },
     {

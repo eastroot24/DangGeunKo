@@ -9,7 +9,7 @@
                       <div class="shape-square" style="margin-top: 4px"></div>
                     </div>
                   </div>
-                  <div class="card-heart">♡</div>
+                  
                 </div>
                 <div class="course-info">
                   <div class="course-name">{{course.courseName}}</div>

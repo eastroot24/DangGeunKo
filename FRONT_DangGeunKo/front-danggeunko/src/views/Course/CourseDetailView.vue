@@ -1,8 +1,6 @@
 <template>
     <div>
-        <hr>
         <CourseDetail></CourseDetail>
-        <hr>
         <Review></Review>
     </div>
 </template>

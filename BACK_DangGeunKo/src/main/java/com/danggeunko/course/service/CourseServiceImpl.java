@@ -29,14 +29,19 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Transactional
 	@Override
-	public List<Course> getAllCourses() {
-		return courseDao.selectAllCourses();
+	public List<Course> getAllCourses(Integer userId) {
+		return courseDao.selectAllCourses(userId);
 	}
 	
 	@Transactional
 	@Override
 	public Course getCourseById(int id) {
 		courseDao.updateViewCnt(id);
+		return courseDao.selectCourseById(id);
+	}
+	@Transactional
+	@Override
+	public Course updateCourseDetail(int id) {
 		return courseDao.selectCourseById(id);
 	}
 
@@ -65,23 +70,36 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Transactional
 	@Override
-	public boolean addCourseWithPoints(Course course) {
+	public int addCourseWithPoints(Course course) {
 		// 1. 코스 저장
 	    int result = courseDao.insertCourse(course);
-	    if(result <= 0) return false;
+	    if(result <= 0) return 0;
 
 	    // 2. course_id가 생성되었으므로 point에 세팅
 	    int courseId = course.getCourseId();
-	    //여기서 null이 잡히는 것 같음..
-	    for(CoursePoint point : course.getCoursePoints()) {
+	    
+	    List<CoursePoint> points = course.getCoursePoints();
+	    
+	    // **null 체크 및 빈 리스트 체크 (안정성 향상)**
+	    if (points == null || points.isEmpty()) {
+	        return courseId;
+	    }
+
+	    // 포인트 리스트에 course_id 세팅
+	    for(CoursePoint point : points) {
 	        point.setCourseId(courseId);
 	    }
 
-	    // 3. 코스 포인트 저장
-	    int count = coursePointDao.insertCoursePoints(course.getCoursePoints());
-	    if(count <= 0) return false;
+	    // 3. 코스 포인트 저장 (일반적으로 List<CoursePoint>를 받아서 bulk insert 수행)
+	    int count = coursePointDao.insertCoursePoints(points);
+	    
+	    // 포인트 저장 실패 시 0 반환 (이때 트랜잭션이 롤백되어야 함)
+	    if(count <= 0) {
+	        throw new RuntimeException("코스 포인트 저장 중 오류가 발생했습니다.");
+	    }
 
-	    return true;
+	    // 4. 최종적으로 새로 생성된 코스 ID 반환
+	    return courseId;
 	}
 	
 	@Transactional
@@ -97,5 +115,7 @@ public class CourseServiceImpl implements CourseService {
 	        return true; // 좋아요 추가됨
 	    }
 	}
+
+	
 
 }

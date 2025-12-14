@@ -29,18 +29,21 @@ public class Course {
 
     private Double avgRating;
     private Integer viewCnt;
-
+    private Integer likeCnt;
+    private Integer reviewCount;
+    private boolean isLiked;
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public Course() {
     }
 
-	public Course(Integer courseId, Integer userId, String courseName, String courseCity, String courseDistrict,
+	public Course(Integer courseId, int userId, String courseName, String courseCity, String courseDistrict,
 			String startAddress, String endAddress, List<CoursePoint> coursePoints, Double distanceKm,
 			Double durationMin, Double paceMin, Integer courseType, String difficulty, String description,
-			Boolean hasCrosswalk, Boolean hasToilet, Double avgRating, Integer viewCnt, LocalDateTime createdAt,
-			LocalDateTime updatedAt) {
+			Boolean hasCrosswalk, Boolean hasToilet, Double avgRating, Integer viewCnt, Integer likeCnt,
+			Integer reviewCount, boolean isLiked, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		super();
 		this.courseId = courseId;
 		this.userId = userId;
@@ -60,6 +63,9 @@ public class Course {
 		this.hasToilet = hasToilet;
 		this.avgRating = avgRating;
 		this.viewCnt = viewCnt;
+		this.likeCnt = likeCnt;
+		this.reviewCount = reviewCount;
+		this.isLiked = isLiked;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -72,11 +78,11 @@ public class Course {
 		this.courseId = courseId;
 	}
 
-	public Integer getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
@@ -208,6 +214,30 @@ public class Course {
 		this.viewCnt = viewCnt;
 	}
 
+	public Integer getLikeCnt() {
+		return likeCnt;
+	}
+
+	public void setLikeCnt(Integer likeCnt) {
+		this.likeCnt = likeCnt;
+	}
+
+	public Integer getReviewCount() {
+		return reviewCount;
+	}
+
+	public void setReviewCount(Integer reviewCount) {
+		this.reviewCount = reviewCount;
+	}
+
+	public boolean isLiked() {
+		return isLiked;
+	}
+
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
+	}
+
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -231,9 +261,12 @@ public class Course {
 				+ endAddress + ", coursePoints=" + coursePoints + ", distanceKm=" + distanceKm + ", durationMin="
 				+ durationMin + ", paceMin=" + paceMin + ", courseType=" + courseType + ", difficulty=" + difficulty
 				+ ", description=" + description + ", hasCrosswalk=" + hasCrosswalk + ", hasToilet=" + hasToilet
-				+ ", avgRating=" + avgRating + ", viewCnt=" + viewCnt + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + "]";
+				+ ", avgRating=" + avgRating + ", viewCnt=" + viewCnt + ", likeCnt=" + likeCnt + ", reviewCount="
+				+ reviewCount + ", isLiked=" + isLiked + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
+
+	
+	
 
    
 }
