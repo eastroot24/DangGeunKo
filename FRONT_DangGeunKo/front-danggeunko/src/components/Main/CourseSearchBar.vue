@@ -24,14 +24,29 @@
 <script setup>
 import { useCourseStore } from '@/stores/course'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
-
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
 const store = useCourseStore()
 
 const {searchInfo} = storeToRefs(store)
 
 const searchCourseList = () => {
-  store.searchCourseList()
+  
+  if(route.path == '/'){
+    router.push({name: 'course'})
+    .then(()=>{
+      store.searchCourseList()
+    })
+    .catch((err)=>{
+      console.log("라우팅 오류:", err)
+    })
+  }else{
+    store.searchCourseList()
+
+  }
+  
+  
 }
 </script>
 
