@@ -61,56 +61,113 @@
 </template>
 
 <script setup>
-import { useCourseStore } from '@/stores/course';
-import { useUserStore } from '@/stores/user';
-import { storeToRefs } from 'pinia';
-import { ref, onMounted, toRaw } from 'vue'
-import { useRouter } from 'vue-router';
+import { useCourseStore } from '@/stores/course'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const emit = defineEmits(['isDone'])
 
-const emit = defineEmits(["draw"])
-const retry = () =>{
-    emit("isDone", false)
-}
+const retry = () => emit('isDone', false)
 
+// 🔹 stores
 const userStore = useUserStore()
 const courseStore = useCourseStore()
-const {loginUserId} = storeToRefs(userStore)
-const courseInfo = ref({
-    userId: loginUserId.value,
-    courseName: '',
-    courseCity: '',
-    courseDistrict: '',
-    startAddress: '',
-    endAddress: '',
-    distanceKm: 0,
-    durationMin: 0,
-    paceMin: 0,
-    courseType: 0,
-    difficulty: '',
-    description: '',
-    hasCrosswalk: false,
-    hasToilet: false,
-    //테스트용
-    coursePoints:  [ 
-    { "pointId": 1, "courseId": 1, "sequence": 1, "latitude": 37.5, "longitude": 127.0, "order": 1 },
-    { "pointId": 1, "courseId": 1, "sequence": 1, "latitude": 37.6, "longitude": 127.1, "order": 2 }
-  ],
+const { loginUserId } = storeToRefs(userStore)
+
+// 🔹 props
+const props = defineProps({
+  points: { type: Array, default: () => [] },
+  distanceKm: { type: Number, default: 0 },
+  startAddress: { type: String, default: '' },
+  endAddress: { type: String, default: '' }
 })
 
-const addCourse = async () => {
-    try {
-        const newCourseId = await courseStore.registCourse(courseInfo.value) 
-        if (newCourseId) {
-            // 새로 받은 ID를 사용해 상세 페이지로 이동
-           router.replace({name: "courseDetail", params: {id: newCourseId}}) 
-        }
-    } catch (error) {
-        console.error("코스 등록 실패:", error);
-    }
-}
+// 🔹 courseInfo
+const courseInfo = ref({
+  userId: loginUserId.value,
+  courseName: '',
+  courseCity: '',
+  courseDistrict: '',
+  startAddress: '',
+  endAddress: '',
+  distanceKm: 0,
+  durationMin: 0,
+  paceMin: 0,
+  courseType: 0,
+  difficulty: '',
+  description: '',
+  hasCrosswalk: false,
+  hasToilet: false,
+  coursePoints: []
+})
 
+/* ✅ 초기 반영 (이게 빠져서 안 보였음) */
+onMounted(() => {
+  courseInfo.value.startAddress = props.startAddress
+  courseInfo.value.endAddress = props.endAddress
+  courseInfo.value.distanceKm = props.distanceKm
+  courseInfo.value.coursePoints = props.points
+})
+
+/* ✅ 이후 변경 대응 */
+watch(() => props.points, v => {
+  courseInfo.value.coursePoints = v ?? []
+})
+
+watch(() => props.distanceKm, v => {
+  courseInfo.value.distanceKm = v ?? 0
+})
+
+watch(() => props.startAddress, v => {
+  courseInfo.value.startAddress = v ?? ''
+})
+
+watch(() => props.endAddress, v => {
+  courseInfo.value.endAddress = v ?? ''
+})
+
+/* ✅ 페이스 자동 계산 */
+watch(
+  () => [courseInfo.value.distanceKm, courseInfo.value.durationMin],
+  ([distance, duration]) => {
+    if (distance > 0 && duration > 0) {
+      courseInfo.value.paceMin = Number((duration / distance).toFixed(1))
+    }
+  }
+)
+
+/* ✅ 로그인 ID 늦게 들어올 경우 */
+watch(loginUserId, v => {
+  courseInfo.value.userId = v ?? null
+})
+
+// 🔹 등록
+const addCourse = async () => {
+  try {
+    const payload = {
+      ...courseInfo.value,
+      coursePoints: courseInfo.value.coursePoints.map((p, idx) => ({
+        courseId: null,              // 서버에서 세팅
+        sequence: idx + 1,           // ⭐ order → sequence
+        latitude: p.latitude,
+        longitude: p.longitude
+      }))
+    }
+
+    console.log('🚀 최종 payload', payload)
+
+    const newCourseId = await courseStore.registCourse(payload)
+
+    if (newCourseId) {
+      router.replace({ name: 'courseDetail', params: { id: newCourseId } })
+    }
+  } catch (e) {
+    console.error('코스 등록 실패', e)
+  }
+}
 
 const regionDB = {
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",

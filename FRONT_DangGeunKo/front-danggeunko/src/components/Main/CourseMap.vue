@@ -1,10 +1,8 @@
 <template>
     <div>
-        <h3>지도화면</h3>
-        <div id="map" style="width:100%;height:400px;">
-            
-        </div>
         <CourseSearchBar/>
+        <div id="map" style="width:100%;height:400px;">
+        </div>
     </div>
 </template>
 <script setup >
