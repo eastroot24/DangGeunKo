@@ -1,17 +1,13 @@
 <template>
     <div>
-        
+
         <!-- 댓글 입력 -->
         <div class="comment-box">
             <textarea v-model="review.content" class="comment-input" placeholder="코스에 대한 리뷰를 남겨주세요."></textarea>
             <div class="stars">
-            <span 
-                v-for="n in 5" 
-                :key="n" 
-                @click="review.rating = n" 
-                :class="{ active: n <= review.rating }"
-            >★</span>
-             </div>
+                <span v-for="n in 5" :key="n" @click="review.rating = n"
+                    :class="{ active: n <= review.rating }">★</span>
+            </div>
             <button @click="addReview" class="comment-submit">등록</button>
         </div>
     </div>
@@ -22,14 +18,14 @@ import { useCourseStore } from '@/stores/course';
 import { useReviewStore } from '@/stores/review';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { ref, onMounted } from 'vue'; // onMounted 임포트 추가
+import { ref, onMounted, watch } from 'vue'; // onMounted 임포트 추가
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const reviewStore = useReviewStore()
 const courseStore = useCourseStore()
-const {loginUserId} = storeToRefs(userStore)
+const { loginUserId } = storeToRefs(userStore)
 //  리뷰 객체
 const review = ref({
     courseId: route.params.id,
@@ -41,15 +37,15 @@ const review = ref({
 
 const addReview = async () => {
     // 로그인 정보 확인
-    if (loginUserId.value === null) { 
+    if (loginUserId.value === null) {
         alert('로그인이 필요한 서비스 입니다.')
-        router.push({name: 'login'})
+        router.push({ name: 'login' })
     }
     else {
 
         // 1. 리뷰를 등록하고
-        await reviewStore.addReview(review.value); 
-        
+        await reviewStore.addReview(review.value);
+
         // 2. 리뷰 입력 필드를 초기화
         review.value.rating = 0;
         review.value.content = '';
@@ -82,6 +78,12 @@ const updateStarDisplay = (currentRating) => {
 };
 
 
+watch(() => route.params.id, (newId) => {
+    if (newId) {
+        review.value.courseId = newId;
+    }
+});
+
 // 3. 컴포넌트가 DOM에 마운트된 후에만 이벤트 리스너 부착
 onMounted(() => {
     /* 별점 선택 */
@@ -90,7 +92,7 @@ onMounted(() => {
         // 이미 위에 정의된 handleStarClick 함수를 리스너로 사용
         star.addEventListener("click", handleStarClick);
     });
-    
+
     // 초기 별점(0) 상태 반영
     updateStarDisplay(review.value.rating);
 });
@@ -98,25 +100,45 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 댓글 입력칸 */
+.comment-box {
+    padding: 12px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 16px;
+}
 
-    /* 댓글 입력칸 */
-    .comment-box{
-        padding:12px; background:#fff; border-top:1px solid #eee; border-bottom:1px solid #eee;
-        margin-bottom:16px;
-    }
-    .comment-input{
-        width:95%; padding:10px; border-radius:10px; border:1px solid #ddd; font-size:12px;
-        margin-bottom:10px;
-    }
+.comment-input {
+    width: 95%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
 
-    /* 별점 */
-    .stars span{
-        font-size:20px; cursor:pointer; color:#ddd;
-    }
-    .stars span.active{ color:#ffb400; }
+/* 별점 */
+.stars span {
+    font-size: 20px;
+    cursor: pointer;
+    color: #ddd;
+}
 
-    .comment-submit{
-        background:#ff7a00; color:#fff; width:100%; border:none; height:36px;
-        border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; margin-top:8px;
-    }
+.stars span.active {
+    color: #ffb400;
+}
+
+.comment-submit {
+    background: #ff7a00;
+    color: #fff;
+    width: 100%;
+    border: none;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+}
 </style>

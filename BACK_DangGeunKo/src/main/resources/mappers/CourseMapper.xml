@@ -22,10 +22,22 @@
 
 	<!-- 전체 코스 조회 -->
    <select id="selectAllCourses" parameterType="Integer" resultType="Course">
-    SELECT 
-        c.*,
-        (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt, 
-        (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
+		SELECT
+		c.*,
+		(SELECT cp.latitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id = c.course_id
+		AND cp.sequence = 1
+		LIMIT 1) AS startLat,
+		(SELECT cp.longitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id = c.course_id
+		AND cp.sequence = 1
+		LIMIT 1) AS startLng,
+		(SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id)
+		AS likeCnt,
+		(SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS
+		reviewCount,
         <choose>
             <when test="userId != null">
                 CASE WHEN EXISTS (
@@ -110,11 +122,21 @@
 
 	<!-- 코스 검색 -->
     <select id="search" parameterType="SearchCondition" resultType="Course">
-    SELECT *
-    FROM course c
-    JOIN user u
-    ON c.user_id = u.user_id
-    WHERE 1=1
+		SELECT c.*,
+		(SELECT cp.latitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id = c.course_id
+		AND cp.sequence = 1
+		LIMIT 1) AS startLat,
+		(SELECT cp.longitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id = c.course_id
+		AND cp.sequence = 1
+		LIMIT 1) AS startLng
+		FROM course c
+		JOIN user u
+		ON c.user_id = u.user_id
+		WHERE 1=1
     
     <if test="key != null and key != '' and value != null and value != ''">
         <choose>

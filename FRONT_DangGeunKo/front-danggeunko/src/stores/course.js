@@ -2,11 +2,13 @@ import { ref } from 'vue'
 import { defineStore, storeToRefs } from "pinia"
 import axios from 'axios'
 import { useUserStore } from './user'
+import { useMapStore } from './map'
 
 const REST_API_COURSE_URL = "http://localhost:8080/api-course/course"
 
 export const useCourseStore = defineStore('course', () => {
     const userStore = useUserStore();
+    const mapStore = useMapStore();
     const courseList = ref([])
     const course = ref({})
     const searchInfo = ref({ 
@@ -20,6 +22,23 @@ export const useCourseStore = defineStore('course', () => {
         orderBy: 'createdAt', 
         orderByDir: 'desc'    
         })
+        // ⭐ 맵에 마커를 표시하는 액션 정의
+    const setCourseMarkers = (courses) => {
+        // 1. courses가 없거나 배열이 아닌 경우 빈 배열로 처리하여 에러 방지
+        const dataArray = Array.isArray(courses) ? courses : (courses ? [courses] : []);
+        
+        const markers = dataArray.map(course => ({
+            id: course.courseId,
+            lat: course.startLat,       // ⭐ 서버에서 넘어온 시작 위도 필드 (가정)
+            lng: course.startLng,       // ⭐ 서버에서 넘어온 시작 경도 필드 (가정)
+            name: course.courseName,    // 마커 정보창에 표시할 이름
+            city: course.courseCity,    // (선택 사항)
+        }));
+
+        // 맵 스토어의 액션을 호출하여 마커 목록을 지도 컴포넌트에 전달
+        mapStore.setMarkers(markers);
+    }
+
     // 전체 코스 조회
     const getCourseList = async () => {
         // loginUserId는 pinia store에 저장된 값이므로 null 또는 실제 ID가 될 수 있습니다.
@@ -31,6 +50,7 @@ export const useCourseStore = defineStore('course', () => {
                 params: params,
             });
             courseList.value = response.data;
+            setCourseMarkers(courseList.value); // 마커 표시 로직 실행
             // console.log(userId)
             // console.log(courseList.value)
 
@@ -45,7 +65,9 @@ export const useCourseStore = defineStore('course', () => {
             params: searchInfo.value
         })
         .then((res)=>{
-            courseList.value = res.data
+            const data = res.data || []
+            courseList.value = data
+            setCourseMarkers(courseList.value);
         })
         .catch((err)=>{
             console.log("코스 검색 오류:", err)
@@ -145,5 +167,5 @@ export const useCourseStore = defineStore('course', () => {
     return { course, searchInfo, courseList, 
         getCourseDetailById, getCourseList, searchCourseList, 
         getWeeklyRanking, registCourse, updateCourseById,
-        deleteCourseById, addLike,  }
+        deleteCourseById, addLike, setCourseMarkers, }
 })

@@ -33,6 +33,10 @@ public class Course {
     private Integer reviewCount;
     private boolean isLiked;
     
+    private Double startLat;
+    private Double startLng;
+    
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -43,7 +47,8 @@ public class Course {
 			String startAddress, String endAddress, List<CoursePoint> coursePoints, Double distanceKm,
 			Double durationMin, Double paceMin, Integer courseType, String difficulty, String description,
 			Boolean hasCrosswalk, Boolean hasToilet, Double avgRating, Integer viewCnt, Integer likeCnt,
-			Integer reviewCount, boolean isLiked, LocalDateTime createdAt, LocalDateTime updatedAt) {
+			Integer reviewCount, boolean isLiked, Double startLat, Double startLng, LocalDateTime createdAt,
+			LocalDateTime updatedAt) {
 		super();
 		this.courseId = courseId;
 		this.userId = userId;
@@ -66,6 +71,8 @@ public class Course {
 		this.likeCnt = likeCnt;
 		this.reviewCount = reviewCount;
 		this.isLiked = isLiked;
+		this.startLat = startLat;
+		this.startLng = startLng;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -238,6 +245,22 @@ public class Course {
 		this.isLiked = isLiked;
 	}
 
+	public Double getStartLat() {
+		return startLat;
+	}
+
+	public void setStartLat(Double startLat) {
+		this.startLat = startLat;
+	}
+
+	public Double getStartLng() {
+		return startLng;
+	}
+
+	public void setStartLng(Double startLng) {
+		this.startLng = startLng;
+	}
+
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -262,11 +285,9 @@ public class Course {
 				+ durationMin + ", paceMin=" + paceMin + ", courseType=" + courseType + ", difficulty=" + difficulty
 				+ ", description=" + description + ", hasCrosswalk=" + hasCrosswalk + ", hasToilet=" + hasToilet
 				+ ", avgRating=" + avgRating + ", viewCnt=" + viewCnt + ", likeCnt=" + likeCnt + ", reviewCount="
-				+ reviewCount + ", isLiked=" + isLiked + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ reviewCount + ", isLiked=" + isLiked + ", startLat=" + startLat + ", startLng=" + startLng
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
-
-	
-	
 
    
 }
