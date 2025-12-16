@@ -2,8 +2,10 @@
 <template>
     <div class="body">
       <div class="app">
-      <CourseMap></CourseMap>
-        <RouterView></RouterView>
+      <div v-if="route.path !== '/myInfo'">
+         <CourseMap></CourseMap>
+      </div>
+      <RouterView></RouterView>
       <CousreFooter></CousreFooter>
       </div>
       
@@ -13,6 +15,9 @@
 <script setup>
 import CousreFooter from '@/components/Footer/CousreFooter.vue';
 import CourseMap from '@/components/Main/CourseMap.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
 
 </script>
 
