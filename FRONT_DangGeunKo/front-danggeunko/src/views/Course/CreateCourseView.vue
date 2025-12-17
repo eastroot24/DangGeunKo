@@ -3,19 +3,10 @@
     <div class="drag-handle"></div>
     <div class="panel-title">코스 등록하기</div>
 
-    <DrawingMap
-  v-if="!isDrawing"
-  @is-done="onDrawingDone"
-/>
+    <DrawingMap v-if="!isDrawing" @is-done="onDrawingDone" />
 
-<CourseForm
-  v-else
-  :points="points"
-  :distanceKm="distanceKm"
-  :startAddress="startAddress"
-  :endAddress="endAddress"
-  @is-done="retryDrawing"
-/>
+    <CourseForm v-else :points="points" :distanceKm="distanceKm" :startAddress="startAddress" :endAddress="endAddress"
+      @is-done="retryDrawing" />
 
   </div>
 </template>

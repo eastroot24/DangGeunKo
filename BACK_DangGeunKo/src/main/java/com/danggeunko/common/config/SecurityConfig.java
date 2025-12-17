@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api-auth/login", "/api-auth/refresh", "/api-auth/logout", "/api-review/**", "/api-course/**").permitAll()
+                        .requestMatchers("/api-auth/login", "/api-auth/refresh", "/api-auth/logout", "/api-review/**", "/api-course/**", "/api-comment/**", "/api-ai/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

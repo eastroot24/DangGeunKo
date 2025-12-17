@@ -14,10 +14,10 @@ public interface CourseService {
 	public List<Course> getAllCourses(Integer userId);
 		
 	// 코스 아이디 조회
-	public Course getCourseById(int id);
+	public Course getCourseById(int id, Integer userId);
 		
 	//코스 상세 업데이트
-	public Course updateCourseDetail(int id);
+	public Course updateCourseDetail(int id, Integer userId);
 	
 	// 코스 업데이트
 	public boolean updateCourse(Course course);

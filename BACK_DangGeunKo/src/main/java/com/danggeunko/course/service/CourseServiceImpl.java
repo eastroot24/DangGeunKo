@@ -35,14 +35,14 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Transactional
 	@Override
-	public Course getCourseById(int id) {
+	public Course getCourseById(int id, Integer userId) {
 		courseDao.updateViewCnt(id);
-		return courseDao.selectCourseById(id);
+		return courseDao.selectCourseById(id, userId);
 	}
 	@Transactional
 	@Override
-	public Course updateCourseDetail(int id) {
-		return courseDao.selectCourseById(id);
+	public Course updateCourseDetail(int id, Integer userId) {
+		return courseDao.selectCourseById(id, userId);
 	}
 
 	@Transactional
