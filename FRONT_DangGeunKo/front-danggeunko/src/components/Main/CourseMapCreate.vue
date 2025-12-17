@@ -78,10 +78,10 @@ function addPoint(latlng) {
   }
 
   if (path.length === 0) {
-  getAddress(latlng, 'update:startAddress')
-} else {
-  getAddress(latlng, 'update:endAddress')
-}
+    getAddress(latlng, 'update:startAddress')
+  } else {
+    getAddress(latlng, 'update:endAddress')
+  }
 
   const icon = path.length === 0 ? startIcon : normalIcon
 

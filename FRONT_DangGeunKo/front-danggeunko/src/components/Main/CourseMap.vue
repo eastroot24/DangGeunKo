@@ -1,7 +1,11 @@
 <template>
     <div>
         <CourseSearchBar />
-        <div id="map" style="width:100%;height: 400px;"></div>
+        <div id="map" style="width:100%;height: 400px;">
+            <button @click="moveToCurrentLocation" class="curr-loc-btn">
+                내 위치로 이동
+            </button>
+        </div>
 
     </div>
 </template>
@@ -197,6 +201,52 @@ const checkLastString = (word, lastString) => new RegExp(lastString + '$').test(
 
 const hasAddition = (addition) => !!(addition && addition.value);
 
+
+// =========================================================
+// ⭐ 현위치 가져오기 및 지도 이동 함수
+// =========================================================
+const curLocationMarker = ref(null); // 현위치 마커를 저장할 변수
+
+const moveToCurrentLocation = () => {
+    if (!mapInstance.value) return;
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                const currentLatLng = new naver.maps.LatLng(lat, lng);
+
+                mapInstance.value.setCenter(currentLatLng);
+                mapInstance.value.setZoom(16); // 정확도를 높였으므로 줌 레벨을 더 높여도 좋습니다.
+
+                if (curLocationMarker.value) {
+                    curLocationMarker.value.setPosition(currentLatLng);
+                    curLocationMarker.value.setMap(mapInstance.value);
+                } else {
+                    curLocationMarker.value = new naver.maps.Marker({
+                        position: currentLatLng,
+                        map: mapInstance.value,
+                        icon: {
+                            content: '<div style="width:15px;height:15px;background:rgba(0,123,255,0.8);border:2px solid white;border-radius:50%;box-shadow:0 0 8px rgba(0,0,0,0.5);"></div>',
+                            anchor: new naver.maps.Point(7, 7)
+                        }
+                    });
+                }
+            },
+            (err) => {
+                console.error("Geolocation 오류:", err.message);
+                // 옵션 사용 시 타임아웃 오류가 발생할 수 있으므로 사용자에게 안내
+                if (err.code === 3) alert("위치 정보를 가져오는 데 시간이 초과되었습니다.");
+                else alert("위치 권한을 확인해주세요.");
+            },
+        );
+    } else {
+        alert("이 브라우저에서는 위치 서비스를 지원하지 않습니다.");
+    }
+};
+
 // =========================================================
 // ⭐ 3. 지도 초기화 함수 정의 (initMap)
 // =========================================================
@@ -279,7 +329,22 @@ watch(mapInstance, (newMap) => {
 // onMounted는 기존 코드 유지
 onMounted(async () => {
     initMap();
+    moveToCurrentLocation()
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+/* 버튼 스타일 예시 (지도 위에 띄우기) */
+.curr-loc-btn {
+    position: absolute;
+    z-index: 100;
+    top: 70px;
+    /* SearchBar 위치에 따라 조정 */
+    right: 10px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+}
+</style>

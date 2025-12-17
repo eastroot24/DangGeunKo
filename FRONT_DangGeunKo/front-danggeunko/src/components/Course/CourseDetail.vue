@@ -76,7 +76,7 @@ const deleteCourse = async () => {
 }
 
 // 찜 하트 토글 함수
-const toggleLike = async (course) => {
+const toggleLike = async (courseData) => {
     if (!loginUserId.value) {
         alert("로그인이 필요합니다.");
         router.push({ name: 'login' })
@@ -84,9 +84,8 @@ const toggleLike = async (course) => {
     }
 
     try {
-        await courseStore.addLike(course.courseId);
-        await courseStore.getCourseDetailById(course.courseId, true)
-
+        await courseStore.addLike(courseData.courseId);
+        const res = await courseStore.getCourseDetailById(courseData.courseId, true)
     } catch (error) {
         console.error("찜 토글 중 오류 발생:", error);
         alert("찜 상태 변경에 실패했습니다.");

@@ -49,10 +49,10 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Transactional
 	@Override
-	public Course getCourseById(int id) {
+	public Course getCourseById(int id, Integer userId) {
 		courseDao.updateViewCnt(id);
 		// 코스 기본 정보
-	    Course course = courseDao.selectCourseById(id);
+	    Course course = courseDao.selectCourseById(id, userId);
 
 	    // 코스 포인트 조회
 	    List<CoursePoint> points =
@@ -65,8 +65,8 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Transactional
 	@Override
-	public Course updateCourseDetail(int id) {
-		return courseDao.selectCourseById(id);
+	public Course updateCourseDetail(int id, Integer userId) {
+		return courseDao.selectCourseById(id, userId);
 	}
 
 	@Transactional
