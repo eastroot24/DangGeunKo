@@ -8,7 +8,7 @@
             </div>
             <div class="course-name">{{ course.courseName }}</div>
             <!-- 지도 -->
-            <div class="map-area">지도 영역</div>
+            <StaticCourseMap :points="course.coursePoints || []" />
             <div class="sub-info">출발 · 종료 : {{ course.startAddress }} – {{ course.endAddress }}</div>
 
             <div class="tag-list">
@@ -42,6 +42,7 @@ import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import StaticCourseMap from '../Main/StaticCourseMap.vue';
 
 const route = useRoute();
 const router = useRouter()
@@ -51,6 +52,9 @@ const userStore = useUserStore()
 const { course } = storeToRefs(courseStore)
 const { loginUserId } = storeToRefs(userStore)
 
+const props = {
+    courseId: Number,
+}
 
 // const course = ref({})
 
@@ -95,6 +99,11 @@ watch(() => route.params.id, (newId) => {
 });
 onMounted(async () => {
     await courseStore.getCourseDetailById(route.params.id)
+})
+
+watch(course, () => {
+  console.log('course:', course.value)
+  console.log('coursePoints:', course.value?.coursePoints)
 })
 
 </script>

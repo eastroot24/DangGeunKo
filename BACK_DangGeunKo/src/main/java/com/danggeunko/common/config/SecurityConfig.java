@@ -21,12 +21,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http        		.cors(cors -> {})
+        http
+        		.cors(cors -> {})
         		.csrf(csrf -> csrf.disable())
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api-auth/login", "/api-auth/refresh", "/api-auth/logout", "/api-review/**", "/api-course/**", "/api-comment/**", "/api-ai/**").permitAll()
+                        .requestMatchers("/api-auth/login", "/api-auth/refresh", "/api-auth/logout", "/api-review/**", "/api-course/**", "/api-course/course/*/thumbnail.png", "/api-comment/**", "/api-ai/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

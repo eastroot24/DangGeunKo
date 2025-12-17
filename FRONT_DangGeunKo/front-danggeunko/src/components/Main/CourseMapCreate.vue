@@ -6,14 +6,15 @@
       <div style="margin-top:6px;font-size:12px;">
         현재 거리: {{ distanceKm }} km
       </div>
-      <button @click="undoLast">Undo</button>
-      <button @click="resetAll">Reset</button>
+      <button @click="undoLast">되돌리기</button>
+      <button @click="resetAll">초기화</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import dgkMarkerImage from '@/assets/img/dgk_marker.png'
 
 const emit = defineEmits([
   'update:points',
@@ -32,12 +33,14 @@ const distanceKm = ref(0)
 let totalDistance = 0
 
 const startIcon = {
-  content: '<div style="background:#2ecc71;color:white;padding:6px 10px;border-radius:12px;font-size:12px;">START</div>',
-  anchor: new naver.maps.Point(20, 10)
+  url: dgkMarkerImage,
+  size: new naver.maps.Size(40, 40),
+  scaledSize: new naver.maps.Size(40, 40),
+  anchor: new naver.maps.Point(20, 40)
 }
 
 const normalIcon = {
-  content: '<div style="background:#3498db;color:white;padding:6px 10px;border-radius:50%;">•</div>',
+  content: '<div style="background:#3498db;color:white;padding:6px 10px;border-radius:50%;"></div>',
   anchor: new naver.maps.Point(10, 10)
 }
 

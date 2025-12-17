@@ -3,6 +3,7 @@ package com.danggeunko.course.service;
 import java.util.List;
 
 import com.danggeunko.course.dto.Course;
+import com.danggeunko.course.dto.MapPoint;
 import com.danggeunko.course.dto.SearchCondition;
 
 public interface CourseService {
@@ -34,5 +35,7 @@ public interface CourseService {
 	public int addCourseWithPoints(Course course);
 	
 	boolean addLike(int userId, int courseId);
+	
+	List<MapPoint> getMapPoints(int courseId);
 
 }
