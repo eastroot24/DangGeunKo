@@ -10,7 +10,13 @@ import com.danggeunko.course.dao.CourseDao;
 import com.danggeunko.course.dao.CoursePointDao;
 import com.danggeunko.course.dto.Course;
 import com.danggeunko.course.dto.CoursePoint;
+import com.danggeunko.course.dto.MapPoint;
 import com.danggeunko.course.dto.SearchCondition;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
+import com.danggeunko.course.dto.MapPoint;
+
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -30,15 +36,33 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	@Override
 	public List<Course> getAllCourses(Integer userId) {
-		return courseDao.selectAllCourses(userId);
+		List<Course> courses = courseDao.selectAllCourses(userId);
+
+	    for (Course course : courses) {
+	        List<CoursePoint> points =
+	            coursePointDao.selectPointsByCourseId(course.getCourseId());
+	        course.setCoursePoints(points);
+	    }
+
+	    return courses;
 	}
 	
 	@Transactional
 	@Override
 	public Course getCourseById(int id) {
 		courseDao.updateViewCnt(id);
-		return courseDao.selectCourseById(id);
+		// 코스 기본 정보
+	    Course course = courseDao.selectCourseById(id);
+
+	    // 코스 포인트 조회
+	    List<CoursePoint> points =
+	        coursePointDao.selectPointsByCourseId(id);
+
+	    course.setCoursePoints(points);
+
+	    return course;
 	}
+	
 	@Transactional
 	@Override
 	public Course updateCourseDetail(int id) {
@@ -115,6 +139,27 @@ public class CourseServiceImpl implements CourseService {
 	        return true; // 좋아요 추가됨
 	    }
 	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<MapPoint> getMapPoints(int courseId) {
+
+	    List<CoursePoint> points =
+	        coursePointDao.selectPointsByCourseId(courseId);
+
+	    if (points == null || points.isEmpty()) {
+	        return List.of();
+	    }
+
+	    return points.stream()
+	        .sorted(Comparator.comparingInt(CoursePoint::getSequence))
+	        .map(p -> new MapPoint(
+	            p.getLatitude(),
+	            p.getLongitude()
+	        ))
+	        .collect(Collectors.toList());
+	}
+
 
 	
 

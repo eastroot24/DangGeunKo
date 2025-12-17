@@ -1,10 +1,19 @@
 package com.danggeunko.course.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-import org.apache.ibatis.annotations.Param;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.danggeunko.course.dto.MapPoint;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.danggeunko.course.dao.CoursePointDao;
 import com.danggeunko.course.dto.Course;
+import com.danggeunko.course.dto.CoursePoint;
 import com.danggeunko.course.dto.SearchCondition;
 import com.danggeunko.course.service.CourseService;
 
@@ -28,10 +39,17 @@ import com.danggeunko.course.service.CourseService;
 public class CourseController {
 
 	CourseService courseService;
+	CoursePointDao coursePointDao;
 
-	public CourseController(CourseService courseService) {
+	public CourseController(CourseService courseService, CoursePointDao coursePointDao) {
 		this.courseService = courseService;
+		this.coursePointDao = coursePointDao;
 	}
+	
+	@Value("${naver.map.gateway-id}")
+    private String naverMapKeyId;
+	@Value("${naver.map.gateway-key}")
+	private String naverMapKeySecret;
 
 	// 코스 전체 조회
 	@GetMapping("/course")
@@ -123,5 +141,49 @@ public class CourseController {
 		boolean liked = courseService.addLike(userId, courseId);
 		return ResponseEntity.ok(Map.of("courseId", courseId, "userId", userId, "liked", liked));
 	}
+	
+	// 지도 캡처 이미지 반환
+	@GetMapping(
+		    value = "/course/{id}/thumbnail",
+		    produces = MediaType.IMAGE_PNG_VALUE
+		)
+		public ResponseEntity<byte[]> getCourseThumbnail(@PathVariable int id)
+		    throws Exception {
+
+		    List<MapPoint> points = courseService.getMapPoints(id);
+
+		    if (points.isEmpty()) {
+		        return ResponseEntity.noContent().build();
+		    }
+
+		    // Node 서버로 보낼 payload
+		    Map<String, Object> payload = Map.of(
+		        "points", points,
+		        "width", 400,
+		        "height", 300
+		    );
+
+		    ObjectMapper mapper = new ObjectMapper();
+		    String json = mapper.writeValueAsString(payload);
+
+		    HttpRequest request = HttpRequest.newBuilder()
+		        .uri(URI.create("http://localhost:4001/render"))
+		        .header("Content-Type", "application/json")
+		        .POST(HttpRequest.BodyPublishers.ofString(json))
+		        .build();
+
+		    HttpClient client = HttpClient.newHttpClient();
+		    HttpResponse<byte[]> response =
+		        client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+		    if (response.statusCode() != 200) {
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		    }
+
+		    return ResponseEntity.ok()
+		        .contentType(MediaType.IMAGE_PNG)
+		        .header("Cache-Control", "no-store")
+		        .body(response.body());
+		}
 
 }

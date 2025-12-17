@@ -104,7 +104,6 @@ const courseInfo = ref({
   coursePoints: []
 })
 
-/* ✅ 초기 반영 (이게 빠져서 안 보였음) */
 onMounted(() => {
   courseInfo.value.startAddress = props.startAddress
   courseInfo.value.endAddress = props.endAddress
@@ -112,7 +111,6 @@ onMounted(() => {
   courseInfo.value.coursePoints = props.points
 })
 
-/* ✅ 이후 변경 대응 */
 watch(() => props.points, v => {
   courseInfo.value.coursePoints = v ?? []
 })
@@ -150,14 +148,12 @@ const addCourse = async () => {
     const payload = {
       ...courseInfo.value,
       coursePoints: courseInfo.value.coursePoints.map((p, idx) => ({
-        courseId: null,              // 서버에서 세팅
-        sequence: idx + 1,           // ⭐ order → sequence
+        courseId: null,     
+        sequence: idx + 1,          
         latitude: p.latitude,
         longitude: p.longitude
       }))
     }
-
-    console.log('🚀 최종 payload', payload)
 
     const newCourseId = await courseStore.registCourse(payload)
 
