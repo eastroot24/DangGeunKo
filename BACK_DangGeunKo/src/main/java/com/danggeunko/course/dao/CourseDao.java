@@ -14,7 +14,7 @@ public interface CourseDao {
 	public List<Course> selectAllCourses(Integer userId);
 	
 	// 코스 아이디 조회
-	public Course selectCourseById(int id);
+	public Course selectCourseById(int id, Integer userId);
 	
 	// 코스 업데이트
 	public int updateCourse(Course course);

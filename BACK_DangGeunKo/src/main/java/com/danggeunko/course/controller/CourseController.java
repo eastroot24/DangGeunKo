@@ -46,30 +46,30 @@ public class CourseController {
 
 	// 코스 상세 조회
 	@GetMapping("/course/{id}")
-	public ResponseEntity<?> getCourseDetailById(@PathVariable("id") int id, @RequestParam(required = false) boolean visited) {
+	public ResponseEntity<?> getCourseDetailById(@PathVariable("id") int id,
+			@RequestParam(required = false) boolean visited, @RequestParam(required = false) Integer userId) {
 		Course course = null;
-			if(visited) {
-				course = courseService.updateCourseDetail(id);
-			}else {
-				course = courseService.getCourseById(id);
-			}
+		if (visited) {
+			course = courseService.updateCourseDetail(id,userId);
+		} else {
+			course = courseService.getCourseById(id,userId);
+		}
 		if (course != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(course);
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 	}
-	
-	
+
 	// 코스 등록
 	@PostMapping("/course")
 	public ResponseEntity<?> registCourse(@RequestBody Course course) {
-	    int newCourseId = courseService.addCourseWithPoints(course);
-	    if (newCourseId > 0) {
-	        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("courseId", newCourseId));
-	    } else {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-	    }
+		int newCourseId = courseService.addCourseWithPoints(course);
+		if (newCourseId > 0) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("courseId", newCourseId));
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 	// 코스 수정

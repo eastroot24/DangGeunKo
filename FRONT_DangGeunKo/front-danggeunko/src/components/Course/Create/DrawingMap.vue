@@ -3,12 +3,8 @@
     <div class="map-box">
       <div>마커를 찍어 코스를 그려보세요!</div>
 
-      <CourseMapCreate
-        @update:points="coursePoints = $event"
-        @update:distance="distanceKm = $event"
-        @update:startAddress="startAddress = $event"
-        @update:endAddress="endAddress = $event"
-      />
+      <CourseMapCreate @update:points="coursePoints = $event" @update:distance="distanceKm = $event"
+        @update:startAddress="startAddress = $event" @update:endAddress="endAddress = $event" />
     </div>
 
     <button @click="draw">코스 그리기 완료</button>

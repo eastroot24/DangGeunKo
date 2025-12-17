@@ -45,7 +45,6 @@ export const useCourseStore = defineStore('course', () => {
         const userId = userStore.loginUserId; 
         const params = userId ? { userId: userId } : {};
         try {
-            // userId가 없으면 파라미터 없이 요청이 전송됨
             const response = await axios.get(REST_API_COURSE_URL, {
                 params: params,
             });
@@ -77,9 +76,11 @@ export const useCourseStore = defineStore('course', () => {
     //코스 상세 조회(단일)
     const getCourseDetailById = async (id, visited=false) => { 
         try {
+            const userId = userStore.loginUserId
             const res = await axios.get(`${REST_API_COURSE_URL}/${id}`, {
                 params: {
                     visited,
+                    userId,
                 }
             }) 
             course.value = res.data
