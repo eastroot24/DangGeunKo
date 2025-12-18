@@ -332,23 +332,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* 지도를 감싸는 wrapper를 화면 전체로 */
-.map-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 390px;
-    /* .app의 너비와 일치 */
-    height: 100vh;
-    z-index: 1;
-    /* 가장 뒤로 */
-}
-
-.full-screen-map {
-    width: 100%;
-    height: 100%;
-}
-
 .curr-loc-btn {
     position: absolute;
     z-index: 100;

@@ -208,10 +208,7 @@ export const useCourseStore = defineStore('course', () => {
 
 
 
-
-
-
-    return { course, searchInfo, courseList, registCourseList, likeCourseList,
+    return { course, searchInfo, courseList, registCourseList, likeCourseList, resetSearchInfo,
         getCourseDetailById, getCourseList, searchCourseList, 
         getWeeklyRanking, registCourse, updateCourseById,
         deleteCourseById, addLike, setCourseMarkers, getRegistCourseList, getLikeCourseList}
