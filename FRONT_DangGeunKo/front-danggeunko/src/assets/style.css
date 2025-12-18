@@ -553,3 +553,38 @@ label {
 .range-slider-group input[type="range"]::-moz-range-progress {
     background: transparent;
 }
+
+/* 메인 카드 패널 */
+.panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  box-shadow: var(--shadow-soft);
+  padding: 18px 16px 12px;
+
+  overflow: hidden;
+}
+
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* 코스 리스트 패널 (드래그로 높이 조절) */
+.course-panel-wrapper {
+  margin-top: 4px;
+}
+
+.drag-handle {
+  width: 40%;
+  height: 4px;
+  margin: 0 auto 8px;
+  border-radius: 999px;
+  background: #e0e0e0;
+  cursor: ns-resize;
+}

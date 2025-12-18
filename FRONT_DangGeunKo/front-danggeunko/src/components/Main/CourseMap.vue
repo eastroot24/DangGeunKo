@@ -1,7 +1,7 @@
 <template>
     <div class="map-wrapper">
         <CourseSearchBar />
-        <div id="map" class="full-screen-map">
+        <div id="map" style="width:100%;height:100vh;">
             <button @click="moveToCurrentLocation" class="curr-loc-btn">
                 내 위치로 이동
             </button>
@@ -257,7 +257,6 @@ const initMap = () => {
         var mapOptions = {
             center: position,
             zoom: 13,
-            mapTypeControl: true,
         };
 
         // 'map' ID를 가진 DOM 요소에 지도를 생성

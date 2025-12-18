@@ -23,8 +23,15 @@ import { computed, onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { useMapStore } from '@/stores/map';
+import { onBeforeRouteLeave } from 'vue-router'
 
-
+// 코스 탭을 완전히 벗어날 때만 초기화
+onBeforeRouteLeave((to, from, next) => {
+    if (!to.name?.startsWith('course')) {
+        courseStore.resetSearchInfo()
+    }
+    next()
+})
 
 const router = useRouter()
 const courseStore = useCourseStore()
