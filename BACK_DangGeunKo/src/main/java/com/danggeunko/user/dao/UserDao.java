@@ -34,4 +34,6 @@ public interface UserDao {
 	
 	//로그인
 	public User login(LoginRequest loginRequest);
+	
+
 }

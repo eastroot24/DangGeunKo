@@ -45,9 +45,9 @@ public class CourseController {
 		this.courseService = courseService;
 		this.coursePointDao = coursePointDao;
 	}
-	
+
 	@Value("${naver.map.gateway-id}")
-    private String naverMapKeyId;
+	private String naverMapKeyId;
 	@Value("${naver.map.gateway-key}")
 	private String naverMapKeySecret;
 
@@ -68,9 +68,9 @@ public class CourseController {
 			@RequestParam(required = false) boolean visited, @RequestParam(required = false) Integer userId) {
 		Course course = null;
 		if (visited) {
-			course = courseService.updateCourseDetail(id,userId);
+			course = courseService.updateCourseDetail(id, userId);
 		} else {
-			course = courseService.getCourseById(id,userId);
+			course = courseService.getCourseById(id, userId);
 		}
 		if (course != null) {
 			return ResponseEntity.status(HttpStatus.OK).body(course);
@@ -141,49 +141,55 @@ public class CourseController {
 		boolean liked = courseService.addLike(userId, courseId);
 		return ResponseEntity.ok(Map.of("courseId", courseId, "userId", userId, "liked", liked));
 	}
-	
+
 	// 지도 캡처 이미지 반환
-	@GetMapping(
-		    value = "/course/{id}/thumbnail",
-		    produces = MediaType.IMAGE_PNG_VALUE
-		)
-		public ResponseEntity<byte[]> getCourseThumbnail(@PathVariable int id)
-		    throws Exception {
+	@GetMapping(value = "/course/{id}/thumbnail", produces = MediaType.IMAGE_PNG_VALUE)
+	public ResponseEntity<byte[]> getCourseThumbnail(@PathVariable int id) throws Exception {
 
-		    List<MapPoint> points = courseService.getMapPoints(id);
+		List<MapPoint> points = courseService.getMapPoints(id);
 
-		    if (points.isEmpty()) {
-		        return ResponseEntity.noContent().build();
-		    }
-
-		    // Node 서버로 보낼 payload
-		    Map<String, Object> payload = Map.of(
-		        "points", points,
-		        "width", 400,
-		        "height", 300
-		    );
-
-		    ObjectMapper mapper = new ObjectMapper();
-		    String json = mapper.writeValueAsString(payload);
-
-		    HttpRequest request = HttpRequest.newBuilder()
-		        .uri(URI.create("http://localhost:4001/render"))
-		        .header("Content-Type", "application/json")
-		        .POST(HttpRequest.BodyPublishers.ofString(json))
-		        .build();
-
-		    HttpClient client = HttpClient.newHttpClient();
-		    HttpResponse<byte[]> response =
-		        client.send(request, HttpResponse.BodyHandlers.ofByteArray());
-
-		    if (response.statusCode() != 200) {
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		    }
-
-		    return ResponseEntity.ok()
-		        .contentType(MediaType.IMAGE_PNG)
-		        .header("Cache-Control", "no-store")
-		        .body(response.body());
+		if (points.isEmpty()) {
+			return ResponseEntity.noContent().build();
 		}
 
+		// Node 서버로 보낼 payload
+		Map<String, Object> payload = Map.of("points", points, "width", 400, "height", 300);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(payload);
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:4001/render"))
+				.header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(json)).build();
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+		if (response.statusCode() != 200) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
+		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).header("Cache-Control", "no-store")
+				.body(response.body());
+	}
+
+	// 내가 등록한 코스 조회
+	@GetMapping("/course/regist")
+	public ResponseEntity<?> getMyRegistCourse(@RequestParam int userId) {
+		List<Course> list = courseService.getMyRegistCourse(userId);
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(list);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
+	}
+	// 내가 찜한 코스 조회
+	@GetMapping("/course/like")
+	public ResponseEntity<?> getMyLikeCourse(@RequestParam int userId) {
+		List<Course> list = courseService.getMyLikeCourse(userId);
+		if (list != null && !list.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(list);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
+	}
 }

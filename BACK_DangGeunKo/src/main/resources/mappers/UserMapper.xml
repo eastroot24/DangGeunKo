@@ -6,16 +6,21 @@
 
 	<!-- 회원 추가 -->
 	<insert id="insertUser" parameterType="User">
-		INSERT INTO user(user_name, nickname, user_email, user_password, gender,
-		age,region, pref_distance, pref_difficulty)
-		VALUES (#{userName},#{nickname},#{userEmail},#{userPassword},#{gender},#{age},#{region},#{prefDistance},#{prefDifficulty});
-	</insert>
+	    INSERT INTO user(
+	        user_name, nickname, user_email, user_password, gender,
+	        age, region, pref_distance, pref_difficulty, profile_img
+	    )
+	    VALUES (
+	        #{userName}, #{nickname}, #{userEmail}, #{userPassword}, #{gender},
+	        #{age}, #{region}, #{prefDistance}, #{prefDifficulty}, #{profileImg}
+	    );
+	</insert>	
 	<!-- 특정 회원 조회 -->
 	<select id="getUserById" parameterType="int" resultType="User">
-		SELECT user_name, nickname, user_email, user_password, gender,
-			age, region, pref_distance, pref_difficulty
-		FROM user
-		WHERE user_id = #{userId};
+	    SELECT user_id, user_name, nickname, user_email, user_password, gender,
+	           age, region, pref_distance, pref_difficulty, profile_img
+	    FROM user
+	    WHERE user_id = #{userId};
 	</select>
 	<!-- 전체 회원 조회 -->
 	<select id="getAllUsers" resultType="User">
@@ -23,42 +28,45 @@
 		FROM user;
 	</select>
 	<!-- 회원 정보 수정 -->
-	<update id="updateUser" parameterType="User">
-	UPDATE user
-	<set>
-		<if test="user.nickname != null and user.nickname != ''">
-			nickname = #{user.nickname},
-		</if>
-		<if test="user.userEmail != null and user.userEmail != ''">
-			user_email = #{user.userEmail},
-		</if>
-		<if test="user.userPassword != null and user.userPassword != ''">
-			user_password = #{user.userPassword},
-		</if>
-		<if test="user.gender != null and user.gender != ''">
-			gender = #{user.gender},
-		</if>
-		<if test="user.age != null">
-			age = #{user.age},
-		</if>
-		<if test="user.region != null">
-			region = #{user.region},
-		</if>
-		<if test="user.prefDistance != null">
-			pref_distance = #{user.prefDistance},
-		</if>
-		<if test="user.prefDifficulty != null and user.prefDifficulty != ''">
-			pref_difficulty = #{user.prefDifficulty},
-		</if>
-	</set>
-	WHERE user_id = #{userId}
-	</update>
+	<update id="updateUser" parameterType="map">
+    UPDATE user
+    <set>
+        <if test="user.nickname != null and user.nickname != ''">
+            nickname = #{user.nickname},
+        </if>
+        <if test="user.userEmail != null and user.userEmail != ''">
+            user_email = #{user.userEmail},
+        </if>
+        <if test="user.userPassword != null and user.userPassword != ''">
+            user_password = #{user.userPassword},
+        </if>
+        <if test="user.gender != null and user.gender != ''">
+            gender = #{user.gender},
+        </if>
+        <if test="user.age != null">
+            age = #{user.age},
+        </if>
+        <if test="user.region != null">
+            region = #{user.region},
+        </if>
+        <if test="user.prefDistance != null">
+            pref_distance = #{user.prefDistance},
+        </if>
+        <if test="user.prefDifficulty != null and user.prefDifficulty != ''">
+            pref_difficulty = #{user.prefDifficulty},
+        </if>
+        <if test="user.userProfileImg != null and user.userProfileImg != ''">
+            profile_img = #{user.profileImg},
+        </if>
+    </set>
+    WHERE user_id = #{userId}
+</update>
 	<!-- 회원 정보 삭제 -->
 	<delete id="deleteUser" parameterType="int">
 		DELETE FROM user
 		WHERE user_id = #{userId};
 	</delete>
-	
+
 	<!-- 팔로우 추가 -->
 	<insert id="addFollow" parameterType="Follow">
 		INSERT INTO Follow (following_id, follower_id)
