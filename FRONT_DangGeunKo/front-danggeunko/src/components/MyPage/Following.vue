@@ -9,11 +9,7 @@
         </div>
       </div>
 
-      <button 
-        class="follow-btn"
-        :class="{ unfollow : u.isFollowing }"
-        @click="toggleFollow(u)"
-      >
+      <button class="follow-btn" :class="{ unfollow: u.isFollowing }" @click="toggleFollow(u)">
         {{ u.isFollowing ? "언팔로우" : "팔로우" }}
       </button>
     </div>
@@ -34,24 +30,26 @@ onMounted(async () => {
 
 async function toggleFollow(u) {
   if (u.isFollowing) {
-    if(await store.deleteFollow(u.userId)) u.isFollowing = false
+    if (await store.deleteFollow(u.userId)) u.isFollowing = false
   } else {
-    if(await store.addFollow(u.userId)) u.isFollowing = true
+    if (await store.addFollow(u.userId)) u.isFollowing = true
   }
+  await store.getFollowing(myId)
 }
 </script>
 
 <style scoped>
-.follow-btn{
-    padding: 6px 15px;
-    border-radius: 6px;
-    font-size:14px;
-    border:none;
-    background:#ff7f00;
-    color:white;
-    cursor: pointer;
+.follow-btn {
+  padding: 6px 15px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: none;
+  background: #ff7f00;
+  color: white;
+  cursor: pointer;
 }
-.unfollow{
-    background:#999;
+
+.unfollow {
+  background: #999;
 }
 </style>

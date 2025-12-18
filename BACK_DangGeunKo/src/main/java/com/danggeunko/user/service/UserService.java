@@ -2,12 +2,14 @@ package com.danggeunko.user.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.danggeunko.auth.dto.LoginRequest;
 import com.danggeunko.user.dto.User;
 
 public interface UserService {
 	//회원 등록
-	public boolean addUser(User user);
+	public boolean addUser(User user, MultipartFile file);
 	//회원 조회
 	public User getUserById(int id);
 	//회원 전체 조회

@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="panel">
+        <div class="drag-handle" id="dragHandle"></div>
         <h2>주간 코스 랭킹</h2>
         <RankingFilter></RankingFilter>
         <RankingList></RankingList>
@@ -13,6 +14,4 @@ import RankingList from '@/components/Ranking/RankingList.vue';
 
 </script>
 
-<style  scoped>
-
-</style>
+<style scoped></style>

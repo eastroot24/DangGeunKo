@@ -160,6 +160,16 @@ public class CourseServiceImpl implements CourseService {
 	        .collect(Collectors.toList());
 	}
 
+	@Override
+	public List<Course> getMyRegistCourse(int userId) {
+		return courseDao.selectMyRegistCourse(userId);
+	}
+
+	@Override
+	public List<Course> getMyLikeCourse(int userId) {
+		return courseDao.selectMyLikeCourse(userId);
+	}
+
 
 	
 

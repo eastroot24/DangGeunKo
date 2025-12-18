@@ -1,7 +1,7 @@
 <template>
     <div class="navbar">
-        <RouterLink to="/myInfo" class="nav-item">MYPAGE</RouterLink> 
-        <RouterLink to="/course" class="nav-item">COURSE</RouterLink> 
+        <RouterLink to="/myInfo" class="nav-item">MYPAGE</RouterLink>
+        <RouterLink to="/course" class="nav-item">COURSE</RouterLink>
         <RouterLink to="/course/ranking" class="nav-item">RANKING</RouterLink>
     </div>
 </template>
@@ -11,7 +11,8 @@
 </script>
 
 <style scoped>
- .nav-item{
+.nav-item {
     text-decoration: none;
- }
+
+}
 </style>

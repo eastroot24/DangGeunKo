@@ -9,6 +9,7 @@ USE danggeunko;
 drop table IF exists `USER`;
 CREATE TABLE `USER` (
     user_id        INT AUTO_INCREMENT PRIMARY KEY,          -- 유저 pk
+    profile_img VARCHAR(255) DEFAULT NULL,				-- 프로필 사진 파일명
     user_name      VARCHAR(30)  NOT NULL,                   -- 사용자 이름
     nickname       VARCHAR(50)  NOT NULL,                   -- 사용자 별명
     user_email     VARCHAR(50)  NOT NULL UNIQUE,            -- 로그인 이메일
@@ -280,3 +281,6 @@ FROM USER;
 
 select * 
 from course;
+
+select *
+from course_like;

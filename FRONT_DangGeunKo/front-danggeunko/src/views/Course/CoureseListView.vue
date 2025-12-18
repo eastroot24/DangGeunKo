@@ -1,11 +1,11 @@
 <template>
-    <div class="panel">
-        <div  class="drag-handle" id="dragHandle"></div>
-        <div class="panel-title">우리동네 코스 구경하기</div>
-        <CourseFilter></CourseFilter>
-        <CourseList></CourseList>
+  <div class="panel">
+    <div class="drag-handle" id="dragHandle"></div>
+    <div class="panel-title">우리동네 코스 구경하기</div>
+    <CourseFilter></CourseFilter>
+    <CourseList></CourseList>
 
-    </div>
+  </div>
 </template>
 
 <script setup>
@@ -15,32 +15,23 @@ import CourseFilter from '@/components/CourseFilter.vue';
 </script>
 
 <style scoped>
-    /* 메인 카드 패널 */
-    .panel {
-      margin-top: 4px;
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: var(--shadow-soft);
-      padding: 18px 16px 12px;
-      backdrop-filter: blur(10px);
-    }
+.panel-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
 
-    .panel-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 14px;
-    }
-     /* 코스 리스트 패널 (드래그로 높이 조절) */
-    .course-panel-wrapper {
-      margin-top: 4px;
-    }
+/* 코스 리스트 패널 (드래그로 높이 조절) */
+.course-panel-wrapper {
+  margin-top: 4px;
+}
 
-    .drag-handle {
-      width: 40%;
-      height: 4px;
-      margin: 0 auto 8px;
-      border-radius: 999px;
-      background: #e0e0e0;
-      cursor: ns-resize;
-    }
+.drag-handle {
+  width: 40%;
+  height: 4px;
+  margin: 0 auto 8px;
+  border-radius: 999px;
+  background: #e0e0e0;
+  cursor: ns-resize;
+}
 </style>

@@ -1,25 +1,28 @@
-
 <template>
-    <div class="body">
-      <div class="app">
-      <div v-if="route.path !== '/myInfo'">
-         <CourseMap></CourseMap>
-      </div>
-      <RouterView></RouterView>
-      <CousreFooter></CousreFooter>
-      </div>
-      
+  <div class="body app-container">
+    <div v-if="!isMyPage">
+      <CourseMap />
     </div>
+
+
+    <RouterView />
+
+    <CousreFooter></CousreFooter>
+  </div>
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import CousreFooter from '@/components/Footer/CousreFooter.vue';
 import CourseMap from '@/components/Main/CourseMap.vue';
-import { useRoute } from 'vue-router';
 
-const route = useRoute()
+const route = useRoute();
+
+// 현재 경로가 마이페이지인지 확인
+const isMyPage = computed(() => route.path.includes('myInfo')
+  || route.path.includes('login') || route.path.includes('signup'));
 
 </script>
 
-<style src="@/assets/style.css">
-</style>
+<style scoped></style>
