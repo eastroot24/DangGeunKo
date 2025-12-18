@@ -1,13 +1,14 @@
 <template>
-  <div class="body app-container">
-    <div v-if="!isMyPage">
-      <CourseMap />
+  <div class="body">
+    <div class="app">
+      <div v-if="!isMyPage">
+        <CourseMap />
+      </div>
+      <RouterView />
+
+      <CousreFooter></CousreFooter>
     </div>
 
-
-    <RouterView />
-
-    <CousreFooter></CousreFooter>
   </div>
 </template>
 
