@@ -42,5 +42,9 @@ public interface CourseDao {
 
 	// 좋아요 개수 조회
 	int countCourseLike(int courseId);
-
+	
+	//내가 등록한 코스 조회
+	List<Course> selectMyRegistCourse(int userId);
+	//내가 찜한 코스 조회
+	List<Course> selectMyLikeCourse(int userId);
 }

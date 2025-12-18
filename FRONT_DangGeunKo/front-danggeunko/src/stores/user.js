@@ -40,7 +40,8 @@ export const useUserStore = defineStore('user', () => {
     age: null,
     region: '',
     prefDistance: '',
-    prefDifficulty: ''
+    prefDifficulty: '',
+    profileImg: null,
   })
 
   /* 🔥 닉네임 중복확인 */
@@ -168,11 +169,16 @@ const checkEmail = async (email) => {
     const res = await api.get(`${REST_USER_API_URL}${id}`)
     user.value = res.data
   }
-
-  const addUser = (data) => {
-    axios.post(REST_USER_API_URL, data)
-      .then(() => alert("당근코와 함께 달려봐요!"))
+const addUser = async (formData) => {
+  try {
+    // axios는 formData를 보내면 자동으로 Content-Type을 multipart/form-data로 설정합니다.
+    await axios.post(REST_USER_API_URL, formData);
+    alert("당근코와 함께 달려봐요!");
+  } catch (err) {
+    console.error("회원가입 실패:", err);
+    alert("회원가입 중 오류가 발생했습니다.");
   }
+}
 
   const updateUser = async (id, data) => {
     const res = await api.put(`${REST_USER_API_URL}${id}`, data)

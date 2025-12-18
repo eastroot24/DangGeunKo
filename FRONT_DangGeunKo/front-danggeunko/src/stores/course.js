@@ -10,6 +10,8 @@ export const useCourseStore = defineStore('course', () => {
     const userStore = useUserStore();
     const mapStore = useMapStore();
     const courseList = ref([])
+    const registCourseList = ref([])
+    const likeCourseList = ref([])
     const course = ref({})
     const searchInfo = ref({ 
         key: 'courseName',
@@ -168,8 +170,49 @@ export const useCourseStore = defineStore('course', () => {
         }
     };
 
-    return { course, searchInfo, courseList, 
+
+
+    //등록한 코스 리스트
+    const getRegistCourseList = async () => {
+        // loginUserId는 pinia store에 저장된 값이므로 null 또는 실제 ID가 될 수 있습니다.
+        const userId = userStore.loginUserId; 
+        const params = userId ? { userId: userId } : {};
+        try {
+            const response = await axios.get(`${REST_API_COURSE_URL}/regist`, {
+                params: params,
+            });
+            registCourseList.value = response.data;
+
+            // 비회원의 경우 isLiked는 SQL에 의해 FALSE로 설정되어 전송됩니다.
+        } catch (error) {
+            console.error("코스 목록 조회 실패:", error);
+        }
+    };
+    //찜한 코스 리스트
+     const getLikeCourseList = async () => {
+        // loginUserId는 pinia store에 저장된 값이므로 null 또는 실제 ID가 될 수 있습니다.
+        const userId = userStore.loginUserId; 
+        const params = userId ? { userId: userId } : {};
+        try {
+            const response = await axios.get(`${REST_API_COURSE_URL}/like`, {
+                params: params,
+            });
+            likeCourseList.value = response.data;
+            // 비회원의 경우 isLiked는 SQL에 의해 FALSE로 설정되어 전송됩니다.
+        } catch (error) {
+            console.error("코스 목록 조회 실패:", error);
+        }
+    };
+
+
+
+
+
+
+
+
+    return { course, searchInfo, courseList, registCourseList, likeCourseList,
         getCourseDetailById, getCourseList, searchCourseList, 
         getWeeklyRanking, registCourse, updateCourseById,
-        deleteCourseById, addLike, setCourseMarkers, resetSearchInfo,}
+        deleteCourseById, addLike, setCourseMarkers, getRegistCourseList, getLikeCourseList}
 })

@@ -1,12 +1,11 @@
 <template>
-    <div>
+    <div class="map-wrapper">
         <CourseSearchBar />
         <div id="map" style="width:100%;height:100vh;">
             <button @click="moveToCurrentLocation" class="curr-loc-btn">
                 내 위치로 이동
             </button>
         </div>
-
     </div>
 </template>
 <script setup>
@@ -333,17 +332,36 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* 버튼 스타일 예시 (지도 위에 띄우기) */
+/* 지도를 감싸는 wrapper를 화면 전체로 */
+.map-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 390px;
+    /* .app의 너비와 일치 */
+    height: 100vh;
+    z-index: 1;
+    /* 가장 뒤로 */
+}
+
+.full-screen-map {
+    width: 100%;
+    height: 100%;
+}
+
 .curr-loc-btn {
     position: absolute;
     z-index: 100;
-    top: 70px;
-    /* SearchBar 위치에 따라 조정 */
-    right: 10px;
-    padding: 10px;
+    top: 100px;
+    /* 검색바 아래로 */
+    right: 16px;
+    padding: 8px 12px;
     background: white;
-    border: 1px solid #ccc;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
 }
 </style>

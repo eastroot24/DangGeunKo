@@ -37,5 +37,9 @@ public interface CourseService {
 	boolean addLike(int userId, int courseId);
 	
 	List<MapPoint> getMapPoints(int courseId);
-
+	
+	//내가 등록한 코스 조회
+	public List<Course> getMyRegistCourse(int userId);
+	//내가 찜한 코스 조회
+	public List<Course> getMyLikeCourse(int userId);
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.danggeunko.user.dto.Follow;
 import com.danggeunko.user.dto.User;
@@ -34,14 +36,18 @@ public class UserController {
 	}
 
 	// 회원 등록
-	@PostMapping("/")
-	public ResponseEntity<?> addUser(@RequestBody User user) {
-		boolean completed = userService.addUser(user);
-		if (completed) {
-			return ResponseEntity.status(HttpStatus.CREATED).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	@PostMapping(value = "/", consumes = {"multipart/form-data"})
+	public ResponseEntity<?> addUser(
+	    @RequestPart("user") User user, 
+	    @RequestPart(value = "file", required = false) MultipartFile file) {
+	    // 1. 서비스에 파일 정보를 함께 넘겨서 처리 
+	    boolean completed = userService.addUser(user, file); 
+
+	    if (completed) {
+	        return ResponseEntity.status(HttpStatus.CREATED).build();
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
 
 	// 회원 검색
