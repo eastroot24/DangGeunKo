@@ -1,46 +1,57 @@
 <template>
-    <div class="panel">
-        <div  class="drag-handle" id="dragHandle"></div>
-        <div class="panel-title">우리동네 코스 구경하기</div>
-        <CourseFilter></CourseFilter>
-        <CourseList></CourseList>
-
-    </div>
+  <div class="panel" ref="panelRef">
+    <div class="drag-handle" @mousedown="startDrag"></div>
+    <div class="panel-title">우리동네 코스 구경하기</div>
+    <CourseFilter></CourseFilter>
+    <CourseList></CourseList>
+  </div>
 </template>
 
 <script setup>
-import CourseList from '@/components/Course/CourseList.vue';
-import CourseFilter from '@/components/CourseFilter.vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import CourseList from '@/components/Course/CourseList.vue'
+import CourseFilter from '@/components/CourseFilter.vue'
 
+const panelRef = ref(null)
+
+let startY = 0
+let startHeight = 0
+let dragging = false
+
+const startDrag = (e) => {
+  dragging = true
+  startY = e.clientY
+  startHeight = panelRef.value.offsetHeight
+
+  document.addEventListener('mousemove', onMouseMove)
+  document.addEventListener('mouseup', stopDrag)
+}
+
+const onMouseMove = (e) => {
+  if (!dragging) return
+
+  const diff = startY - e.clientY
+  let newHeight = startHeight + diff
+
+  newHeight = Math.max(200, Math.min(newHeight, window.innerHeight * 0.85))
+  panelRef.value.style.height = `${newHeight}px`
+}
+
+const stopDrag = () => {
+  dragging = false
+  document.removeEventListener('mousemove', onMouseMove)
+  document.removeEventListener('mouseup', stopDrag)
+}
+
+onMounted(() => {
+  panelRef.value.style.height = '360px'
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('mousemove', onMouseMove)
+  document.removeEventListener('mouseup', stopDrag)
+})
 </script>
 
-<style scoped>
-    /* 메인 카드 패널 */
-    .panel {
-      margin-top: 4px;
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: var(--shadow-soft);
-      padding: 18px 16px 12px;
-      backdrop-filter: blur(10px);
-    }
 
-    .panel-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 14px;
-    }
-     /* 코스 리스트 패널 (드래그로 높이 조절) */
-    .course-panel-wrapper {
-      margin-top: 4px;
-    }
-
-    .drag-handle {
-      width: 40%;
-      height: 4px;
-      margin: 0 auto 8px;
-      border-radius: 999px;
-      background: #e0e0e0;
-      cursor: ns-resize;
-    }
-</style>
+<style scoped></style>

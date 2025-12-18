@@ -4,59 +4,92 @@
     <!-- 입력 폼 -->
     <div class="form-wrap">
       <label style="font-weight: bold;">코스 이름</label>
-      <input v-model="courseInfo.courseName" type="text" placeholder="코스 이름">
+      <input v-model="courseInfo.courseName" @input="errors.courseName = ''" type="text" placeholder="코스 이름" />
+      <div v-if="errors.courseName" class="error-text">
+        {{ errors.courseName }}
+      </div>
 
       <label style="font-weight: bold;">지역구</label>
-      <div class="row-3">
-        <select ref="city"></select>
-        <select ref="district"></select>
-      </div>
-      <label style="font-weight: bold;">출발지 주소</label>
-      <input v-model="courseInfo.startAddress" type="text" placeholder="출발지 주소">
-      <label style="font-weight: bold;">도착지 주소</label>
-      <input v-model="courseInfo.endAddress" type="text" placeholder="도착지 주소">
+      <div class="row">
+        <select v-model="selectedCity">
+          <option value="">시/도 선택</option>
+          <option v-for="city in Object.keys(regionDB)" :key="city" :value="city">
+            {{ city }}
+          </option>
+        </select>
 
-      <div class="row-3">
-        <label style="font-weight: bold;">전체거리</label>
-        <input v-model="courseInfo.distanceKm" type="number" placeholder="전체 거리 (km)">
-        <label style="font-weight: bold;">소요 시간</label>
-        <input v-model="courseInfo.durationMin" type="number" placeholder="소요 시간 (분)">
-        <label style="font-weight: bold;">평균 페이스</label>
-        <input v-model="courseInfo.paceMin" type="number" placeholder="평균 페이스 (/km)">
-      </div>
+        <select v-model="selectedDistrict" :disabled="!selectedCity">
+          <option value="">시/군/구 선택</option>
+          <option v-for="gu in regionDB[selectedCity]" :key="gu" :value="gu">
+            {{ gu }}
+          </option>
+        </select>
+        <div v-if="errors.courseCity" class="error-text">
+          {{ errors.courseCity }}
+        </div>
 
-      <div class="row-3">
-        <label style="font-weight: bold;">러닝 유형</label>
-        <select v-model="courseInfo.courseType">
-          <option value="1">인터벌</option>
-          <option value="2">템포</option>
-          <option value="3">파틀렉</option>
-          <option value="4">장거리</option>
-        </select>
-        <label style="font-weight: bold;">코스 난이도</label>
-        <select v-model="courseInfo.difficulty">
-          <option value="초급">런린이</option>
-          <option value="중급">러너</option>
-          <option value="고급">런고수</option>
-        </select>
-      </div>
-      <label style="font-weight: bold;">코스 설명 및 편의 시설</label>
-      <textarea v-model="courseInfo.description" placeholder="코스의 특징, 주의 사항 등을 적어주세요."></textarea>
+        <div v-if="errors.courseDistrict" class="error-text">
+          {{ errors.courseDistrict }}
+        </div>
+        <label style="font-weight: bold;">출발지 주소</label>
+        <input v-model="courseInfo.startAddress" type="text" placeholder="출발지 주소">
+        <label style="font-weight: bold;">도착지 주소</label>
+        <input v-model="courseInfo.endAddress" type="text" placeholder="도착지 주소">
 
-      <div class="row-3" style="margin-top:10px;">
-        <label style="font-weight: bold;">횡단보도 유무</label>
-        <select v-model="courseInfo.hasCrosswalk">
-          <option value="true">있음</option>
-          <option value="false">없음</option>
-        </select>
-        <label style="font-weight: bold;">공중화장실 유무</label>
-        <select v-model="courseInfo.hasToilet">
-          <option value="true">있음</option>
-          <option value="false">없음</option>
-        </select>
+        <div class="row-3">
+          <label style="font-weight: bold;">전체거리</label>
+          <input v-model="courseInfo.distanceKm" type="number" placeholder="전체 거리 (km)">
+          <label style="font-weight: bold;">소요 시간</label>
+          <input v-model="courseInfo.durationMin" @input="errors.durationMin = ''" type="number"
+            placeholder="소요 시간 (분)" />
+          <div v-if="errors.durationMin" class="error-text">{{ errors.durationMin }}</div>
+          <label style="font-weight: bold;">평균 페이스</label>
+          <input v-model="courseInfo.paceMin" type="number" placeholder="평균 페이스 (/km)">
+        </div>
+
+        <div class="row-3">
+          <label style="font-weight: bold;">러닝 유형</label>
+          <select v-model="courseInfo.courseType" @change="errors.courseType = ''">
+            <option value="1">조깅</option>
+            <option value="2">인터벌</option>
+            <option value="3">가속주</option>
+            <option value="4">LSD</option>
+            <option value="5">트레일</option>
+            <option value="6">업힐</option>
+          </select>
+          <div v-if="errors.courseType" class="error-text">{{ errors.courseType }}</div>
+          <label style="font-weight: bold;">코스 난이도</label>
+          <select v-model="courseInfo.difficulty" @change="errors.difficulty = ''">
+            <option value="런린이">런린이</option>
+            <option value="러너">러너</option>
+            <option value="런고수">런고수</option>
+          </select>
+          <div v-if="errors.difficulty" class="error-text">{{ errors.difficulty }}</div>
+        </div>
+        <label style="font-weight: bold;">코스 설명 및 편의 시설</label>
+        <textarea v-model="courseInfo.description" @input="errors.description = ''"
+          placeholder="코스의 특징, 주의 사항 등을 적어주세요."></textarea>
+        <div v-if="errors.description" class="error-text">{{ errors.description }}</div>
+
+        <div class="row-3" style="margin-top:10px;">
+          <label style="font-weight: bold;">횡단보도 유무</label>
+          <select v-model="courseInfo.hasCrosswalk" @change="errors.hasCrosswalk = ''">
+            <option value="">선택</option>
+            <option value="true">있음</option>
+            <option value="false">없음</option>
+          </select>
+          <div v-if="errors.hasCrosswalk" class="error-text">{{ errors.hasCrosswalk }}</div>
+          <label style="font-weight: bold;">공중화장실 유무</label>
+          <select v-model="courseInfo.hasToilet" @change="errors.hasToilet = ''">
+            <option value="">선택</option>
+            <option value="true">있음</option>
+            <option value="false">없음</option>
+          </select>
+          <div v-if="errors.hasToilet" class="error-text">{{ errors.hasToilet }}</div>
+        </div>
       </div>
+      <button @click="addCourse" class="submit">등록하기</button>
     </div>
-    <button @click="addCourse" class="submit">등록하기</button>
   </div>
 </template>
 
@@ -99,10 +132,23 @@ const courseInfo = ref({
   courseType: 0,
   difficulty: '',
   description: '',
-  hasCrosswalk: false,
-  hasToilet: false,
+  hasCrosswalk: '',
+  hasToilet: '',
   coursePoints: []
 })
+
+const errors = ref({
+  courseName: '',
+  courseCity: '',
+  courseDistrict: '',
+  durationMin: '',
+  courseType: '',
+  difficulty: '',
+  description: '',
+  hasCrosswalk: '',
+  hasToilet: ''
+})
+
 
 onMounted(() => {
   courseInfo.value.startAddress = props.startAddress
@@ -142,14 +188,70 @@ watch(loginUserId, v => {
   courseInfo.value.userId = v ?? null
 })
 
+const validate = () => {
+  let valid = true
+
+  // 에러 초기화
+  Object.keys(errors.value).forEach(k => errors.value[k] = '')
+
+  if (!courseInfo.value.courseName) {
+    errors.value.courseName = '코스 이름을 적어주세요'
+    valid = false
+  }
+
+  if (!courseInfo.value.courseCity) {
+    errors.value.courseCity = '지역을 선택해주세요'
+    valid = false
+  }
+
+  if (!courseInfo.value.courseDistrict) {
+    errors.value.courseDistrict = '지역구를 선택해주세요'
+    valid = false
+  }
+
+  if (!courseInfo.value.durationMin || courseInfo.value.durationMin <= 0) {
+    errors.value.durationMin = '소요 시간을 입력해주세요'
+    valid = false
+  }
+
+  if (!courseInfo.value.courseType) {
+    errors.value.courseType = '러닝 유형을 선택해주세요'
+    valid = false
+  }
+
+  if (!courseInfo.value.difficulty) {
+    errors.value.difficulty = '코스 난이도를 선택해주세요'
+    valid = false
+  }
+
+  if (!courseInfo.value.description) {
+    errors.value.description = '코스의 특징, 주의사항 등을 적어주세요'
+    valid = false
+  }
+
+  if (courseInfo.value.hasCrosswalk === '') {
+    errors.value.hasCrosswalk = '횡단보도 유무를 선택해주세요'
+    valid = false
+  }
+
+  if (courseInfo.value.hasToilet === '') {
+    errors.value.hasToilet = '화장실 유무를 선택해주세요'
+    valid = false
+  }
+
+  return valid
+}
+
 // 🔹 등록
 const addCourse = async () => {
+  if (!validate()) return
+
   try {
     const payload = {
       ...courseInfo.value,
       coursePoints: courseInfo.value.coursePoints.map((p, idx) => ({
-        courseId: null,     
-        sequence: idx + 1,          
+        courseId: null,
+        sequence: idx + 1,
         latitude: p.latitude,
         longitude: p.longitude
       }))
@@ -195,33 +297,34 @@ const regionDB = {
   "제주특별자치도": ["제주시", "서귀포시"]
 }
 
-const city = ref(null)
-const district = ref(null)
+const selectedCity = ref("")
+const selectedDistrict = ref('')
 
-onMounted(() => {
-  Object.keys(regionDB).forEach(c => {
-    city.value.innerHTML += `<option>${c}</option>`
-  })
+watch(selectedCity, (v) => {
+  courseInfo.value.courseCity = v
+  courseInfo.value.courseDistrict = ''
+  selectedDistrict.value = ''
 
-  const loadDistricts = () => {
-    district.value.innerHTML = ""
-    regionDB[city.value.value].forEach(gu => {
-      district.value.innerHTML += `<option>${gu}</option>`
-    })
-    courseInfo.value.courseCity = city.value.value
-    courseInfo.value.courseDistrict = district.value.value
-  }
+  errors.value.courseCity = ''
+  errors.value.courseDistrict = ''
+})
 
-  city.value.addEventListener("change", loadDistricts)
-  loadDistricts()
-  if (district.value) {
-    courseInfo.value.courseDistrict = district.value.value;
-  }
+watch(selectedDistrict, (v) => {
+  courseInfo.value.courseDistrict = v
+
+  errors.value.courseDistrict = ''
 })
 
 </script>
 
 <style scoped>
+.error-text {
+  color: red;
+  font-size: 11px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
 .back {
   font-size: 10px;
   cursor: pointer;

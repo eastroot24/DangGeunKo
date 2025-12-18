@@ -15,7 +15,8 @@
                 <div class="tag">{{ course.courseCity }}</div>
                 <div class="tag">{{ course.courseDistrict }}</div>
                 <div class="tag">{{ course.difficulty }}</div>
-                <div class="tag">화장실 여부 : {{ course.hasToilet }}</div>
+                <div class="tag">화장실 : {{ course.hasToilet ? "있음" : "없음" }}</div>
+                <div class="tag">횡단보도 : {{ course.hasCrosswalk ? "있음" : "없음" }}</div>
                 <div class="tag">{{ course.distanceKm }}km / {{ course.duration_min }}시간 / {{ course.coursePace }} 페이스
                 </div>
             </div>
@@ -102,8 +103,8 @@ onMounted(async () => {
 })
 
 watch(course, () => {
-  console.log('course:', course.value)
-  console.log('coursePoints:', course.value?.coursePoints)
+    console.log('course:', course.value)
+    console.log('coursePoints:', course.value?.coursePoints)
 })
 
 </script>

@@ -73,6 +73,21 @@ export const useCourseStore = defineStore('course', () => {
         })
     }
 
+    //검색 초기화
+    const resetSearchInfo = () => {
+        searchInfo.value = {
+    key: 'courseName',
+    value: '',
+    courseCity: '',
+    courseDistrict: '',
+    difficulty: '',
+    minRange: 1,
+    maxRange: 50,
+    orderBy: 'createdAt',
+    orderByDir: 'desc'
+        }
+    }
+
     //코스 상세 조회(단일)
     const getCourseDetailById = async (id, visited=false) => { 
         try {
@@ -116,13 +131,13 @@ export const useCourseStore = defineStore('course', () => {
 
     //코스 수정
     const updateCourseById = async (course) => {
-       try{
+        try{
         await  axios.put(`${REST_API_COURSE_URL}/${course.courseId}`, course)
         return true
-       }catch (err){
+        }catch (err){
         console.log("수정실패: ", err)
         return false
-       }
+        }
     }
 
     //코스 삭제
@@ -153,20 +168,8 @@ export const useCourseStore = defineStore('course', () => {
         }
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
     return { course, searchInfo, courseList, 
         getCourseDetailById, getCourseList, searchCourseList, 
         getWeeklyRanking, registCourse, updateCourseById,
-        deleteCourseById, addLike, setCourseMarkers, }
+        deleteCourseById, addLike, setCourseMarkers, resetSearchInfo,}
 })
