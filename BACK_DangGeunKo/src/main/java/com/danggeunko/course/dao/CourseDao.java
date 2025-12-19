@@ -1,6 +1,7 @@
 package com.danggeunko.course.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.danggeunko.course.dto.Course;
 import com.danggeunko.course.dto.SearchCondition;
@@ -44,7 +45,7 @@ public interface CourseDao {
 	int countCourseLike(int courseId);
 	
 	//내가 등록한 코스 조회
-	List<Course> selectMyRegistCourse(int userId);
+	List<Course> selectMyRegistCourse(Map<String, Object> param);
 	//내가 찜한 코스 조회
-	List<Course> selectMyLikeCourse(int userId);
+	List<Course> selectMyLikeCourse(Map<String, Object> param);
 }

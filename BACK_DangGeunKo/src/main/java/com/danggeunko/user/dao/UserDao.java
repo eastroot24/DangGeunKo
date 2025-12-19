@@ -11,6 +11,8 @@ public interface UserDao {
 	public int insertUser(User user);
 	//특정 유저 조회
 	public User getUserById(int userId);
+	//닉네임으로 검색
+	public User getUserByNickname(String nickname);
 	//전체 유저 조회
 	public List<User> getAllUsers();
 	//유저 수정

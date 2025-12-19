@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
 	            File target = new File(uploadPath, saveFileName);
 	            file.transferTo(target);
 	            
-	            user.setprofileImg(saveFileName);
+	            user.setProfileImg(saveFileName);
 	            
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            return false; 
 	        }
 	    } else {
-	        user.setprofileImg("dgk-default-profile.png");
+	        user.setProfileImg("dgk-default-profile.png");
 	    }
 	    
 	    return userDao.insertUser(user) > 0;
@@ -66,7 +66,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public boolean updateUser(int id, User user) {
+	public boolean updateUser(int id, User user, MultipartFile file) {
+		
+		 if (file != null && !file.isEmpty()) {
+		        try {
+		            String originalFileName = file.getOriginalFilename();
+		            String saveFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+		            
+		            File target = new File(uploadPath, saveFileName);
+		            file.transferTo(target);
+		            
+		            user.setProfileImg(saveFileName);
+		            
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		            return false; 
+		        }
+		    }
+		
 		return userDao.updateUser(id, user) > 0;
 	}
 
@@ -91,6 +108,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User login(LoginRequest loginRequest) {
 		return userDao.login(loginRequest);
+	}
+
+	@Override
+	public User getUserByNickname(String nickname) {
+		return userDao.getUserByNickname(nickname);
 	}
 
 	

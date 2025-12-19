@@ -27,7 +27,6 @@ const { reviewList } = storeToRefs(store);
 
 onMounted(() => {
     store.searchInfo.courseId = route.params.id;
-    // await를 사용하여 데이터 로딩이 완료될 때까지 기다리는 것이 좋습니다.
     store.getReviewsByCourse();
 });
 

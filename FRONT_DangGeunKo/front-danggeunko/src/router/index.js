@@ -64,7 +64,7 @@ const router = createRouter({
       meta: { alreadyAuth: true },
     },
     {
-      path: "/myInfo",
+      path: "/myInfo/:nickname",
       name: "myInfo",
       component: MyInfoView,
       meta: { requiresAuth: true },
@@ -76,13 +76,13 @@ const router = createRouter({
       meta: { requiresPwCheck: true },
     },
     {
-      path: "/follow",
+      path: "/follow/:type/:nickname",
       name: "follow",
       component: FollowView,
       meta: { requiresAuth: true },
     },
     {
-      path: "/myCourseList",
+      path: "/myCourseList/:nickname",
       name: "myCourseList",
       component: MyCourseListView,
       meta: { requiresAuth: true },

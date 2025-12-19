@@ -156,51 +156,52 @@ export const useCourseStore = defineStore('course', () => {
 
     //코스 좋아요
     const addLike = async (courseId) => {
-        const userId = userStore.loginUserId; 
-        const url = `${REST_API_COURSE_URL}/${courseId}/like?userId=${userId}`; // ⭐️ 쿼리 파라미터로 userId 전달
+    const userId = userStore.loginUserId; 
+    const url = `${REST_API_COURSE_URL}/${courseId}/like?userId=${userId}`;
 
-        try {
-            const response = await axios.post(url);
-            await getCourseList()
-            // console.log(response.data)
-            return response.data
-        } catch (err) {
-            console.error("코스 좋아요 토글 에러:", err);
-            throw new Error("좋아요 상태 변경에 실패했습니다.");
-        }
-    };
+    try {
+        const response = await axios.post(url);
+        // 여기서 getCourseList()를 호출하는 것은 전체 리스트용이므로 
+        // 마이페이지 실시간 반영과는 직접적 연관이 적을 수 있습니다. 필요없다면 제거하거나 유지하세요.
+        await getCourseList(); 
+        return response.data; // 서버에서 바뀐 하트 상태(true/false)를 반환한다고 가정
+    } catch (err) {
+        console.error("코스 좋아요 토글 에러:", err);
+        throw err;
+    }
+};
 
 
 
     //등록한 코스 리스트
-    const getRegistCourseList = async () => {
-        // loginUserId는 pinia store에 저장된 값이므로 null 또는 실제 ID가 될 수 있습니다.
-        const userId = userStore.loginUserId; 
-        const params = userId ? { userId: userId } : {};
+   // stores/course.js
+    const getRegistCourseList = async (targetId) => {
         try {
             const response = await axios.get(`${REST_API_COURSE_URL}/regist`, {
-                params: params,
+                params: { 
+                    targetUserId: targetId, // 목록 주인
+                    loginUserId: userStore.loginUserId // 하트 색깔 결정 주체
+                }
             });
             registCourseList.value = response.data;
-
-            // 비회원의 경우 isLiked는 SQL에 의해 FALSE로 설정되어 전송됩니다.
         } catch (error) {
-            console.error("코스 목록 조회 실패:", error);
+            console.error("목록 로드 실패", error);
         }
     };
+
+// getLikeCourseList도 동일하게 targetUserId와 loginUserId를 params로 전송하도록 수정하세요.
     //찜한 코스 리스트
-     const getLikeCourseList = async () => {
-        // loginUserId는 pinia store에 저장된 값이므로 null 또는 실제 ID가 될 수 있습니다.
-        const userId = userStore.loginUserId; 
-        const params = userId ? { userId: userId } : {};
+     const getLikeCourseList = async (targetId) => {
         try {
             const response = await axios.get(`${REST_API_COURSE_URL}/like`, {
-                params: params,
+                params: { 
+                    targetUserId: targetId, // 목록 주인
+                    loginUserId: userStore.loginUserId // 하트 색깔 결정 주체
+                }
             });
             likeCourseList.value = response.data;
-            // 비회원의 경우 isLiked는 SQL에 의해 FALSE로 설정되어 전송됩니다.
         } catch (error) {
-            console.error("코스 목록 조회 실패:", error);
+            console.error("목록 로드 실패", error);
         }
     };
 
