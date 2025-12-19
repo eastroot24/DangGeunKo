@@ -28,7 +28,7 @@ body {
 }
 
 .app {
-    width: 390px;
+    width: 800px;
     min-height: 100vh;
     background: #fff;
     position: relative;
@@ -160,24 +160,6 @@ label {
 }
 
 /* =======================
-    Floating + 공통
-======================= */
-.plus {
-    position: fixed;
-    right: calc(50% - 390px/2 + 16px);
-    bottom: 78px;
-    width: 48px;
-    height: 48px;
-    background: #ff7a00;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 28px;
-    border: none;
-    box-shadow: 0 6px 12px rgba(0,0,0,.18);
-    cursor: pointer;
-}
-
-/* =======================
     하단 네비게이션
 ======================= */
 .navbar {
@@ -185,8 +167,8 @@ label {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 390px;
-    height: 62px;
+    width: 800px;
+    height: 115px;
     background: #fff;
     border-top: 1px solid #eee;
     display: flex;
@@ -224,9 +206,8 @@ label {
 /* 상단 검색 */
     .top-search-row {
       display: flex;
-      gap: 8px;
+      gap: 16px;
       align-items: center;
-      margin-bottom: 12px;
     }
 
     .category-btn {
@@ -236,17 +217,17 @@ label {
       border: none;
       background: var(--orange);
       color: #fff;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 0px;
       cursor: pointer;
       box-shadow: var(--shadow-soft);
       flex-shrink: 0;
     }
     .category-btn span.caret {
-      font-size: 10px;
+      font-size: 15px;
       margin-top: 1px;
     }
     .category-dropdown {
@@ -287,7 +268,7 @@ label {
       border-radius: 999px;
       border: none;
       box-shadow: var(--shadow-soft);
-      font-size: 13px;
+      font-size: 15px;
       outline: none;
     }
     .search-btn {
@@ -564,9 +545,12 @@ label {
   background: #fff;
   border-radius: 28px 28px 0 0;
   box-shadow: var(--shadow-soft);
-  padding: 18px 16px 12px;
-
-  overflow: hidden;
+  padding: 18px 16px 0px;
+  
+  display: flex;
+  flex-direction: column; 
+  /* overflow: auto; */
+  height: calc((100vh - 120px) * 2 / 3);
 }
 
 .panel-title {
@@ -577,7 +561,17 @@ label {
 
 /* 코스 리스트 패널 (드래그로 높이 조절) */
 .course-panel-wrapper {
-  margin-top: 4px;
+  flex: 1;            /* 제목, 필터를 제외한 나머지 공간 다 차지 */
+  overflow-y: auto;   /* 내용 넘치면 스크롤 생성 */
+  min-height: 0;      /* flex 자식의 스크롤 버그 방지 */
+  padding-bottom: 80px; /* 하단 네비게이션 등에 가려지지 않게 여백 */
+}
+
+/* 3. 기존에 고정 높이가 잡혀있던 course-list 수정 */
+.course-list {
+  padding: 14px;
+  height: auto;       /* [중요] 고정 높이 해제! 부모가 높이를 결정함 */
+  overflow-y: visible; /* 이중 스크롤 방지를 위해 visible */
 }
 
 .drag-handle {
@@ -587,4 +581,33 @@ label {
   border-radius: 999px;
   background: #e0e0e0;
   cursor: ns-resize;
+}
+
+/* 지도 */
+.map-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+/* 전역 스크롤바 스타일링 */
+.course-panel-wrapper::-webkit-scrollbar {
+  width: 6px;  /* 세로 스크롤바 너비 */
+  height: 6px; /* 가로 스크롤바 높이 */
+}
+
+/* 스크롤바 트랙 (바탕) */
+.course-panel-wrapper::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* 스크롤바 핸들 (움직이는 부분) */
+.course-panel-wrapper::-webkit-scrollbar-thumb {
+  background: #e0e0e0; /* 핸들 색상 */
+  border-radius: 10px;  /* 둥근 모서리 */
+}
+
+/* 스크롤바 핸들 호버 시 */
+.course-panel-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #ff7a00; /* 포인트 컬러로 변경 가능 */
 }

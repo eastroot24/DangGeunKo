@@ -1,6 +1,10 @@
 <template>
   <div class="map-wrapper">
+    <div class="map-guide-text">
+      마커를 찍어 코스를 그려보세요!
+    </div>
     <div id="createmap" style="width:100%;height:400px;">
+
       <div class="map-btn-group">
         <button @click="moveToCurrentLocation" class="map-btn">
           현위치
@@ -263,5 +267,29 @@ onMounted(() => {
 
 .map-btn:hover {
   background: #f5f5f5;
+}
+
+.map-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.map-guide-text {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 14px;
+  border-radius: 20px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+
+  z-index: 10;
+  pointer-events: none;
+  /* 지도 조작 방해 안 함 */
 }
 </style>

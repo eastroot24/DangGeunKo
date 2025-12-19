@@ -11,7 +11,7 @@
     <div class="search-input-wrap">
       <input type="text" class="search-input" placeholder="코스 제목을 입력하세요" v-model="searchInfo.value"
         @keyup.enter="searchCourseList" />
-      <button @click="searchCourseList" class="search-btn">🔍검색</button>
+      <button @click="searchCourseList" class="search-btn">검색</button>
     </div>
   </div>
 </template>
@@ -45,4 +45,19 @@ const searchCourseList = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.course-search-overlay {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+
+  width: calc(100% - 32px);
+  max-width: 360px;
+
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+</style>

@@ -1,8 +1,6 @@
 <template>
   <div>
     <div class="map-box">
-      <div>마커를 찍어 코스를 그려보세요!</div>
-
       <CourseMapCreate @update:points="(points) => {
         coursePoints = points
         if (points.length > 0) errorMessage = ''
