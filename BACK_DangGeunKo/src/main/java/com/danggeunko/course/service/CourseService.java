@@ -1,6 +1,7 @@
 package com.danggeunko.course.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.danggeunko.course.dto.Course;
 import com.danggeunko.course.dto.MapPoint;
@@ -39,7 +40,7 @@ public interface CourseService {
 	List<MapPoint> getMapPoints(int courseId);
 	
 	//내가 등록한 코스 조회
-	public List<Course> getMyRegistCourse(int userId);
+	public List<Course> getMyRegistCourse(Map<String, Object> param);
 	//내가 찜한 코스 조회
-	public List<Course> getMyLikeCourse(int userId);
+	public List<Course> getMyLikeCourse(Map<String, Object> param);
 }

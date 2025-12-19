@@ -12,10 +12,12 @@ public interface UserService {
 	public boolean addUser(User user, MultipartFile file);
 	//회원 조회
 	public User getUserById(int id);
+	//닉네임으로 조회
+	public User getUserByNickname(String nickname);
 	//회원 전체 조회
 	public List<User> getAllUsers();
 	//회원 정보 수정
-	public boolean updateUser(int id, User user);
+	public boolean updateUser(int id, User user, MultipartFile file);
 	//회원 삭제
 	public boolean deleteUser(int id);
 	//닉네임 중복 확인

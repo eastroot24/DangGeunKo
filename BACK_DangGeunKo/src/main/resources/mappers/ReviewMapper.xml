@@ -10,9 +10,9 @@
 	</insert>
 	<!-- 특정 코스에 대한 리뷰 조회-->
 	<select id="getReviewsByCourse" resultType="Review" parameterType="ReviewSearchCondition">
-	      SELECT r.*, u.nickName as nickName, u.region as region
+	      SELECT r.*, u.profile_img as profileImg, u.nickName as nickName, u.user_city as userCity, u.user_district as userDistrict
 	      FROM review r
-	      JOIN user u
+	      LEFT JOIN user u
 	      ON r.user_id = u.user_id
 	      WHERE r.course_id = #{courseId}
 	      <if test="sortBy != null">

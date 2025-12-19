@@ -1,6 +1,9 @@
 package com.danggeunko.course.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +15,6 @@ import com.danggeunko.course.dto.Course;
 import com.danggeunko.course.dto.CoursePoint;
 import com.danggeunko.course.dto.MapPoint;
 import com.danggeunko.course.dto.SearchCondition;
-import java.util.Comparator;
-import java.util.stream.Collectors;
-
-import com.danggeunko.course.dto.MapPoint;
 
 
 @Service
@@ -161,13 +160,13 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<Course> getMyRegistCourse(int userId) {
-		return courseDao.selectMyRegistCourse(userId);
+	public List<Course> getMyRegistCourse(Map<String, Object> param) {
+		return courseDao.selectMyRegistCourse(param);
 	}
 
 	@Override
-	public List<Course> getMyLikeCourse(int userId) {
-		return courseDao.selectMyLikeCourse(userId);
+	public List<Course> getMyLikeCourse(Map<String, Object> param) {
+		return courseDao.selectMyLikeCourse(param);
 	}
 
 

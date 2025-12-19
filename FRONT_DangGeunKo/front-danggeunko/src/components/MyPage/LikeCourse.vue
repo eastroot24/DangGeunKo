@@ -12,7 +12,8 @@
                 </div>
             </div>
             <div class="course-grid" v-else-if="limitedCourses != null && limitedCourses.length > 0">
-                <RouterLink v-if="route.path === '/myInfo'" :to="{ name: 'myCourseList', query: { tab: 'liked' } }"
+                <RouterLink v-if="route.path.toLowerCase().includes('/myinfo')"
+                    :to="{ name: 'myCourseList', params: { nickname: route.params.nickname }, query: { tab: 'liked' } }"
                     class="more-btn">
                     더보기
                 </RouterLink>
@@ -39,16 +40,21 @@
 import { useCourseStore } from '@/stores/course';
 import CourseCard from '../Course/CourseCard.vue';
 import { useRouter, useRoute } from 'vue-router';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
 const courseStore = useCourseStore()
 const { loginUserId } = storeToRefs(userStore)
 const props = defineProps({
+    targetUserId: Number,
     allView: Boolean,
 })
-
+const loadData = async () => {
+    if (props.targetUserId) {
+        await courseStore.getLikeCourseList(props.targetUserId)
+    }
+}
 const router = useRouter()
 const route = useRoute()
 const goDetail = async (course) => {
@@ -70,23 +76,34 @@ const limitedCourses = computed(() => {
 const toggleLike = async (course) => {
     if (!loginUserId.value) {
         alert("로그인이 필요합니다.");
-        router.push({ name: 'login' })
+        router.push({ name: 'login' });
         return;
     }
 
     try {
         await courseStore.addLike(course.courseId);
-        await courseStore.getLikeCourseList()
-        await courseStore.getRegistCourseList()
-    } catch (error) {
-        console.error("찜 토글 중 오류 발생:", error);
-        alert("찜 상태 변경에 실패했습니다.");
-    }
-}
-onMounted(() => {
-    courseStore.getLikeCourseList()
-})
 
+        // UI 즉시 업데이트 (allView 여부와 상관없이 스토어의 리스트들 업데이트)
+        const updateInList = (list) => {
+            const found = list.find(c => c.courseId === course.courseId);
+            if (found) found.liked = !found.liked;
+        };
+
+        updateInList(courseStore.registCourseList);
+        updateInList(courseStore.likeCourseList);
+
+        // 서버 데이터 재동기화
+        await Promise.all([
+            courseStore.getRegistCourseList(props.targetUserId),
+            courseStore.getLikeCourseList(props.targetUserId)
+        ]);
+    } catch (error) {
+        console.error("찜 토글 중 오류:", error);
+    }
+};
+watch(() => props.targetUserId, loadData)
+
+onMounted(loadData)
 </script>
 
 <style scoped>
@@ -135,5 +152,17 @@ onMounted(() => {
 
 .card-heart.active {
     color: var(--orange);
+}
+
+.more-btn {
+    grid-column: span 2;
+    /* 그리드 전체 너비 차지 */
+    text-align: right;
+    font-size: 12px;
+    color: #ff7f00;
+    text-decoration: none;
+    margin-bottom: 4px;
+    font-weight: bold;
+    cursor: pointer;
 }
 </style>

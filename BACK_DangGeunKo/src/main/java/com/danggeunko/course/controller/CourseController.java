@@ -1,15 +1,12 @@
 package com.danggeunko.course.controller;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.danggeunko.course.dto.MapPoint;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -29,9 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.danggeunko.course.dao.CoursePointDao;
 import com.danggeunko.course.dto.Course;
-import com.danggeunko.course.dto.CoursePoint;
+import com.danggeunko.course.dto.MapPoint;
 import com.danggeunko.course.dto.SearchCondition;
 import com.danggeunko.course.service.CourseService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api-course")
@@ -174,22 +172,23 @@ public class CourseController {
 
 	// 내가 등록한 코스 조회
 	@GetMapping("/course/regist")
-	public ResponseEntity<?> getMyRegistCourse(@RequestParam int userId) {
-		List<Course> list = courseService.getMyRegistCourse(userId);
-		if (list != null && !list.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(list);
-		} else {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}
+	public ResponseEntity<?> getMyRegistCourse(@RequestParam int targetUserId, 
+		    @RequestParam(required = false) Integer loginUserId){
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("targetUserId", targetUserId);
+	    params.put("loginUserId", loginUserId);
+	    
+	    return ResponseEntity.ok(courseService.getMyRegistCourse(params));
 	}
 	// 내가 찜한 코스 조회
 	@GetMapping("/course/like")
-	public ResponseEntity<?> getMyLikeCourse(@RequestParam int userId) {
-		List<Course> list = courseService.getMyLikeCourse(userId);
-		if (list != null && !list.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(list);
-		} else {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}
+	public ResponseEntity<?> getMyLikeCourse(@RequestParam int targetUserId, 
+		    @RequestParam(required = false) Integer loginUserId) {
+	    
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("targetUserId", targetUserId);
+	    params.put("loginUserId", loginUserId);
+	    
+	    return ResponseEntity.ok(courseService.getMyLikeCourse(params));
 	}
 }

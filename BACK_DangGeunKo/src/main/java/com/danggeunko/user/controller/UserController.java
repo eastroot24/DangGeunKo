@@ -60,6 +60,16 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 	}
+	// 회원 검색닉네임으로
+	@GetMapping("/nickname/{nickname}")
+	public ResponseEntity<?> getUserByNickname(@PathVariable("nickname") String nickname) {
+		User user = userService.getUserByNickname(nickname);
+		if (user != null) {
+			return ResponseEntity.status(HttpStatus.OK).body(user);
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
+	}
 
 	// 회원 전체 조회
 	@GetMapping("/")
@@ -72,15 +82,21 @@ public class UserController {
 		}
 	}
 
-	// 회원 정보 수정
-	@PutMapping("/{userId}")
-	public ResponseEntity<?> updateUser(@PathVariable("userId") int userId, @RequestBody User user) {
-		boolean completed = userService.updateUser(userId, user);
-		if (completed) {
-			return ResponseEntity.status(HttpStatus.OK).build();
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+	// 회원 정보 수정 (이미지 포함을 위해 @RequestPart 사용)
+	@PutMapping(value = "/{userId}", consumes = {"multipart/form-data"})
+	public ResponseEntity<?> updateUser(
+	        @PathVariable("userId") int userId, 
+	        @RequestPart("user") User user,
+	        @RequestPart(value = "file", required = false) MultipartFile file) {
+	    
+	    // 서비스 로직에서 userId와 user 객체 내부의 ID가 일치하는지 확인 후 처리
+	    boolean completed = userService.updateUser(userId, user, file); 
+
+	    if (completed) {
+	        return ResponseEntity.status(HttpStatus.OK).build();
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	    }
 	}
 
 	// 회원 삭제

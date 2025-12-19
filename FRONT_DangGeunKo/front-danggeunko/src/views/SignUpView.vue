@@ -19,10 +19,19 @@
 
       <label>이메일</label>
       <div class="row">
-        <input type="email" v-model="user.userEmail" :class="{ 'input-error': errors.userEmail }" required>
+        <input type="email" v-model="user.userEmail" :class="{ 'input-error': errors.userEmail }">
         <button class="btn-duple" @click="handleEmailCheck">중복확인</button>
       </div>
+
       <div v-if="errors.userEmail" class="error-msg">{{ errors.userEmail }}</div>
+
+      <div v-else-if="user.userEmail && emailRule && store.emailAvailable === null" class="success-msg">
+        사용 가능한 형식입니다. 중복 확인을 눌러주세요.
+      </div>
+
+      <div v-else-if="store.emailAvailable === true" class="success-msg">
+        사용 가능한 이메일입니다.
+      </div>
 
       <label>별명</label>
       <div class="row">
@@ -30,6 +39,7 @@
         <button class="btn-duple" @click="handleNicknameCheck">중복확인</button>
       </div>
       <div v-if="errors.nickname" class="error-msg">{{ errors.nickname }}</div>
+      <div v-else-if="store.nicknameAvailable === true" class="success-msg">사용 가능한 별명입니다.</div>
 
       <label>비밀번호</label>
       <input type="password" v-model="user.userPassword" :class="{ 'input-error': errors.userPassword }">
@@ -72,21 +82,21 @@
 
       <label>지역</label>
       <div class="row">
-        <select v-model="selectedCity" :class="{ 'input-error': errors.region }">
+        <select v-model="user.userCity" :class="{ 'input-error': errors.userDistrict }">
           <option value="">시/도 선택</option>
           <option v-for="city in Object.keys(regionDB)" :key="city" :value="city">
             {{ city }}
           </option>
         </select>
 
-        <select v-model="user.region" :disabled="!selectedCity" :class="{ 'input-error': errors.region }">
+        <select v-model="user.userDistrict" :disabled="!user.userCity" :class="{ 'input-error': errors.userDistrict }">
           <option value="">시/군/구 선택</option>
-          <option v-for="gu in regionDB[selectedCity]" :key="gu" :value="gu">
+          <option v-for="gu in regionDB[user.userCity]" :key="gu" :value="gu">
             {{ gu }}
           </option>
         </select>
       </div>
-      <div v-if="errors.region" class="error-msg">{{ errors.region }}</div>
+      <div v-if="errors.userDistrict" class="error-msg">{{ errors.userDistrict }}</div>
 
       <label>최근 러닝 평균 거리</label>
       <div class="row">
@@ -113,63 +123,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user';
 
 const store = useUserStore()
 const router = useRouter()
-const passwordCheck = ref('')
-const isPwMatch = computed(() => user.value.userPassword === passwordCheck.value)
-const pwRule = computed(() => {
-  const pw = user.value.userPassword
-  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/
-  return regex.test(pw)
-})
-const emailRule = computed(() => {
-  const email = user.value.userEmail;
-  // 표준 이메일 형식 정규표현식
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regex.test(email);
-});
-// <script setup> 내부에 추가
-const handleEmailCheck = () => {
-  // 1. 에러 메시지 초기화
-  errors.value.userEmail = '';
 
-  // 2. 이메일 형식 검사 (emailRule 사용)
-  if (!user.value.userEmail) {
-    errors.value.userEmail = '이메일을 입력해주세요.';
-    return;
-  }
-
-  if (!emailRule.value) {
-    errors.value.userEmail = '올바른 이메일 형식이 아닙니다.';
-    return;
-  }
-
-  // 3. 형식이 올바를 때만 서버에 중복 확인 요청
-  store.checkEmail(user.value.userEmail);
-};
-const handleNicknameCheck = () => {
-  // 1. 에러 메시지 초기화
-  errors.value.nickname = '';
-
-  // 2. 빈 값 검사
-  if (!user.value.nickname || user.value.nickname.trim() === '') {
-    errors.value.nickname = '별명을 입력해주세요.';
-    return;
-  }
-
-  // (선택사항) 추가 규칙이 있다면 여기에 작성 (예: 2자 이상)
-  if (user.value.nickname.length < 2) {
-    errors.value.nickname = '별명은 2자 이상 입력해주세요.';
-    return;
-  }
-
-  // 3. 검사를 통과했을 때만 서버에 중복 확인 요청
-  store.checkNickname(user.value.nickname);
-};
 const user = ref({
   userName: '',
   nickname: '',
@@ -177,68 +137,113 @@ const user = ref({
   userPassword: '',
   gender: '',
   age: null,
-  region: '',
+  userCity: '',
+  userDistrict: '',
   prefDistance: '',
   prefDifficulty: '',
   profileImg: null,
 })
+
+const passwordCheck = ref('')
 const imagePreview = ref('http://localhost:8080/uploads/dgk-default-profile.png');
-// <script setup> 내부
 const errors = ref({
-  userName: '',
-  nickname: '',
-  userEmail: '',
-  userPassword: '',
-  passwordCheck: '',
-  gender: '',
-  age: '',
-  region: '',
-  prefDistance: '',
-  prefDifficulty: ''
+  userName: '', nickname: '', userEmail: '', userPassword: '',
+  passwordCheck: '', gender: '', age: '', userDistrict: '',
+  prefDistance: '', prefDifficulty: ''
 });
-// 파일 선택 핸들러
+
+// --- 유효성 검사 로직 (Computed) ---
+
+const emailRule = computed(() => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(user.value.userEmail);
+});
+
+const pwRule = computed(() => {
+  const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/
+  return regex.test(user.value.userPassword)
+});
+
+const isPwMatch = computed(() => user.value.userPassword === passwordCheck.value);
+
+// --- 실시간 감시 (Watch) 및 에러 제거 ---
+
+// 이메일 실시간 검사 및 중복 확인 리셋
+watch(() => user.value.userEmail, (newVal) => {
+  if (!newVal) {
+    errors.value.userEmail = ''; // 값이 비어있으면 에러 메시지 숨김
+  } else if (!emailRule.value) {
+    errors.value.userEmail = '올바른 이메일 형식이 아닙니다.'; // 실시간 형식 검사
+  } else {
+    errors.value.userEmail = ''; // 형식이 올바르면 에러 메시지 제거
+  }
+
+  // 이메일이 바뀌면 기존 중복 확인 상태 초기화
+  store.emailAvailable = null;
+});
+
+// 별명 실시간 에러 제거 및 중복 확인 리셋
+watch(() => user.value.nickname, (newVal) => {
+  if (newVal && newVal.trim().length >= 2) errors.value.nickname = '';
+  store.nicknameAvailable = null;
+});
+
+// 기타 항목 실시간 에러 제거
+watch(() => user.value.userName, (val) => { if (val) errors.value.userName = '' });
+watch(() => user.value.userPassword, (val) => { if (pwRule.value) errors.value.userPassword = '' });
+watch(() => passwordCheck.value, (val) => { if (isPwMatch.value) errors.value.passwordCheck = '' });
+watch(() => user.value.gender, (val) => { if (val) errors.value.gender = '' });
+watch(() => user.value.age, (val) => { if (val) errors.value.age = '' });
+watch(() => user.value.userDistrict, (val) => { if (val) errors.value.userDistrict = '' });
+watch(() => user.value.prefDistance, (val) => { if (val) errors.value.prefDistance = '' });
+watch(() => user.value.prefDifficulty, (val) => { if (val) errors.value.prefDifficulty = '' });
+
+// --- 버튼 핸들러 ---
+
+const handleEmailCheck = () => {
+  if (!emailRule.value) {
+    errors.value.userEmail = '올바른 이메일 형식이 아닙니다.';
+    return;
+  }
+  store.checkEmail(user.value.userEmail);
+};
+
+const handleNicknameCheck = () => {
+  if (!user.value.nickname || user.value.nickname.length < 2) {
+    errors.value.nickname = '별명은 2자 이상 입력해주세요.';
+    return;
+  }
+  store.checkNickname(user.value.nickname);
+};
+
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
     user.value.profileImg = file;
-    // 파일을 선택하면 선택한 파일의 미리보기로 교체
     imagePreview.value = URL.createObjectURL(file);
   }
 };
 
 const goHome = async () => {
-  // 에러 초기화
-  Object.keys(errors.value).forEach(key => errors.value[key] = '');
-
   let isValid = true;
-
-  // 필수 항목 체크
   if (!user.value.userName) { errors.value.userName = '이름을 입력해주세요.'; isValid = false; }
-  if (!user.value.userEmail) { errors.value.userEmail = '이메일을 입력해주세요.'; isValid = false; }
+  if (!emailRule.value) { errors.value.userEmail = '이메일 형식을 확인해주세요.'; isValid = false; }
   else if (store.emailAvailable !== true) { errors.value.userEmail = '이메일 중복 확인이 필요합니다.'; isValid = false; }
 
   if (!user.value.nickname) { errors.value.nickname = '별명을 입력해주세요.'; isValid = false; }
   else if (store.nicknameAvailable !== true) { errors.value.nickname = '별명 중복 확인이 필요합니다.'; isValid = false; }
 
-  if (!user.value.userPassword) { errors.value.userPassword = '비밀번호를 입력해주세요.'; isValid = false; }
-  else if (!pwRule.value) { errors.value.userPassword = '비밀번호 형식이 올바르지 않습니다.'; isValid = false; }
-
-  if (!passwordCheck.value) { errors.value.passwordCheck = '비밀번호 확인을 입력해주세요.'; isValid = false; }
-  else if (!isPwMatch.value) { errors.value.passwordCheck = '비밀번호가 일치하지 않습니다.'; isValid = false; }
+  if (!pwRule.value) { errors.value.userPassword = '비밀번호 형식을 확인해주세요.'; isValid = false; }
+  if (!isPwMatch.value) { errors.value.passwordCheck = '비밀번호가 일치하지 않습니다.'; isValid = false; }
 
   if (!user.value.gender) { errors.value.gender = '성별을 선택해주세요.'; isValid = false; }
   if (!user.value.age) { errors.value.age = '나이를 입력해주세요.'; isValid = false; }
-  if (!user.value.region) { errors.value.region = '지역을 선택해주세요.'; isValid = false; }
+  if (!user.value.userDistrict) { errors.value.userDistrict = '지역을 선택해주세요.'; isValid = false; }
   if (!user.value.prefDistance) { errors.value.prefDistance = '거리를 입력해주세요.'; isValid = false; }
   if (!user.value.prefDifficulty) { errors.value.prefDifficulty = '실력 수준을 선택해주세요.'; isValid = false; }
 
-  if (!isValid) {
-    // 가장 상단에 있는 에러 메시지로 스크롤 이동 (선택 사항)
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
+  if (!isValid) return;
 
-  // 유효성 검사 통과 시 기존 FormData 로직 실행
   const formData = new FormData();
   const userData = { ...user.value };
   const profileFile = userData.profileImg;
@@ -250,12 +255,6 @@ const goHome = async () => {
   await store.addUser(formData);
   router.replace('/login');
 }
-
-
-const goLogin = () => {
-  router.push({ name: "login" })
-}
-
 const regionDB = {
   "서울특별시": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구",
     "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
@@ -286,7 +285,7 @@ const regionDB = {
   "제주특별자치도": ["제주시", "서귀포시"]
 }
 
-const selectedCity = ref("")
+
 
 </script>
 <style scoped>
@@ -296,9 +295,21 @@ const selectedCity = ref("")
 
 .error-msg {
   color: #ff4d4f;
-  font-size: 12px;
+  font-size: 11px;
   margin-top: 4px;
-  margin-left: 4px;
   font-weight: bold;
+}
+
+.success-msg {
+  color: #52c41a;
+  /* 초록색 */
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: bold;
+}
+
+.small {
+  font-size: 11px;
+  margin-top: 2px;
 }
 </style>

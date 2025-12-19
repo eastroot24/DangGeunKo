@@ -250,43 +250,35 @@
 	</select>
 	
 	<!-- 내가 등록한 코스 조회-->
-	<select id="selectMyRegistCourse" parameterType="int" resultType="Course">
-    SELECT 
-        c.*,
-        (SELECT cp.latitude 
-         FROM COURSE_POINT cp 
-         WHERE cp.course_id = c.course_id 
-         AND cp.sequence = 1 
-         LIMIT 1) AS startLat,
-        (SELECT cp.longitude 
-         FROM COURSE_POINT cp 
-         WHERE cp.course_id = c.course_id 
-         AND cp.sequence = 1 
-         LIMIT 1) AS startLng,
-        (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt,
-        (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
-        -- 내가 등록한 코스들 중에서도 내가 '좋아요'를 눌렀는지 여부 확인
-        CASE WHEN EXISTS (
-            SELECT 1 
-            FROM COURSE_LIKE cl 
-            WHERE cl.course_id = c.course_id 
-            AND cl.user_id = #{userId}
-        ) THEN TRUE ELSE FALSE END AS isLiked
-    FROM course c
-    WHERE c.user_id = #{userId}
-    ORDER BY c.created_at DESC
-</select>
-	<!-- 내가 찜한 코스 조회 -->
-	<select id="selectMyLikeCourse" parameterType="int" resultType="Course">
+	<select id="selectMyRegistCourse" parameterType="map" resultType="Course">
     SELECT 
         c.*,
         (SELECT cp.latitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLat,
         (SELECT cp.longitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLng,
         (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt,
         (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
-        TRUE AS isLiked
+        CASE WHEN EXISTS (
+            SELECT 1 FROM COURSE_LIKE cl 
+            WHERE cl.course_id = c.course_id 
+            AND cl.user_id = #{loginUserId} ) THEN TRUE ELSE FALSE END AS isLiked
     FROM course c
-    JOIN course_like cl ON c.course_id = cl.course_id
-    WHERE cl.user_id = #{userId}
-</select>
+    WHERE c.user_id = #{targetUserId} ORDER BY c.created_at DESC
+	</select>
+	<!-- 내가 찜한 코스 조회 -->
+	<select id="selectMyLikeCourse" parameterType="map" resultType="Course">
+	    SELECT 
+	        c.*,
+	        (SELECT cp.latitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLat,
+	        (SELECT cp.longitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLng,
+	        (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt,
+	        (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
+	        CASE WHEN EXISTS (
+	            SELECT 1 FROM COURSE_LIKE cl 
+	            WHERE cl.course_id = c.course_id 
+	            AND cl.user_id = #{loginUserId}
+	        ) THEN TRUE ELSE FALSE END AS isLiked
+	    FROM course c
+	    JOIN course_like cl ON c.course_id = cl.course_id
+	    WHERE cl.user_id = #{targetUserId} 
+	    </select>
 </mapper>
