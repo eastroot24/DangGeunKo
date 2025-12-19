@@ -1,6 +1,6 @@
 <template>
   <div class="panel" ref="panelRef">
-    <div class="drag-handle" @mousedown="startDrag"></div>
+    <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
     <button class="back-btn" @click="goBack">
       ←
     </button>
@@ -16,10 +16,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import CourseForm from '@/components/Course/Create/CourseForm.vue'
 import DrawingMap from '@/components/Course/Create/DrawingMap.vue'
 import { useRouter } from 'vue-router'
+import { useSlidingPanel } from '@/assets/script.js'
 
 const router = useRouter()
 
@@ -48,42 +49,25 @@ const retryDrawing = () => {
 
 const panelRef = ref(null)
 
-let startY = 0
-let startHeight = 0
-let dragging = false
-
-const startDrag = (e) => {
-  dragging = true
-  startY = e.clientY
-  startHeight = panelRef.value.offsetHeight
-
-  document.addEventListener('mousemove', onMouseMove)
-  document.addEventListener('mouseup', stopDrag)
-}
-
-const onMouseMove = (e) => {
-  if (!dragging) return
-
-  const diff = startY - e.clientY
-  let newHeight = startHeight + diff
-
-  newHeight = Math.max(200, Math.min(newHeight, window.innerHeight * 0.85))
-  panelRef.value.style.height = `${newHeight}px`
-}
-
-const stopDrag = () => {
-  dragging = false
-  document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('mouseup', stopDrag)
-}
+const {
+  panelState,
+  setPanelState,
+  applyHeight,
+  startDrag
+} = useSlidingPanel()
 
 onMounted(() => {
-  panelRef.value.style.height = '360px'
+  setPanelState(2)
+  if (panelRef.value) {
+    applyHeight(panelRef.value)
+  }
 })
 
-onBeforeUnmount(() => {
-  document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('mouseup', stopDrag)
+// 2. 상태 변화 감시 및 높이 적용
+watch(panelState, () => {
+  if (panelRef.value) {
+    applyHeight(panelRef.value)
+  }
 })
 
 </script>

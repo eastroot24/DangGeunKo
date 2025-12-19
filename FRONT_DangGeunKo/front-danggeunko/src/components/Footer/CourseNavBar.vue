@@ -1,14 +1,17 @@
 <template>
     <div class="navbar">
-        <RouterLink :to='myInfoPath' class="nav-item">MYPAGE</RouterLink>
-        <RouterLink to="/course" class="nav-item">COURSE</RouterLink>
-        <RouterLink to="/course/ranking" class="nav-item">RANKING</RouterLink>
+        <RouterLink :to='myInfoPath' class="nav-item" @click="toggleByTap">MYPAGE</RouterLink>
+        <RouterLink to="/course" class="nav-item" @click="toggleByTap">COURSE</RouterLink>
+        <RouterLink to="/course/ranking" class="nav-item" @click="toggleByTap">RANKING</RouterLink>
     </div>
 </template>
 
 <script setup>
+import { useSlidingPanel } from '@/assets/script.js'
 import { useUserStore } from '@/stores/user';
 import { computed, onMounted, ref, watch } from 'vue';
+  
+const { toggleByTap } = useSlidingPanel()  
 
 const userStore = useUserStore()
 // 로그인한 유저의 닉네임이 바뀔 때마다 자동으로 경로를 업데이트

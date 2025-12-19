@@ -4,6 +4,12 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.danggeunko.course.dto.MapPoint;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +49,8 @@ public class CourseController {
 		this.courseService = courseService;
 		this.coursePointDao = coursePointDao;
 	}
-
-	@Value("${naver.map.gateway-id}")
-	private String naverMapKeyId;
-	@Value("${naver.map.gateway-key}")
-	private String naverMapKeySecret;
+	
+	private static final String THUMBNAIL_DIR = "thumbnail";
 
 	// 코스 전체 조회
 	@GetMapping("/course")
@@ -141,34 +144,70 @@ public class CourseController {
 	}
 
 	// 지도 캡처 이미지 반환
-	@GetMapping(value = "/course/{id}/thumbnail", produces = MediaType.IMAGE_PNG_VALUE)
-	public ResponseEntity<byte[]> getCourseThumbnail(@PathVariable int id) throws Exception {
+	@GetMapping(
+		    value = "/course/{id}/thumbnail",
+		    produces = MediaType.IMAGE_PNG_VALUE
+		)
+		public ResponseEntity<byte[]> getCourseThumbnail(@PathVariable int id)
+		    throws Exception {
 
-		List<MapPoint> points = courseService.getMapPoints(id);
+		    // 1. 썸네일 파일 경로
+		    Path dir = Paths.get(THUMBNAIL_DIR);
+		    if (!Files.exists(dir)) {
+		        Files.createDirectories(dir);
+		    }
 
-		if (points.isEmpty()) {
-			return ResponseEntity.noContent().build();
+		    Path thumbnailPath = dir.resolve("course_" + id + ".png");
+
+		    // 2. 이미 캐시가 있으면 바로 반환
+		    if (Files.exists(thumbnailPath)) {
+		        byte[] cachedImage = Files.readAllBytes(thumbnailPath);
+		        return ResponseEntity.ok()
+		            .contentType(MediaType.IMAGE_PNG)
+		            .header("Cache-Control", "max-age=86400")
+		            .body(cachedImage);
+		    }
+
+		    // 3. 없으면 → Node 서버 호출
+		    List<MapPoint> points = courseService.getMapPoints(id);
+		    if (points.isEmpty()) {
+		        return ResponseEntity.noContent().build();
+		    }
+
+		    Map<String, Object> payload = Map.of(
+		        "points", points,
+		        "width", 400,
+		        "height", 300
+		    );
+
+		    ObjectMapper mapper = new ObjectMapper();
+		    String json = mapper.writeValueAsString(payload);
+
+		    HttpRequest request = HttpRequest.newBuilder()
+		        .uri(URI.create("http://localhost:4001/render"))
+		        .header("Content-Type", "application/json")
+		        .POST(HttpRequest.BodyPublishers.ofString(json))
+		        .build();
+
+		    HttpClient client = HttpClient.newHttpClient();
+		    HttpResponse<byte[]> response =
+		        client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+		    if (response.statusCode() != 200) {
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		    }
+
+		    byte[] imageBytes = response.body();
+
+		    // 4. 파일로 저장 (캐싱)
+		    Files.write(thumbnailPath, imageBytes);
+
+		    return ResponseEntity.ok()
+		        .contentType(MediaType.IMAGE_PNG)
+		        .header("Cache-Control", "no-cache, no-store, must-revalidate")
+		        .body(imageBytes);
 		}
 
-		// Node 서버로 보낼 payload
-		Map<String, Object> payload = Map.of("points", points, "width", 400, "height", 300);
-
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(payload);
-
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:4001/render"))
-				.header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(json)).build();
-
-		HttpClient client = HttpClient.newHttpClient();
-		HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
-
-		if (response.statusCode() != 200) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-
-		return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).header("Cache-Control", "no-store")
-				.body(response.body());
-	}
 
 	// 내가 등록한 코스 조회
 	@GetMapping("/course/regist")

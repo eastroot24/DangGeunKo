@@ -1,6 +1,8 @@
 <template>
     <div class="map-wrapper">
-        <CourseSearchBar />
+        <div class="map-overlay">
+            <CourseSearchBar />
+        </div>
         <div id="map" style="width:100%;height:100vh;">
             <button @click="moveToCurrentLocation" class="curr-loc-btn">
                 내 위치로 이동
@@ -335,7 +337,7 @@ onMounted(async () => {
 .curr-loc-btn {
     position: absolute;
     z-index: 100;
-    top: 100px;
+    top: 60px;
     /* 검색바 아래로 */
     right: 16px;
     padding: 8px 12px;
@@ -346,5 +348,16 @@ onMounted(async () => {
     border-radius: 8px;
     font-size: 12px;
     font-weight: bold;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 800px;
+    z-index: 100;
+    pointer-events: auto;
 }
 </style>

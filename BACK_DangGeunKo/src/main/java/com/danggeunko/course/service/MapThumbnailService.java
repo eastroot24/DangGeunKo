@@ -26,8 +26,8 @@ public class MapThumbnailService {
 
         Map<String, Object> body = new HashMap<>();
         body.put("points", points);
-        body.put("width", 400);
-        body.put("height", 300);
+        body.put("width", 200);
+        body.put("height", 200);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

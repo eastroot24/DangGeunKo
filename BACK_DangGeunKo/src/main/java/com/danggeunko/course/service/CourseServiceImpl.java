@@ -1,5 +1,12 @@
 package com.danggeunko.course.service;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +22,7 @@ import com.danggeunko.course.dto.Course;
 import com.danggeunko.course.dto.CoursePoint;
 import com.danggeunko.course.dto.MapPoint;
 import com.danggeunko.course.dto.SearchCondition;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Service
@@ -71,13 +79,103 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	@Override
 	public boolean updateCourse(Course course) {
-		return courseDao.updateCourse(course) > 0;
+
+	    int courseId = course.getCourseId();
+
+	    // 1️⃣ 코스 기본 정보 수정
+	    int updated = courseDao.updateCourse(course);
+	    if (updated <= 0) {
+	        return false;
+	    }
+
+	    // 2️⃣ 기존 포인트 삭제
+	    coursePointDao.deletePointsByCourseId(courseId);
+
+	    // 3️⃣ 새 포인트 INSERT
+	    List<CoursePoint> points = course.getCoursePoints();
+	    if (points != null && !points.isEmpty()) {
+	        for (CoursePoint p : points) {
+	            p.setCourseId(courseId);
+	        }
+	        coursePointDao.insertCoursePoints(points);
+	    }
+
+	    // 4️⃣ 썸네일 캐시 삭제
+	    try {
+	        Files.deleteIfExists(
+	            Paths.get("thumbnail/course_" + courseId + ".png")
+	        );
+	    } catch (Exception e) {
+	        System.err.println("썸네일 캐시 삭제 실패: " + e.getMessage());
+	    }
+
+	    // 5️⃣ 최신 포인트 기준으로 썸네일 재생성
+	    try {
+	        generateThumbnail(courseId);
+	    } catch (Exception e) {
+	        System.err.println("썸네일 재생성 실패: " + e.getMessage());
+	    }
+
+	    return true;
 	}
+
+	private void generateThumbnail(int courseId) {
+		try {
+	        List<MapPoint> points = getMapPoints(courseId);
+	        if (points.isEmpty()) return;
+
+	        Map<String, Object> payload = Map.of(
+	            "points", points,
+	            "width", 400,
+	            "height", 300
+	        );
+
+	        ObjectMapper mapper = new ObjectMapper();
+	        String json = mapper.writeValueAsString(payload);
+
+	        HttpRequest request = HttpRequest.newBuilder()
+	            .uri(URI.create("http://localhost:4001/render"))
+	            .header("Content-Type", "application/json")
+	            .POST(HttpRequest.BodyPublishers.ofString(json))
+	            .build();
+
+	        HttpClient client = HttpClient.newHttpClient();
+	        HttpResponse<byte[]> response =
+	            client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+	        if (response.statusCode() != 200) return;
+
+	        Path dir = Paths.get("thumbnail");
+	        Files.createDirectories(dir);
+
+	        Files.write(
+	            dir.resolve("course_" + courseId + ".png"),
+	            response.body()
+	        );
+
+	    } catch (Exception e) {
+	        System.err.println("썸네일 재생성 실패: " + e.getMessage());
+	    }
+	}
+		
+	
 
 	@Transactional
 	@Override
 	public boolean deleteCourse(int id) {
-		return courseDao.deleteCourse(id) > 0;
+	    boolean result = courseDao.deleteCourse(id) > 0;
+
+	    if (result) {
+	        try {
+	            Files.deleteIfExists(
+	                Paths.get("thumbnail/course_" + id + ".png")
+	            );
+	        } catch (Exception e) {
+	            System.err.println("썸네일 캐시 삭제 실패");
+	        }
+	    }
+
+	    return result;
 	}
 	
 	@Transactional

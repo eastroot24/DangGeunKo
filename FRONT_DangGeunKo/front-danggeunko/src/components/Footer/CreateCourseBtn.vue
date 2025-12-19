@@ -10,9 +10,8 @@
 
 <style scoped>
 .plus-btn {
-    width: 48px;
-    /* 크기를 약간 키움 */
-    height: 48px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: #ff7a00;
     color: #fff;
@@ -22,15 +21,27 @@
     align-items: center;
     justify-content: center;
     position: fixed;
-    /* absolute에서 fixed로 변경하여 화면 기준 고정 */
-    left: calc(50% + 130px);
-    /* 390px 화면 기준 우측 배치 */
-    bottom: 80px;
-    /* 내브바 높이(62px)보다 높게 설정 */
+    right: calc(50% - 800px/2 + 30px);
+    bottom: 130px;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
+    /* 기본 그림자 (피그마보다 살짝 약하게) */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+    /* 호버 애니메이션용 */
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
     z-index: 1100;
     /* 내브바보다 위에 위치 */
+}
+
+.plus-btn:hover {
+    transform: translateY(-2px);
+    /* 살짝 뜨는 느낌 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    background-color: #ff6a00;
+    /* 살짝 밝게 */
 }
 </style>

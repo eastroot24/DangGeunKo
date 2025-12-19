@@ -1,56 +1,47 @@
 <template>
   <div class="panel" ref="panelRef">
-    <div class="drag-handle" @mousedown="startDrag"></div>
+    <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
     <div class="panel-title">우리동네 코스 구경하기</div>
     <CourseFilter></CourseFilter>
-    <CourseList></CourseList>
+    <div class="course-panel-wrapper">
+      <CourseList></CourseList>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import CourseList from '@/components/Course/CourseList.vue'
 import CourseFilter from '@/components/CourseFilter.vue'
+import { useSlidingPanel } from '@/assets/script.js'
 
 const panelRef = ref(null)
 
-let startY = 0
-let startHeight = 0
-let dragging = false
-
-const startDrag = (e) => {
-  dragging = true
-  startY = e.clientY
-  startHeight = panelRef.value.offsetHeight
-
-  document.addEventListener('mousemove', onMouseMove)
-  document.addEventListener('mouseup', stopDrag)
-}
-
-const onMouseMove = (e) => {
-  if (!dragging) return
-
-  const diff = startY - e.clientY
-  let newHeight = startHeight + diff
-
-  newHeight = Math.max(200, Math.min(newHeight, window.innerHeight * 0.85))
-  panelRef.value.style.height = `${newHeight}px`
-}
-
-const stopDrag = () => {
-  dragging = false
-  document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('mouseup', stopDrag)
-}
+const {
+  panelState,
+  setPanelState,
+  syncTapCount,
+  applyHeight,
+  startDrag
+} = useSlidingPanel()
 
 onMounted(() => {
-  panelRef.value.style.height = '360px'
+  // 1. 이 페이지 진입 시 초기 높이를 'half(1)'로 설정
+  setPanelState(1)
+  // 2. 탭 카운트도 1회 클릭된 상태로 동기화 (그래야 다음 클릭 시 2단계인 full이 됨)
+  syncTapCount(1)
+
+  if (panelRef.value) {
+    applyHeight(panelRef.value)
+  }
 })
 
-onBeforeUnmount(() => {
-  document.removeEventListener('mousemove', onMouseMove)
-  document.removeEventListener('mouseup', stopDrag)
-})
+watch(panelState, () => {
+  if (panelRef.value) {
+    applyHeight(panelRef.value)
+  }
+}, { immediate: true })
+
 </script>
 
 
