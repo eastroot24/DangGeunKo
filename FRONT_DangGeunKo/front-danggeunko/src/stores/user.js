@@ -38,12 +38,21 @@ export const useUserStore = defineStore('user', () => {
     userPassword: '',
     gender: '',
     age: null,
-    region: '',
+    userCity:'',
+    userDistrict:'',
     prefDistance: '',
     prefDifficulty: '',
     profileImg: null,
   })
-
+const getUserByNickname = async (nickname) => {
+  try {
+    const res = await api.get(`${REST_USER_API_URL}nickname/${nickname}`);
+    return res.data; 
+  } catch (e) {
+    console.error("유저를 찾을 수 없습니다.");
+    return null;
+  }
+};
   /* 🔥 닉네임 중복확인 */
 const nicknameAvailable = ref(null)
 
@@ -180,10 +189,19 @@ const addUser = async (formData) => {
   }
 }
 
-  const updateUser = async (id, data) => {
-    const res = await api.put(`${REST_USER_API_URL}${id}`, data)
-    user.value = res.data
+  const updateUser = async (formData) => { 
+  try {
+    // formData에서 userId를 꺼내거나 loginUserId를 사용
+    const res = await api.put(`${REST_USER_API_URL}${loginUserId.value}`, formData);
+    
+    // 수정 후 최신 정보를 다시 불러
+    await getUserById(loginUserId.value); 
+    return true;
+  } catch (err) {
+    console.error("수정 실패:", err);
+    return false;
   }
+};
 
   const deleteUser = async (id) => {
     await api.delete(`${REST_USER_API_URL}${id}`)
@@ -208,21 +226,39 @@ const addUser = async (formData) => {
     })
   }
 
-  const getFollowing = async (id) => {
-    if (!id) return
-    const res = await api.get(`${REST_USER_API_URL}follow/following/${id}`)
-    followingList.value = res.data.map(u => ({ ...u, isFollowing: true }))
-  }
+ /* user.js 의 follow 섹션 수정 */
 
-  const getFollower = async (id) => {
-    if (!id) return
-    await getFollowing(id)
-    const res = await api.get(`${REST_USER_API_URL}follow/follower/${id}`)
+const getFollowing = async (id) => {
+    if (!id) return;
+    const res = await api.get(`${REST_USER_API_URL}follow/following/${id}`);
+    
+    // 타인의 팔로잉 목록을 볼 때도, "내"가 그들을 팔로우 중인지 체크해야 함
+    const myFingRes = await api.get(`${REST_USER_API_URL}follow/following/${loginUserId.value}`);
+    const myFollowings = myFingRes.data;
+
+    followingList.value = res.data.map(u => ({
+        ...u,
+        isFollowing: myFollowings.some(f => Number(f.userId) === Number(u.userId))
+    }));
+};
+
+const getFollower = async (id) => {
+    if (!id) return;
+    
+    // 1. 내 팔로잉 리스트 로드 (버튼 상태 체크용)
+    const myFingRes = await api.get(`${REST_USER_API_URL}follow/following/${loginUserId.value}`);
+    const myFollowings = myFingRes.data;
+
+    // 2. 대상의 팔로워 리스트 로드
+    const res = await api.get(`${REST_USER_API_URL}follow/follower/${id}`);
+    
+    // 3. 데이터 규격화 및 isFollowing 주입
     followerList.value = res.data.map(u => ({
-      ...u,
-      isFollowing: followingList.value.some(f => f.userId === u.userId)
-    }))
-  }
+        ...u,
+        // 백엔드 응답에 따라 u.userId가 없을 경우 u.id 등으로 매핑 확인 필요
+        isFollowing: myFollowings.some(f => Number(f.userId) === Number(u.userId))
+    }));
+  };
 
   /* ===============================
      pw check
@@ -260,6 +296,7 @@ const addUser = async (formData) => {
     addUser,
     updateUser,
     deleteUser,
+    getUserByNickname,
 
     // follow
     addFollow,

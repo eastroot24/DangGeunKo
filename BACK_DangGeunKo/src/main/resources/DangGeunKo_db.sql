@@ -16,7 +16,8 @@ CREATE TABLE `USER` (
     user_password  VARCHAR(50)  NOT NULL,                   -- 비밀번호
     gender         VARCHAR(10),                             -- 성별
     age            INT,                                     -- 나이
-    region         VARCHAR(10),                             -- 거주 동네(코드) ? 이거  어떤지? varchar
+    user_city 	   VARCHAR(10),								-- 거주 시/도
+    user_district         VARCHAR(10),                             -- 거주 동네(구)
     created_at     DATETIME     DEFAULT CURRENT_TIMESTAMP,  -- 가입일자
     pref_distance  FLOAT,                                   -- 러닝 선호 거리(km)
     pref_difficulty VARCHAR(10),                            -- 런린이/러너/런고수
@@ -46,7 +47,7 @@ CREATE TABLE `COURSE` (
     user_id       INT NOT NULL,                             -- 유조 pk
     course_name   VARCHAR(50) NOT NULL,                     -- 코스 이름
     course_city   varchar(10),                              -- 코스 도시
-    course_district   varchar(10),                              -- 코스 도시
+    course_district   varchar(10),                          -- 코스 도시
     start_address VARCHAR(200),                             -- 출발지 주소
     end_address   VARCHAR(200),                             -- 도착지 주소
     distance_km   FLOAT,                                    -- 전체 거리
@@ -115,18 +116,18 @@ CREATE TABLE `REVIEW` (
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-INSERT INTO USER (user_name, nickname, user_email, user_password, gender, age, region, pref_distance, pref_difficulty)
+INSERT INTO `USER` (user_name, nickname, user_email, user_password, gender, age, user_city, user_district, pref_distance, pref_difficulty)
 VALUES
-('김철수', '철수런너', 'chulsoo@example.com', 'pass1234', 'M', 28, '해운대', 5.0, '런린이'),
-('이영희', '희희', 'younghee@example.com', 'pass1234', 'F', 26, '수영구', 10.0, '러너'),
-('박민수', '민수러너', 'minsu@example.com', 'pass1234', 'M', 32, '부산진구', 7.0, '런린이'),
-('최지현', '지지', 'jihyun@example.com', 'pass1234', 'F', 30, '남구', 12.0, '런고수'),
-('정우성', '우성이형', 'woosung@example.com', 'pass1234', 'M', 35, '동래구', 8.0, '러너'),
-('한가을', '가을담당', 'gaeul@example.com', 'pass1234', 'F', 24, '해운대', 3.0, '런린이'),
-('오준호', '준호달려', 'junho@example.com', 'pass1234', 'M', 29, '기장군', 15.0, '런고수'),
-('김보라', '보라빛밤', 'bora@example.com', 'pass1234', 'F', 27, '금정구', 6.0, '러너'),
-('장동현', '동동', 'donghyun@example.com', 'pass1234', 'M', 31, '연제구', 9.0, '러너'),
-('서지민', '지밍', 'jimin@example.com', 'pass1234', 'F', 25, '사하구', 4.0, '런린이');
+('김철수', '서울러너', 'chulsoo@example.com', 'pass1234', 'M', 28, '서울특별시', '강남구', 5.5, '런린이'),
+('이영희', '부산갈매기', 'younghee@example.com', 'pass1234', 'F', 26, '부산광역시', '해운대구', 10.0, '러너'),
+('박민수', '경기호랑이', 'minsu@example.com', 'pass1234', 'M', 32, '경기도', '수원시 팔달구', 7.2, '런린이'),
+('최지현', '대구질주', 'jihyun@example.com', 'pass1234', 'F', 30, '대구광역시', '수성구', 12.5, '런고수'),
+('정우성', '인천바람', 'woosung@example.com', 'pass1234', 'M', 35, '인천광역시', '연수구', 8.0, '러너'),
+('한가을', '강원다람쥐', 'gaeul@example.com', 'pass1234', 'F', 24, '강원도', '춘천시', 3.5, '런린이'),
+('오준호', '충남번개', 'junho@example.com', 'pass1234', 'M', 29, '충청남도', '천안시 동남구', 15.0, '런고수'),
+('김보라', '전북나비', 'bora@example.com', 'pass1234', 'F', 27, '전라북도', '전주시 완산구', 6.0, '러너'),
+('장동현', '경남치타', 'donghyun@example.com', 'pass1234', 'M', 31, '경남', '창원시 의창구', 9.5, '러너'),
+('서지민', '제주바당', 'jimin@example.com', 'pass1234', 'F', 25, '제주특별자치도', '제주시', 4.8, '런린이');
 
 INSERT INTO FOLLOW (following_id, follower_id)
 VALUES

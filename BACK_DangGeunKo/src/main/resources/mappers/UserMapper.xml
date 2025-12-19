@@ -5,22 +5,29 @@
 <mapper namespace="com.danggeunko.user.dao.UserDao">
 
 	<!-- 회원 추가 -->
-	<insert id="insertUser" parameterType="User">
-	    INSERT INTO user(
-	        user_name, nickname, user_email, user_password, gender,
-	        age, region, pref_distance, pref_difficulty, profile_img
-	    )
-	    VALUES (
-	        #{userName}, #{nickname}, #{userEmail}, #{userPassword}, #{gender},
-	        #{age}, #{region}, #{prefDistance}, #{prefDifficulty}, #{profileImg}
-	    );
-	</insert>	
+<insert id="insertUser" parameterType="User">
+    INSERT INTO user(
+        user_name, nickname, user_email, user_password, gender,
+        age, user_city, user_district, pref_distance, pref_difficulty, profile_img
+    )
+    VALUES (
+        #{userName}, #{nickname}, #{userEmail}, #{userPassword}, #{gender},
+        #{age}, #{userCity}, #{userDistrict}, #{prefDistance}, #{prefDifficulty}, #{profileImg}
+    )
+    </insert>
 	<!-- 특정 회원 조회 -->
 	<select id="getUserById" parameterType="int" resultType="User">
 	    SELECT user_id, user_name, nickname, user_email, user_password, gender,
-	           age, region, pref_distance, pref_difficulty, profile_img
+	           age, user_city, user_district, pref_distance, pref_difficulty, profile_img
 	    FROM user
 	    WHERE user_id = #{userId};
+	</select>
+	<!-- 특정 회원 조회 닉네임으로 -->
+	<select id="getUserByNickname" parameterType="String" resultType="User">
+	    SELECT user_id, user_name, nickname, user_email, user_password, gender,
+	           age, user_city, user_district, pref_distance, pref_difficulty, profile_img
+	    FROM user
+	    WHERE nickname = #{nickname};
 	</select>
 	<!-- 전체 회원 조회 -->
 	<select id="getAllUsers" resultType="User">
@@ -46,8 +53,11 @@
         <if test="user.age != null">
             age = #{user.age},
         </if>
-        <if test="user.region != null">
-            region = #{user.region},
+        <if test="user.userCity != null">
+            user_city = #{user.userCity},
+        </if>
+        <if test="user.userDistrict != null">
+            user_district = #{user.userDistrict},
         </if>
         <if test="user.prefDistance != null">
             pref_distance = #{user.prefDistance},
@@ -55,7 +65,7 @@
         <if test="user.prefDifficulty != null and user.prefDifficulty != ''">
             pref_difficulty = #{user.prefDifficulty},
         </if>
-        <if test="user.userProfileImg != null and user.userProfileImg != ''">
+        <if test="user.profileImg != null and user.profileImg != ''">
             profile_img = #{user.profileImg},
         </if>
     </set>
@@ -87,7 +97,7 @@
 	</select>
 	<!-- 팔로워 조회 -->	
 	<select id="getFollowerById" parameterType="int" resultType="User">
-     SELECT u.user_id, u.user_name, u.nickname
+     SELECT *
      FROM Follow f 
      INNER JOIN User u
      ON u.user_id = f.following_id 

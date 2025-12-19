@@ -258,13 +258,13 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<Course> getMyRegistCourse(int userId) {
-		return courseDao.selectMyRegistCourse(userId);
+	public List<Course> getMyRegistCourse(Map<String, Object> param) {
+		return courseDao.selectMyRegistCourse(param);
 	}
 
 	@Override
-	public List<Course> getMyLikeCourse(int userId) {
-		return courseDao.selectMyLikeCourse(userId);
+	public List<Course> getMyLikeCourse(Map<String, Object> param) {
+		return courseDao.selectMyLikeCourse(param);
 	}
 
 
