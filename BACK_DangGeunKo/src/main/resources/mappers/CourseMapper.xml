@@ -280,5 +280,10 @@
 	    FROM course c
 	    JOIN course_like cl ON c.course_id = cl.course_id
 	    WHERE cl.user_id = #{targetUserId} 
-	    </select>
+	</select>
+	<update id="updateCourseAvgRating">
+    UPDATE course
+    SET avg_rating = #{avgRating}
+    WHERE course_id = #{courseId}
+</update>
 </mapper>

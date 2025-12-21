@@ -48,4 +48,6 @@ public interface CourseDao {
 	List<Course> selectMyRegistCourse(Map<String, Object> param);
 	//내가 찜한 코스 조회
 	List<Course> selectMyLikeCourse(Map<String, Object> param);
+	
+	public int updateCourseAvgRating(double avgRating, int courseId);
 }
