@@ -3,7 +3,8 @@
         <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
         <div class="panel-title">주간 코스 랭킹</div>
         <RankingFilter></RankingFilter>
-        <RankingList></RankingList>
+        <div class="course-panel-wrapper"><RankingList></RankingList></div>
+        
     </div>
 </template>
 

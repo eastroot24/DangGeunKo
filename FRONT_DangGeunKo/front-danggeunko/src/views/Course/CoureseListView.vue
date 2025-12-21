@@ -3,9 +3,8 @@
     <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
     <div class="panel-title">우리동네 코스 구경하기</div>
     <CourseFilter></CourseFilter>
-    <div class="course-panel-wrapper">
-      <CourseList></CourseList>
-    </div>
+    <div class="course-panel-wrapper"><CourseList></CourseList></div>
+    
   </div>
 </template>
 
