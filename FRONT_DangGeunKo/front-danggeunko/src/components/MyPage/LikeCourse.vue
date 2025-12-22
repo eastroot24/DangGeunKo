@@ -109,52 +109,6 @@ onMounted(loadData)
 </script>
 
 <style scoped>
-.course-panel {
-    background: hsl(0, 0%, 100%);
-    border-radius: 20px;
-    padding: 8px 2px 6px;
-    height: 100%;
-    /* 기본 높이 */
-    overflow-y: auto;
-    transition: height 0.1s ease-out;
-}
-
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    padding: 4px 10px 10px;
-}
-
-.course-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
-    font-size: 11px;
-    position: relative;
-}
-
-.card-heart {
-    position: absolute;
-    right: 6px;
-    bottom: 80px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: #bbbbbb;
-    cursor: pointer;
-    box-shadow: var(--shadow-soft);
-}
-
-.card-heart.active {
-    color: var(--orange);
-}
 
 .more-btn {
     grid-column: span 2;

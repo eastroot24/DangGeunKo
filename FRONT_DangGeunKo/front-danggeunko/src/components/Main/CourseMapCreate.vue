@@ -52,7 +52,7 @@ const startIcon = {
 }
 
 const normalIcon = {
-  content: '<div style="background:#3498db;color:white;padding:6px 10px;border-radius:50%;"></div>',
+  content: '<div style="background:#ffffff;color:white;padding:6px 6px;border-radius:50%;border:3px solid #ff8a24"></div>',
   anchor: new naver.maps.Point(10, 10)
 }
 const mapInstance = ref(null);

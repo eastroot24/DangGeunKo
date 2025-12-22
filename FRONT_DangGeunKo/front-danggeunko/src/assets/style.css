@@ -3,6 +3,66 @@
 /* =======================
     기본 세팅
 ======================= */
+@font-face {
+  font-family: 'DanggeunkoFont'; /* 내가 사용할 이름 설정 */
+  src: url('@/assets/font/KarrotSans-Bold.otf') format('truetype');
+  font-weight:normal;
+  font-style:normal
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 900;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 800;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 700;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 600;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 500;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 400;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 300;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff');
+}
+@font-face {
+    font-family: "Pretendard";
+    font-weight: 200;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff');
+}
+
+/* 전체 폰트 변경 */
+body, #app {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+}
+
 :root {
       --orange: #ff7a00;
       --light-orange: #ffe4c4;
@@ -144,6 +204,32 @@ label {
     margin-bottom: 12px;
 }
 
+.course-panel {
+    background: hsl(0, 0%, 100%);
+    border-radius: 20px;
+    padding: 8px 2px 6px;
+    height: 100%;
+    /* 기본 높이 */
+    overflow-y: visible;
+    transition: height 0.1s ease-out;
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding: 10px 40px 30px;
+}
+
+.course-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    font-size: 11px;
+    position: relative;
+}
+
 /* 이미지 플레이스홀더 */
 .thumb {
     background: #e8e8e8;
@@ -167,6 +253,27 @@ label {
 }
 .heart.active {
     color: #ff7a00;
+}
+
+.card-heart {
+    position: absolute;
+    right: 6px;
+    bottom: 80px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #bbbbbb;
+    cursor: pointer;
+    box-shadow: var(--shadow-soft);
+}
+
+.card-heart.active {
+    color: var(--orange);
 }
 
 /* =======================
@@ -561,6 +668,30 @@ label {
   flex-direction: column; 
   /* overflow: auto; */
   /* height: calc((100vh - 120px) * 2 / 3); */
+}
+
+.panel.panel--scroll{
+  overflow-y: auto;
+}
+
+.panel.panel--scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
+.panel.panel--scroll::-webkit-scrollbar-thumb {
+  background: #ff7a00;         /* 주황색 적용 */
+  border-radius: 10px;
+  border: 1px solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+}
+
+/* 호버 시 조금 더 진한 주황색 */
+.panel.panel--scroll::-webkit-scrollbar-thumb:hover {
+  background: #e66e00;
+}
+
+.panel.panel--scroll .course-panel-wrapper {
+  overflow: hidden;
 }
 
 .panel-title {

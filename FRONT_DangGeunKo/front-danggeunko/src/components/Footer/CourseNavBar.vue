@@ -16,6 +16,7 @@
 import { useSlidingPanel } from '@/assets/script.js'
 import { useUserStore } from '@/stores/user';
 import { computed, onMounted, ref, watch } from 'vue';
+
   
 const { toggleByTap } = useSlidingPanel()  
 
@@ -44,6 +45,6 @@ watch()
 
 .router-link-active {
     font-weight: bold;
-    color: #ff7f00;
+    color: #ff8a24;
 }
 </style>

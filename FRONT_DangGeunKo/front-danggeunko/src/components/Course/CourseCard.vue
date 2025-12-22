@@ -91,28 +91,23 @@ body {
   transition: height 0.1s ease-out;
 }
 
-.course-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  padding: 4px 10px 10px;
-}
-
-.course-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-  font-size: 11px;
-}
-
+/* CourseCard.vue 스코프 스타일 */
 .course-img {
   position: relative;
   background: var(--card-bg);
-  height: 120px;
+  width: 100%;           /* 가로 전체 사용 */
+  aspect-ratio: 1 / 1;   /* 가로 세로 1:1 비율 고정 (현대 브라우저 표준) */
+  height: auto;          /* 기존의 height: 120px 제거 */
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.course-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* 이미지가 찌그러지지 않게 꽉 채움 */
 }
 
 /* 단순한 도형들로 목업 느낌 */

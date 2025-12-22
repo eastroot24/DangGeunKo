@@ -27,7 +27,8 @@ const startIcon = {
 
 // 일반 마커
 const normalIcon = {
-  content: '<div style="width:10px;height:10px;background:#FF7A00;border-radius:50%;"></div>',
+  content: '<div style="background:#ffffff;color:white;padding:6px 6px;border-radius:50%;border:3px solid #ff8a24"></div>'
+  ,
   anchor: new naver.maps.Point(5, 5)
 }
 

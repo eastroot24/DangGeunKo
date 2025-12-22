@@ -1,5 +1,5 @@
 <template>
-    <div v-if="targetUser.userId">
+    <div class="my-info-scroll" v-if="targetUser.userId">
         <Profile :user="targetUser" :isMe="isMe"></Profile>
         <RegistCourse :targetUserId="targetUser.userId"></RegistCourse>
         <LikeCourse :targetUserId="targetUser.userId"></LikeCourse>
@@ -39,3 +39,27 @@ onMounted(() => {
 });
 watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로드
 </script>
+
+<style>
+.my-info-scroll{
+    height: 100vh;
+    overflow-y: auto;
+    padding-bottom: 120px;
+}
+
+.my-info-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
+.my-info-scroll::-webkit-scrollbar-thumb {
+  background: #ff7a00;         /* 주황색 적용 */
+  border-radius: 10px;
+  border: 1px solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+}
+
+/* 호버 시 조금 더 진한 주황색 */
+.my-info-scroll::-webkit-scrollbar-thumb:hover {
+  background: #e66e00;
+}
+</style>
