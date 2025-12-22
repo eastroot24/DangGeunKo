@@ -25,7 +25,7 @@ const pinia = createPinia()
 app.use(pinia)
 
 const userStore = useUserStore()
-userStore.initAuth()   // ⭐⭐⭐ 이거 중요
+userStore.initAuth()  
 
 app.use(router)
 app.mount('#app')

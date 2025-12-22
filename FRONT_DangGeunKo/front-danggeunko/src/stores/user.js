@@ -149,7 +149,7 @@ const checkEmail = async (email) => {
     user.value = { };
     
     // 3. 마지막에 홈으로 이동
-    await router.replace('/'); 
+    await router.replace('/login'); 
 };
 
   /* ===============================
