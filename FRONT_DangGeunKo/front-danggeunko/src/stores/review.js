@@ -32,6 +32,7 @@ export const useReviewStore = defineStore('review', () => {
     const addReview = async (review) => {
         try{
             await axios.post(`${REST_API_REVIEW_URL}`, review)
+            searchInfo.value.courseId = reviewData.courseId;
             await getReviewsByCourse()
         }
         catch (err) {

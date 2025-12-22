@@ -69,6 +69,17 @@ export const useCourseStore = defineStore('course', () => {
             const data = res.data || []
             courseList.value = data
             setCourseMarkers(courseList.value);
+            if (data.length > 0) {
+                const firstCourse = data[0];
+                // 서버 필드명(startLat, startLng) 확인 필수
+                if (firstCourse.startLat && firstCourse.startLng) {
+                    mapStore.setMapCenter({
+                        lat: firstCourse.startLat,
+                        lng: firstCourse.startLng,
+                        zoom: 14 // 적절한 줌 레벨 설정
+                    });
+                }
+            }
         })
         .catch((err)=>{
             console.log("코스 검색 오류:", err)

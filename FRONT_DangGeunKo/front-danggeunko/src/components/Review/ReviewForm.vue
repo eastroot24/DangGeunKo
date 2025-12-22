@@ -49,6 +49,7 @@ const addReview = async () => {
         // 2. 리뷰 입력 필드를 초기화
         review.value.rating = 0;
         review.value.content = '';
+        // 3. 최신 데이터 갱신 (리뷰 목록 + 코스 상세 정보)
         await reviewStore.getReviewsByCourse();
         await courseStore.getCourseDetailById(review.value.courseId, true)
     }
