@@ -1,29 +1,17 @@
+/* font pretendard 1개만 가져오고 fontweight으로 조절 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
+
 /* =======================
     기본 세팅
 ======================= */
+/* font 당큰코 */
 @font-face {
   font-family: 'DanggeunkoFont';
   src: url('@/assets/font/KarrotSans-Bold.otf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  font-weight:normal;
+  font-style:normal
 }
 
-@font-face {
-  font-family: 'Pretendard';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-/* Pretendard Weights */
-@font-face { font-family: "Pretendard"; font-weight: 900; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 800; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 700; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 600; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 500; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 400; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 300; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff'); }
-@font-face { font-family: "Pretendard"; font-weight: 200; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff'); }
 
 /* 전체 폰트 변경 */
 body, #app {
