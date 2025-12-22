@@ -37,7 +37,6 @@ export const useAIStore = defineStore("ai", () => {
     comment,
     loading,
     error,
-
     // actions
     sendMemoryMessage,
     clearMemory,

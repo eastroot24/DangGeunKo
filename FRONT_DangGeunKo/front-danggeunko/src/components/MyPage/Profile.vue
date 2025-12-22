@@ -27,6 +27,17 @@
             </div>
         </div>
 
+        <div class="coach-btn-wrapper">
+            <button class="coach-icon-btn" @click="isCoachOpen = true" title="당근코치 피드백">
+                <img src="@/assets/img/dgk_coach_head.png" alt="당근코치">
+            </button>
+            
+            <CoachModal 
+                v-if="isCoachOpen" 
+                :user="user" 
+                @close="isCoachOpen = false" 
+            />
+        </div>
         <div class="popup-bg" v-if="isOpen">
             <div class="popup">
                 <div class="popup-title">비밀번호 확인</div>
@@ -36,6 +47,9 @@
                 <button class="close-btn" @click="closePopup">취소</button>
             </div>
         </div>
+
+        
+        
     </div>
 </template>
 
@@ -44,10 +58,12 @@ import { ref, computed, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/stores/user"
 import { storeToRefs } from "pinia"
-
+import CoachModal from "./CoachModal.vue"
+const userStore = useUserStore();
+const { isCoachOpen } = storeToRefs(userStore); 
 const props = defineProps({
-    user: Object,    // 조회 대상 유저 객체
-    isMe: Boolean    // 본인 여부 (MyInfoView에서 계산해서 넘겨줌)
+    user: Object,
+    isMe: Boolean
 })
 
 const router = useRouter()
@@ -59,11 +75,9 @@ const isOpen = ref(false)
 const pwInput = ref("")
 const pwError = ref(false)
 
-// 팔로잉/팔로워 숫자 (해당 유저의 데이터)
 const followingCount = ref(0)
 const followerCount = ref(0)
 
-// 프로필 이미지 경로 계산
 const profileImgPreview = computed(() => {
     const baseUrl = 'http://localhost:8080/profileImg/';
     return props.user.profileImg
@@ -71,26 +85,17 @@ const profileImgPreview = computed(() => {
         : `${baseUrl}dgk-default-profile.png`;
 })
 
-// 내(로그인유저)가 이 유저를 팔로우 중인지 확인
 const isFollowing = computed(() => {
     return followingList.value.some(f => f.userId === props.user.userId)
 })
 
-// 팔로우/팔로워 정보 로드 (대상 유저가 바뀔 때마다 실행)
 const loadFollowData = async () => {
     if (!props.user?.userId) return
-
     try {
-        // 1. 타인의 팔로잉/팔로워 목록을 가져옴 
-        // 주의: 이 함수들이 실행되면 store.followingList가 이 유저의 리스트로 바뀜
         await store.getFollowing(props.user.userId)
         followingCount.value = store.followingList.length
-
         await store.getFollower(props.user.userId)
         followerCount.value = store.followerList.length
-
-        // 2. 핵심: 다시 "내(로그인한 유저)" 팔로잉 목록으로 복구시킴
-        // 그래야 isFollowing (computed)이 내 리스트를 보고 정확히 판단함
         if (loginUserId.value) {
             await store.getFollowing(loginUserId.value)
         }
@@ -99,7 +104,6 @@ const loadFollowData = async () => {
     }
 }
 
-// 팔로우 토글
 const toggleFollow = async () => {
     try {
         if (isFollowing.value) {
@@ -108,15 +112,12 @@ const toggleFollow = async () => {
             await store.addFollow(props.user.userId);
         }
         await store.getFollowing(loginUserId.value);
-
-        // 해당 유저의 팔로워 숫자도 다시 로드
         await loadFollowData();
     } catch (error) {
         console.error("팔로우 토글 실패:", error);
     }
 }
 
-// 비밀번호 확인 로직 (본인용)
 const checkPassword = () => {
     if (pwInput.value === store.user.userPassword) {
         store.verifyPassword()
@@ -130,7 +131,6 @@ const checkPassword = () => {
 const logout = () => {
     if (confirm("로그아웃 하시겠습니까?")) {
         store.userLogout()
-        router.replace('/')
     }
 }
 
@@ -140,105 +140,108 @@ const closePopup = () => {
     pwError.value = false
 }
 
-// Profile.vue 내부
 const goFollow = (type) => {
     router.push({
         name: "follow",
         params: {
-            type: type, // 'following' 또는 'follower'
+            type: type,
             nickname: props.user.nickname
         }
     })
 }
 
-// 대상 유저 ID가 변경되면 팔로우 정보를 다시 가져옴
 watch(() => props.user?.userId, loadFollowData, { immediate: true })
 </script>
 
 <style scoped>
+/* Profile Card Layout */
 .profile-card {
     display: flex;
-    align-items: center;
-    padding: 24px;
-    gap: 20px;
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 1.5rem;
+    gap: 1.25rem;
     background: #fff;
+    position: relative;
+    /* 수평 분할을 위해 justify-content 설정 가능하지만, 
+       중앙 영역(profile-info)이 flex:1이므로 자동 밀어내기가 됨 */
 }
 
 .profile-img {
-    width: 90px;
-    height: 90px;
+    width: 5.625rem;
+    height: 5.625rem;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #eee;
+    border: 0.0625rem solid #eee;
+    flex-shrink: 0; /* 이미지 크기 유지 */
 }
 
-.profile-info {
-    flex: 1;
+.profile-info { 
+    flex: 1; /* 남은 공간을 다 차지하여 코치 버튼을 오른쪽 끝으로 밀어냄 */
 }
+
+.profile-info { flex: 1; }
 
 .name-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
+    gap: 0.625rem; /* 10px */
+    margin-bottom: 0.25rem; /* 4px */
 }
 
-.name-row b {
-    font-size: 18px;
-}
+.name-row b { font-size: 1.125rem; /* 18px */ }
 
-.email {
-    font-size: 13px;
-    color: #888;
-    margin: 0 0 8px 0;
-}
-
-.follow-stats {
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.follow {
-    cursor: pointer;
-    color: #555;
-}
-
-.follow strong {
-    color: #333;
-}
-
-.my-actions {
+/* 코치 버튼을 감싸는 영역 */
+.coach-btn-wrapper {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: flex-end;
+    flex-shrink: 0;
 }
 
+.coach-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem; /* 터치 영역 확보 */
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+.coach-icon-btn:hover { transform: scale(1.1); }
+.coach-icon-btn img {
+    width: 2.5rem; /* 32px */
+    height: 2.5rem;
+}
+
+.email { font-size: 0.8125rem; color: #888; margin: 0 0 0.5rem 0; }
+.follow-stats { font-size: 0.875rem; margin-bottom: 0.75rem; }
+.follow { cursor: pointer; color: #555; }
+.follow strong { color: #333; }
+
+.my-actions { display: flex; align-items: center; gap: 0.75rem; }
+
 .profile-btn {
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    padding: 0.375rem 0.875rem;
+    border-radius: 0.5rem;
+    border: 0.0625rem solid #ddd;
     background: #fff;
-    font-size: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
 }
 
 .follow-toggle-btn {
-    padding: 4px 12px;
-    border-radius: 6px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
     border: none;
-    background: #ff7a00;
+    background: var(--orange);
     color: white;
-    font-size: 12px;
+    font-size: 0.75rem;
     cursor: pointer;
 }
-
-.follow-toggle-btn.unfollow {
-    background: #eee;
-    color: #666;
-}
+.follow-toggle-btn.unfollow { background: #eee; color: #666; }
 
 .logout-link {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #999;
     background: none;
     border: none;
@@ -246,59 +249,34 @@ watch(() => props.user?.userId, loadFollowData, { immediate: true })
     text-decoration: underline;
 }
 
-/* 팝업 스타일 */
+/* 팝업 공통 배경 */
 .popup-bg {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, .4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999;
 }
 
 .popup {
-    width: 300px;
+    width: 18.75rem; /* 300px */
     background: white;
-    border-radius: 16px;
-    padding: 24px;
+    border-radius: 1rem;
+    padding: 1.5rem;
     text-align: center;
-}
-
-.popup input {
-    width: 100%;
-    padding: 12px;
-    margin: 16px 0 8px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
 }
 
 .confirm-btn {
     width: 100%;
-    height: 40px;
-    background: #ff7a00;
+    height: 2.5rem;
+    background: var(--orange);
     color: white;
     border: none;
-    border-radius: 8px;
-    margin-top: 10px;
+    border-radius: 0.5rem;
     cursor: pointer;
+    font-weight: 700;
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    color: #999;
-    margin-top: 12px;
-    cursor: pointer;
-}
-
-.error {
-    color: #ff4d4f;
-    font-size: 12px;
-    margin-bottom: 8px;
-}
+.close-btn { background: none; border: none; color: #999; margin-top: 0.75rem; cursor: pointer; }
+.error { color: #ff4d4f; font-size: 0.75rem; margin-bottom: 0.5rem; }
 </style>
