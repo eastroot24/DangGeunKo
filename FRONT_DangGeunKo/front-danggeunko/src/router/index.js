@@ -47,8 +47,8 @@ const router = createRouter({
       name: 'ranking',
       component: RankingListView},
     {
-      path: "/onBoarding",
-      name: "onBoarding",
+      path: "/onboarding",
+      name: "onboarding",
       component: OnBoardingView,
     },
     {
@@ -92,6 +92,23 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const store = useUserStore();
+
+  const isLoggedIn = store.isLoggedIn;
+  const hasVisited = localStorage.getItem('hasVisited') === 'true';
+
+  /* =========================
+     0️⃣ 온보딩 분기 (최우선)
+  ========================= */
+
+  // 로그인 유저는 온보딩 접근 불가
+  if (to.name === 'onboarding' && isLoggedIn) {
+    return next({ name: '/' });
+  }
+
+  // 첫 방문 + 비로그인 → 온보딩 강제
+  if (!isLoggedIn && !hasVisited && to.name !== 'onboarding') {
+    return next({ name: 'onboarding' });
+  }
 
   // 1. 로그인 중 로그인/회원가입 페이지 접근 시
   if (to.meta.alreadyAuth && store.isLoggedIn) {
