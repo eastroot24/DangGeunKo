@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import api from '@/api/axios'
-
+import router from '@/router'
 /* ===============================
    JWT base64url 디코딩 (원본 유지)
 ================================ */
@@ -44,6 +44,7 @@ export const useUserStore = defineStore('user', () => {
     prefDifficulty: '',
     profileImg: null,
   })
+  const isCoachOpen = ref(false);
 const getUserByNickname = async (nickname) => {
   try {
     const res = await api.get(`${REST_USER_API_URL}nickname/${nickname}`);
@@ -139,11 +140,17 @@ const checkEmail = async (email) => {
   }
 
   const userLogout = async () => {
-    localStorage.removeItem("accessToken")
-    loginStatus.value = false
-    loginUserId.value = null
-    user.value = {}
-  }
+    // 1. 먼저 정보를 비우기 전에 이동할 준비를 함
+    localStorage.removeItem("accessToken");
+    // 2. 상태값들을 먼저 초기화 (반응형 변수들)
+    loginStatus.value = false;
+    loginUserId.value = null;
+    isLoggedIn.value = false;
+    user.value = { };
+    
+    // 3. 마지막에 홈으로 이동
+    await router.replace('/'); 
+};
 
   /* ===============================
      🔥 핵심 추가: 새로고침 / 직접 접근 대응
@@ -177,6 +184,7 @@ const checkEmail = async (email) => {
     if (!id) return
     const res = await api.get(`${REST_USER_API_URL}${id}`)
     user.value = res.data
+    return res.data
   }
 const addUser = async (formData) => {
   try {
@@ -279,6 +287,7 @@ const getFollower = async (id) => {
     followingList,
     followerList,
     isPwVerified,
+    isCoachOpen,
     checkEmail,
     checkNickname,
 

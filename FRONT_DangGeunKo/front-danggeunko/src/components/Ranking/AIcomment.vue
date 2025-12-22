@@ -41,10 +41,8 @@ const prompt = () => {
                    공중화장실 유무: ${course.value.hasToilet}
                    별점 평균: ${course.value.avgRating}
                    조회수: ${course.value.viewCnt}
-                   이걸 바탕으로 유튜브 영상 링크도 추천해줘.
-                   답변 예시: 1줄로 ~한 이유로 런린이/러너/런고수 분들에게 추천드려요!
-                   그다음 1줄: 유튜브 영상링크(바로 클릭할 수 있게)
-                   총 2줄로 답변해줘.
+                   강조할 부분은 마크다운언어 형식으로 강조해주고,
+                   답변 예시: 2줄로 ~한 이유로 런린이/러너/런고수 분들에게 추천드려요!
                    `
 }
 const send = async () => {
@@ -58,11 +56,11 @@ const renderedComment = computed(() => {
 });
 
 //최종 테스트 때 열거임 다시!!!!!!!!
-// onMounted(async () => {
-//     if (props.course) {
-//         await send();
-//     }
-// })
+onMounted(async () => {
+    if (props.course) {
+        await send();
+    }
+})
 </script>
 
 <style scoped>

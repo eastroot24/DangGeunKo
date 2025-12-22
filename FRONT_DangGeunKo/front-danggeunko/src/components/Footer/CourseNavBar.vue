@@ -20,12 +20,13 @@
 <script setup>
 import { useSlidingPanel } from '@/assets/script.js'
 import { useUserStore } from '@/stores/user';
+import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 
   
 const { toggleByTap } = useSlidingPanel()  
-
 const userStore = useUserStore()
+const { user, isLoggedIn } = storeToRefs(userStore)
 // 로그인한 유저의 닉네임이 바뀔 때마다 자동으로 경로를 업데이트
 const myInfoPath = computed(() => {
   if (!userStore.isLoggedIn) return '/login';
@@ -35,12 +36,11 @@ const myInfoPath = computed(() => {
 
 
 // 컴포넌트가 마운트될 때 유저 정보가 없다면 불러오도록 설정 
-onMounted(() => {
-    if (userStore.loginUserId && !userStore.user.nickname) {
-        userStore.getUserById(userStore.loginUserId);
+onMounted(async () => {
+    if (userStore.loginUserId && !user.value?.nickname) {
+        await userStore.getUserById(userStore.loginUserId);
     }
 });
-watch()
 </script>
 
 <style scoped>
