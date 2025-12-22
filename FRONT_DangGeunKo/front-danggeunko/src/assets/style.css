@@ -27,12 +27,20 @@ body {
     justify-content: center;
 }
 
-.app {
+/* .app {
     width: 800px;
     min-height: 100vh;
     background: #fff;
     position: relative;
     overflow-x: hidden;
+} */
+
+.app {
+    width: 800px;
+    height: 100vh;      /* min-height를 height로 변경 */
+    overflow: hidden;   /* [중요] 앱 전체 스크롤을 아예 막아버림 */
+    position: relative;
+    background: #fff;
 }
 
 /* =======================
@@ -550,7 +558,7 @@ label {
   display: flex;
   flex-direction: column; 
   /* overflow: auto; */
-  height: calc((100vh - 120px) * 2 / 3);
+  /* height: calc((100vh - 120px) * 2 / 3); */
 }
 
 .panel-title {
@@ -562,16 +570,10 @@ label {
 /* 코스 리스트 패널 (드래그로 높이 조절) */
 .course-panel-wrapper {
   flex: 1;            /* 제목, 필터를 제외한 나머지 공간 다 차지 */
-  overflow-y: auto;   /* 내용 넘치면 스크롤 생성 */
+  overflow-y: auto;   /* 내용 넘치면 스크롤 생성*/
   min-height: 0;      /* flex 자식의 스크롤 버그 방지 */
-  padding-bottom: 80px; /* 하단 네비게이션 등에 가려지지 않게 여백 */
-}
-
-/* 3. 기존에 고정 높이가 잡혀있던 course-list 수정 */
-.course-list {
-  padding: 14px;
-  height: auto;       /* [중요] 고정 높이 해제! 부모가 높이를 결정함 */
-  overflow-y: visible; /* 이중 스크롤 방지를 위해 visible */
+  padding-bottom: 120px; /*하단 네비게이션 등에 가려지지 않게 여백*/
+  height: calc(100% - 210px);
 }
 
 .drag-handle {
@@ -590,24 +592,18 @@ label {
     height: 100vh;
 }
 
-/* 전역 스크롤바 스타일링 */
 .course-panel-wrapper::-webkit-scrollbar {
-  width: 6px;  /* 세로 스크롤바 너비 */
-  height: 6px; /* 가로 스크롤바 높이 */
+  width: 10px;
 }
 
-/* 스크롤바 트랙 (바탕) */
-.course-panel-wrapper::-webkit-scrollbar-track {
-  background: transparent; 
-}
-
-/* 스크롤바 핸들 (움직이는 부분) */
+/* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
 .course-panel-wrapper::-webkit-scrollbar-thumb {
-  background: #e0e0e0; /* 핸들 색상 */
-  border-radius: 10px;  /* 둥근 모서리 */
+  background: #ff7a00;         /* 주황색 적용 */
+  border-radius: 10px;
+  border: 1px solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
 }
 
-/* 스크롤바 핸들 호버 시 */
+/* 호버 시 조금 더 진한 주황색 */
 .course-panel-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #ff7a00; /* 포인트 컬러로 변경 가능 */
+  background: #e66e00;
 }

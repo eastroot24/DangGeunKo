@@ -1,5 +1,4 @@
 <template>
-    <div class="course-panel-wrapper">
         <div class="course-panel" id="coursePanel">
             <div class="course-grid" v-if="store.courseList && store.courseList.length > 0">
 
@@ -18,7 +17,6 @@
 
             </div>
         </div>
-    </div>
 </template>
 
 <script setup>
@@ -72,7 +70,7 @@ watch(
     padding: 8px 2px 6px;
     height: 100%;
     /* 기본 높이 */
-    overflow-y: auto;
+    overflow-y: visible;
     transition: height 0.1s ease-out;
 }
 

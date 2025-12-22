@@ -1,5 +1,4 @@
 <template>
-    <div class="course-panel-wrapper">
         <div class="course-panel" id="coursePanel">
             <div class="course-grid" v-if="courseStore.courseList && courseStore.courseList.length > 0">
                 <div class="course-card" v-for="course in courseStore.courseList" :key="course.courseId">
@@ -12,7 +11,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script setup>
@@ -83,7 +81,7 @@ onMounted(() => {
     padding: 8px 2px 6px;
     height: 100%;
     /* 기본 높이 */
-    overflow-y: auto;
+    overflow-y: visible;
     transition: height 0.1s ease-out;
 }
 
