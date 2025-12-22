@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="top-bar">
-      <div class="back" @click="goBack">←</div>
+      <div class="back-btn" @click="goBack"><i class="fi fi-rs-angle-left"></i></div>
       <div class="title">프로필 수정</div>
     </div>
 
@@ -165,7 +165,10 @@ onMounted(async () => {
       userDistrict: loginUser.userDistrict || ''
     };
     originalNickname.value = loginUser.nickname;
-    imagePreview.value = loginUser.profileImg || 'http://localhost:8080/uploads/dgk-default-profile.png';
+    const baseUrl = 'http://localhost:8080/profileImg/';
+    imagePreview.value = loginUser.profileImg 
+      ? `${baseUrl}${loginUser.profileImg}` 
+      : `${baseUrl}dgk-default-profile.png`;
 
     // 초기 상태는 본인 닉네임이므로 통과 상태
     store.nicknameAvailable = true;

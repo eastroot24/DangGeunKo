@@ -2,7 +2,7 @@
   <div class="panel" ref="panelRef">
     <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
     <button class="back-btn" @click="goBack">
-      ←
+      <i class="fi fi-rs-angle-left"></i>
     </button>
 
     <div class="panel-title">코스 등록하기</div>
@@ -75,7 +75,6 @@ watch(panelState, () => {
 <style>
 .back-btn {
   background: #fff;
-  border: 1px solid #ff7a00;
   color: #ff7a00;
   font-weight: 600;
 }

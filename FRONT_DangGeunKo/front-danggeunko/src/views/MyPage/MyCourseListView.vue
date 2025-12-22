@@ -1,6 +1,8 @@
 <template>
   <div class="app">
-    <div class="back" @click="goMyInfo">←</div>
+     <button class="back-btn" @click="goBack">
+      <i class="fi fi-rs-angle-left"></i>
+    </button>
     <div class="panel-title">등록/찜 코스 목록</div>
     <div class="tab-toggle-wrap">
       <div class="tab-toggle">
@@ -42,7 +44,7 @@ import { useUserStore } from '@/stores/user';
 
 const router = useRouter()
 
-const goMyInfo = () => {
+const goBack = () => {
   router.back()
 }
 onMounted(async () => {

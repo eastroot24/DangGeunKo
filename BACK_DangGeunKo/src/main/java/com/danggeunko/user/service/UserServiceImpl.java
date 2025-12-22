@@ -17,7 +17,9 @@ import com.danggeunko.user.dto.User;
 public class UserServiceImpl implements UserService {
 	
 	private final UserDao userDao;
-	private final String uploadPath = "C:/danggeunko/uploads/";
+	//프로젝트 실행 경로(BACK_...)의 상위 폴더에 있는 profileImg 폴더를 가리킴
+    private final String uploadPath = new File(System.getProperty("user.dir"))
+                                        .getParent() + File.separator + "profileImg" + File.separator;
 	public UserServiceImpl(UserDao userDao) {
 		this.userDao = userDao;
 		// 저장 경로 폴더가 없으면 생성

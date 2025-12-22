@@ -3,25 +3,225 @@
 <mapper namespace="com.danggeunko.course.dao.CourseDao">
 
 	<!-- 코스 등록 -->
-    <insert id="insertCourse" parameterType="Course"
-        useGeneratedKeys="true"
-        keyProperty="courseId"
-        keyColumn="course_id">
-    INSERT INTO course (
-        user_id, course_name, course_city, course_district, start_address, end_address,
-        distance_km, duration_min, pace_min, course_type, difficulty,
-        description, has_crosswalk, has_toilet
-    ) VALUES (
-        #{userId}, #{courseName}, #{courseCity}, #{courseDistrict}, #{startAddress},
-        #{endAddress}, #{distanceKm}, #{durationMin}, #{paceMin},
-        #{courseType}, #{difficulty}, #{description},
-        #{hasCrosswalk}, #{hasToilet}
-    )
+	<insert id="insertCourse" parameterType="Course"
+		useGeneratedKeys="true" keyProperty="courseId" keyColumn="course_id">
+		INSERT INTO
+		course (
+		user_id, course_name, course_city, course_district,
+		start_address,
+		end_address,
+		distance_km, duration_min, pace_min,
+		course_type, difficulty,
+		description, has_crosswalk, has_toilet
+		) VALUES
+		(
+		#{userId}, #{courseName}, #{courseCity}, #{courseDistrict},
+		#{startAddress},
+		#{endAddress}, #{distanceKm}, #{durationMin},
+		#{paceMin},
+		#{courseType}, #{difficulty}, #{description},
+		#{hasCrosswalk}, #{hasToilet}
+		)
 	</insert>
 
 
 	<!-- 전체 코스 조회 -->
-   <select id="selectAllCourses" parameterType="Integer" resultType="Course">
+	<select id="selectAllCourses" parameterType="Integer"
+		resultType="Course">
+		SELECT
+		c.*,
+		(SELECT cp.latitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id =
+		c.course_id
+		AND cp.sequence = 1
+		LIMIT 1) AS startLat,
+		(SELECT
+		cp.longitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id = c.course_id
+		AND
+		cp.sequence = 1
+		LIMIT 1) AS startLng,
+		(SELECT COUNT(*) FROM COURSE_LIKE
+		cl WHERE cl.course_id = c.course_id)
+		AS likeCnt,
+		(SELECT COUNT(*) FROM
+		REVIEW r WHERE r.course_id = c.course_id) AS
+		reviewCount,
+		<choose>
+			<when test="userId != null">
+				CASE WHEN EXISTS (
+				SELECT 1
+				FROM COURSE_LIKE cl
+				WHERE
+				cl.course_id = c.course_id
+				AND cl.user_id = #{userId}
+				) THEN TRUE ELSE
+				FALSE END AS isLiked
+			</when>
+			<otherwise>
+				FALSE AS isLiked
+			</otherwise>
+		</choose>
+		FROM course c
+		ORDER BY c.created_at DESC
+	</select>
+
+	<!-- 코스 단건 조회 -->
+	<select id="selectCourseById" parameterType="Integer"
+		resultType="Course">
+		SELECT
+		c.*,
+		COUNT(DISTINCT l.user_id) AS likeCnt, COUNT(DISTINCT
+		r.review_id) AS
+		reviewCount,
+		<choose>
+			<when test="userId != null">
+				CASE WHEN EXISTS (
+				SELECT 1
+				FROM COURSE_LIKE cl
+				WHERE
+				cl.course_id = c.course_id
+				AND cl.user_id = #{userId}
+				) THEN TRUE ELSE
+				FALSE END AS isLiked
+			</when>
+			<otherwise>
+				FALSE AS isLiked
+			</otherwise>
+		</choose>
+		FROM COURSE c
+		LEFT JOIN
+		COURSE_LIKE l ON c.course_id = l.course_id
+		LEFT
+		JOIN
+		REVIEW r ON c.course_id = r.course_id
+		WHERE
+		c.course_id = #{id}
+		GROUP BY
+		c.course_id
+	</select>
+
+	<!-- 코스 수정 -->
+	<update id="updateCourse" parameterType="Course">
+		UPDATE course
+		SET
+		course_name = #{courseName},
+		course_city = #{courseCity},
+		course_district = #{courseDistrict},
+		start_address = #{startAddress},
+		end_address = #{endAddress},
+		distance_km = #{distanceKm},
+		duration_min =
+		#{durationMin},
+		pace_min = #{paceMin},
+		course_type = #{courseType},
+		difficulty = #{difficulty},
+		description = #{description},
+		has_crosswalk
+		= #{hasCrosswalk},
+		has_toilet = #{hasToilet},
+		updated_at = NOW()
+		WHERE
+		course_id = #{courseId}
+	</update>
+
+
+	<!-- 코스 삭제 -->
+	<delete id="deleteCourse">
+		DELETE FROM course
+		WHERE course_id = #{id}
+	</delete>
+
+	<!-- 조회수 증가 -->
+	<update id="updateViewCnt">
+		UPDATE course
+		SET view_cnt = view_cnt + 1
+		WHERE
+		course_id = #{id}
+	</update>
+
+	<!-- 코스 검색 -->
+	<select id="search" parameterType="SearchCondition"
+		resultType="Course">
+		SELECT c.*,
+		(SELECT cp.latitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id =
+		c.course_id
+		AND cp.sequence = 1
+		LIMIT 1) AS startLat,
+		(SELECT
+		cp.longitude
+		FROM COURSE_POINT cp
+		WHERE cp.course_id = c.course_id
+		AND
+		cp.sequence = 1
+		LIMIT 1) AS startLng
+		FROM course c
+		JOIN user u
+		ON
+		c.user_id = u.user_id
+		WHERE 1=1
+
+		<if
+			test="key != null and key != '' and value != null and value != ''">
+			<choose>
+				<when test="key == 'courseName'">AND c.course_name LIKE CONCAT('%', #{value}, '%')
+				</when>
+
+				<when test="key == 'userName'">AND u.nickname LIKE CONCAT('%', #{value}, '%')
+				</when>
+
+				<when test="key == 'description'">AND c.description LIKE CONCAT('%', #{value}, '%')
+				</when>
+			</choose>
+		</if>
+		<if test="courseCity != null and courseCity != ''">
+			AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
+			<!--도시가 있어야 구가 있음 -->
+			<if test="courseDistrict != null and courseDistrict != ''">
+				AND c.course_district LIKE CONCAT('%', #{courseDistrict},
+				'%')
+			</if>
+		</if>
+
+		<if test="difficulty != null and difficulty != ''">
+			AND c.difficulty LIKE CONCAT('%', #{difficulty}, '%')
+		</if>
+
+		<if test="minRange != null and minRange != ''">
+			AND c.distance_km &gt;= #{minRange}
+		</if>
+
+		<if test="maxRange != null and maxRange != ''">
+			AND c.distance_km &lt;= #{maxRange}
+		</if>
+
+		ORDER BY
+		<choose>
+			<when test="orderBy != null and orderBy != ''">
+				<choose>
+					<when test="orderBy == 'createdAt'">c.created_at</when>
+					<when test="orderBy == 'avgRating'">c.avg_rating</when>
+					<when test="orderBy == 'viewCnt'">c.view_cnt</when>
+					<otherwise>c.created_at</otherwise>
+				</choose>
+			</when>
+			<otherwise>c.created_at</otherwise>
+		</choose>
+
+		<choose>
+			<when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
+			<when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
+			<otherwise>DESC</otherwise>
+		</choose>
+	</select>
+
+	<!-- 주간 랭킹 (리뷰 기준) -->
+	<select id="selectWeeklyRanking"
+		resultType="com.danggeunko.course.dto.Course">
 		SELECT
 		c.*,
 		(SELECT cp.latitude
@@ -34,256 +234,133 @@
 		WHERE cp.course_id = c.course_id
 		AND cp.sequence = 1
 		LIMIT 1) AS startLng,
-		(SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id)
-		AS likeCnt,
-		(SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS
-		reviewCount,
-        <choose>
-            <when test="userId != null">
-                CASE WHEN EXISTS (
-                    SELECT 1 
-                    FROM COURSE_LIKE cl 
-                    WHERE cl.course_id = c.course_id 
-                    AND cl.user_id = #{userId}
-                ) THEN TRUE ELSE FALSE END AS isLiked
-            </when>
-            <otherwise>
-                FALSE AS isLiked
-            </otherwise>
-        </choose>
-    FROM course c
-    ORDER BY c.created_at DESC
-</select>
 
-	<!-- 코스 단건 조회 -->
-    <select id="selectCourseById" parameterType="Integer" resultType="Course">
-		SELECT
-		c.*,
-		COUNT(DISTINCT l.user_id) AS likeCnt, COUNT(DISTINCT r.review_id) AS
-		reviewCount, 
-		 <choose>
-            <when test="userId != null">
-                CASE WHEN EXISTS (
-                    SELECT 1 
-                    FROM COURSE_LIKE cl 
-                    WHERE cl.course_id = c.course_id 
-                    AND cl.user_id = #{userId}
-                ) THEN TRUE ELSE FALSE END AS isLiked
-            </when>
-            <otherwise>
-                FALSE AS isLiked
-            </otherwise>
-        </choose>
-		FROM COURSE c
-		LEFT JOIN
-		COURSE_LIKE l ON c.course_id = l.course_id
-		LEFT JOIN
-		REVIEW r ON c.course_id = r.course_id
-		WHERE
-		c.course_id = #{id}
-		GROUP BY
-		c.course_id
-	</select>
+		<choose>
+			<when test="userId != null">
+				CASE WHEN EXISTS (
+				SELECT 1
+				FROM COURSE_LIKE cl
+				WHERE cl.course_id = c.course_id
+				AND cl.user_id = #{userId}
+				) THEN TRUE ELSE FALSE END AS isLiked
+			</when>
+			<otherwise>
+				FALSE AS isLiked
+			</otherwise>
+		</choose>
+		,
 
-	<!-- 코스 수정 -->
-    <update id="updateCourse" parameterType="Course">
-    UPDATE course
-    SET
-        course_name   = #{courseName},
-        course_city = #{courseCity},
-        course_district = #{courseDistrict},
-        start_address = #{startAddress},
-        end_address   = #{endAddress},
-        distance_km   = #{distanceKm},
-        duration_min  = #{durationMin},
-        pace_min      = #{paceMin},
-        course_type   = #{courseType},
-        difficulty    = #{difficulty},
-        description   = #{description},
-        has_crosswalk = #{hasCrosswalk},
-        has_toilet    = #{hasToilet},
-        updated_at    = NOW()
-    WHERE course_id = #{courseId}
-</update>
-
-
-	<!-- 코스 삭제 -->
-    <delete id="deleteCourse">
-        DELETE FROM course
-        WHERE course_id = #{id}
-    </delete>
-
-	<!-- 조회수 증가 -->
-    <update id="updateViewCnt">
-        UPDATE course
-        SET view_cnt = view_cnt + 1
-        WHERE course_id = #{id}
-    </update>
-
-	<!-- 코스 검색 -->
-    <select id="search" parameterType="SearchCondition" resultType="Course">
-		SELECT c.*,
-		(SELECT cp.latitude
-		FROM COURSE_POINT cp
-		WHERE cp.course_id = c.course_id
-		AND cp.sequence = 1
-		LIMIT 1) AS startLat,
-		(SELECT cp.longitude
-		FROM COURSE_POINT cp
-		WHERE cp.course_id = c.course_id
-		AND cp.sequence = 1
-		LIMIT 1) AS startLng
-		FROM course c
-		JOIN user u
-		ON c.user_id = u.user_id
-		WHERE 1=1
-    
-    <if test="key != null and key != '' and value != null and value != ''">
-        <choose>
-            <when test="key == 'courseName'">AND c.course_name LIKE CONCAT('%', #{value}, '%')</when>
-            
-            <when test="key == 'userName'">AND u.nickname LIKE CONCAT('%', #{value}, '%')</when> 
-            
-            <when test="key == 'description'">AND c.description LIKE CONCAT('%', #{value}, '%')</when>
-        </choose>
-    </if>
-     <if test="courseCity != null and courseCity != ''">
-      	AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
-			<!--도시가 있어야 구가 있음-->
-      	<if test="courseDistrict != null and courseDistrict != ''">
-      	AND c.course_district LIKE CONCAT('%', #{courseDistrict}, '%')
-    	</if>
-    </if>
-    
-    <if test="difficulty != null and difficulty != ''">
-      	AND c.difficulty LIKE CONCAT('%', #{difficulty}, '%')
-    </if>
-    
-    <if test="minRange != null and minRange != ''">
-      	AND c.distance_km &gt;= #{minRange}
-    </if>
-    
-    <if test="maxRange != null and maxRange != ''">
-        AND c.distance_km &lt;= #{maxRange}
-    </if>
-
-    ORDER BY 
-    <choose>
-        <when test="orderBy != null and orderBy != ''">
-            <choose>
-                <when test="orderBy == 'createdAt'">c.created_at</when>
-                <when test="orderBy == 'avgRating'">c.avg_rating</when>
-                <when test="orderBy == 'viewCnt'">c.view_cnt</when>
-                <otherwise>c.created_at</otherwise>
-            </choose>
-        </when>
-        <otherwise>c.created_at</otherwise>
-    </choose>
-
-    <choose>
-        <when test="orderByDir != null and orderByDir == 'asc'">ASC</when>
-        <when test="orderByDir != null and orderByDir == 'desc'">DESC</when>
-        <otherwise>DESC</otherwise>
-    </choose>
-</select>
-
-	<!-- 주간 랭킹 (리뷰 기준) -->
-    <select id="selectWeeklyRanking" resultType="com.danggeunko.course.dto.Course">
-		SELECT
-		c.*,
-		(AVG(r.rating) * 5) AS rating_score,
-		(COUNT(l.course_id) * 3) AS like_score, (c.view_cnt * 2) AS view_score,
-		(IFNULL(AVG(r.rating), 0) * 5) + (COUNT(l.course_id) * 3) + (c.view_cnt
-		* 2) AS weighted_score
+		(IFNULL(AVG(r.rating), 0) * 5) AS rating_score,
+		(COUNT(DISTINCT l.user_id) * 3) AS like_score,
+		(c.view_cnt * 2) AS view_score,
+		(IFNULL(AVG(r.rating), 0) * 5) + (COUNT(DISTINCT l.user_id) * 3) + (c.view_cnt * 2) AS
+		weighted_score
 		FROM course c
 		LEFT JOIN review r ON c.course_id = r.course_id
 		LEFT JOIN course_like l ON c.course_id = l.course_id
 		LEFT JOIN user u ON c.user_id = u.user_id
-
-
 		WHERE 1=1
 		AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-    
-    <if test="courseCity != null and courseCity != ''">
-      	AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
-      	<if test="courseDistrict != null and courseDistrict != ''">
-      		AND c.course_district LIKE CONCAT('%', #{courseDistrict}, '%')
-    	</if>
-    </if>
-    
-    <if test="key != null and key != '' and value != null and value != ''">
-        <choose>
-            <when test="key == 'courseName'">AND c.course_name LIKE CONCAT('%', #{value}, '%')</when>
-            <when test="key == 'userName'">AND u.nickname LIKE CONCAT('%', #{value}, '%')</when> 
-            <when test="key == 'description'">AND c.description LIKE CONCAT('%', #{value}, '%')</when>
-        </choose>
-    </if>
-    
-    GROUP BY c.course_id
-    ORDER BY weighted_score DESC
+
+		<if test="courseCity != null and courseCity != ''">
+			AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')
+			<if test="courseDistrict != null and courseDistrict != ''">
+				AND c.course_district LIKE CONCAT('%', #{courseDistrict}, '%')
+			</if>
+		</if>
+
+		GROUP BY c.course_id
+		ORDER BY weighted_score DESC
 	</select>
 
 	<!-- 좋아요 여부 확인 -->
 	<select id="existsCourseLike" resultType="int">
-	    SELECT COUNT(*)
-	    FROM course_like
-	    WHERE user_id = #{userId} AND course_id = #{courseId}
+		SELECT COUNT(*)
+		FROM
+		course_like
+		WHERE user_id = #{userId} AND course_id = #{courseId}
 	</select>
-	
+
 	<!-- 좋아요 추가 -->
 	<insert id="insertCourseLike">
-	    INSERT INTO course_like (user_id, course_id)
-	    VALUES (#{userId}, #{courseId})
+		INSERT INTO course_like (user_id, course_id)
+		VALUES
+		(#{userId}, #{courseId})
 	</insert>
-	
+
 	<!-- 좋아요 삭제 -->
 	<delete id="deleteCourseLike">
-	    DELETE FROM course_like
-	    WHERE user_id = #{userId} AND course_id = #{courseId}
+		DELETE FROM course_like
+		WHERE user_id = #{userId} AND
+		course_id = #{courseId}
 	</delete>
-	
+
 	<!-- 특정 코스의 좋아요 개수 -->
 	<select id="countCourseLike" resultType="int">
-	    SELECT COUNT(*)
-	    FROM course_like
-	    WHERE course_id = #{courseId}
+		SELECT COUNT(*)
+		FROM
+		course_like
+		WHERE course_id = #{courseId}
 	</select>
-	
-	<!-- 내가 등록한 코스 조회-->
-	<select id="selectMyRegistCourse" parameterType="map" resultType="Course">
-    SELECT 
-        c.*,
-        (SELECT cp.latitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLat,
-        (SELECT cp.longitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLng,
-        (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt,
-        (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
-        CASE WHEN EXISTS (
-            SELECT 1 FROM COURSE_LIKE cl 
-            WHERE cl.course_id = c.course_id 
-            AND cl.user_id = #{loginUserId} ) THEN TRUE ELSE FALSE END AS isLiked
-    FROM course c
-    WHERE c.user_id = #{targetUserId} ORDER BY c.created_at DESC
+
+	<!-- 내가 등록한 코스 조회 -->
+	<select id="selectMyRegistCourse" parameterType="map"
+		resultType="Course">
+		SELECT
+		c.*,
+		(SELECT cp.latitude FROM COURSE_POINT cp WHERE
+		cp.course_id = c.course_id AND
+		cp.sequence = 1 LIMIT 1) AS startLat,
+		(SELECT cp.longitude FROM COURSE_POINT cp WHERE cp.course_id =
+		c.course_id
+		AND cp.sequence = 1 LIMIT 1) AS startLng,
+		(SELECT COUNT(*)
+		FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS
+		likeCnt,
+		(SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS
+		reviewCount,
+		CASE WHEN EXISTS (
+		SELECT 1 FROM COURSE_LIKE cl
+		WHERE
+		cl.course_id = c.course_id
+		AND cl.user_id = #{loginUserId} ) THEN TRUE
+		ELSE FALSE END AS isLiked
+		FROM course c
+		WHERE c.user_id =
+		#{targetUserId} ORDER BY c.created_at DESC
 	</select>
 	<!-- 내가 찜한 코스 조회 -->
-	<select id="selectMyLikeCourse" parameterType="map" resultType="Course">
-	    SELECT 
-	        c.*,
-	        (SELECT cp.latitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLat,
-	        (SELECT cp.longitude FROM COURSE_POINT cp WHERE cp.course_id = c.course_id AND cp.sequence = 1 LIMIT 1) AS startLng,
-	        (SELECT COUNT(*) FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS likeCnt,
-	        (SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS reviewCount,
-	        CASE WHEN EXISTS (
-	            SELECT 1 FROM COURSE_LIKE cl 
-	            WHERE cl.course_id = c.course_id 
-	            AND cl.user_id = #{loginUserId}
-	        ) THEN TRUE ELSE FALSE END AS isLiked
-	    FROM course c
-	    JOIN course_like cl ON c.course_id = cl.course_id
-	    WHERE cl.user_id = #{targetUserId} 
+	<select id="selectMyLikeCourse" parameterType="map"
+		resultType="Course">
+		SELECT
+		c.*,
+		(SELECT cp.latitude FROM COURSE_POINT cp WHERE
+		cp.course_id = c.course_id AND
+		cp.sequence = 1 LIMIT 1) AS startLat,
+		(SELECT cp.longitude FROM COURSE_POINT cp WHERE cp.course_id =
+		c.course_id
+		AND cp.sequence = 1 LIMIT 1) AS startLng,
+		(SELECT COUNT(*)
+		FROM COURSE_LIKE cl WHERE cl.course_id = c.course_id) AS
+		likeCnt,
+		(SELECT COUNT(*) FROM REVIEW r WHERE r.course_id = c.course_id) AS
+		reviewCount,
+		CASE WHEN EXISTS (
+		SELECT 1 FROM COURSE_LIKE cl
+		WHERE
+		cl.course_id = c.course_id
+		AND cl.user_id = #{loginUserId}
+		) THEN TRUE
+		ELSE FALSE END AS isLiked
+		FROM course c
+		JOIN course_like cl ON
+		c.course_id = cl.course_id
+		WHERE cl.user_id = #{targetUserId}
 	</select>
 	<update id="updateCourseAvgRating">
-    UPDATE course
-    SET avg_rating = #{avgRating}
-    WHERE course_id = #{courseId}
-</update>
+		UPDATE course
+		SET avg_rating = #{avgRating}
+		WHERE
+		course_id = #{courseId}
+	</update>
 </mapper>

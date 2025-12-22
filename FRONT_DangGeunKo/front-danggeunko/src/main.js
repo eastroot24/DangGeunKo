@@ -1,6 +1,5 @@
 import './assets/style.css'
 import '@flaticon/flaticon-uicons/css/all/all.css'
-
 // import { createApp } from 'vue'
 // import { createPinia } from 'pinia'
 

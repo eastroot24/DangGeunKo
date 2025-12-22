@@ -1,9 +1,14 @@
 <template>
     <div class="navbar">
-        <i class="fi fi-ts-user"></i>
-        <RouterLink :to='myInfoPath' class="nav-item" @click="toggleByTap">MYPAGE</RouterLink>
-        <RouterLink to="/course" class="nav-item" @click="toggleByTap">COURSE</RouterLink>
-        <RouterLink to="/course/ranking" class="nav-item" @click="toggleByTap">RANKING</RouterLink>
+        
+        <RouterLink :to='myInfoPath' class="nav-item" @click="toggleByTap">
+            <i class="fi fi-rs-user"></i><div>MYPAGE</div>
+        </RouterLink>
+        <RouterLink to="/course" class="nav-item" @click="toggleByTap">
+            <i class="fi fi-rs-map-marker"></i><div>COURSE</div></RouterLink>
+        <RouterLink to="/course/ranking" class="nav-item" @click="toggleByTap">
+            <i class="fi fi-rs-trophy"></i>
+            <div>RANKING</div></RouterLink>
     </div>
 </template>
 

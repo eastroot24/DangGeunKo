@@ -65,7 +65,7 @@ const followerCount = ref(0)
 
 // 프로필 이미지 경로 계산
 const profileImgPreview = computed(() => {
-    const baseUrl = 'http://localhost:8080/uploads/';
+    const baseUrl = 'http://localhost:8080/profileImg/';
     return props.user.profileImg
         ? `${baseUrl}${props.user.profileImg}`
         : `${baseUrl}dgk-default-profile.png`;

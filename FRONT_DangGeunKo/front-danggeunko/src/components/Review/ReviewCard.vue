@@ -74,7 +74,6 @@ async function handleToggleFollow() {
     await userStore.getFollowing(loginUserId.value)
 }
 
-// 기존 로직들
 let updateView = ref(false)
 const updateReviewView = () => updateView.value = !updateView.value
 
@@ -90,11 +89,12 @@ const updateReview = async () => {
 const formatTimeAgo = (dateString) => timeAgo(dateString)
 
 const profileImgPreview = computed(() => {
-    const baseUrl = 'http://localhost:8080/uploads/';
+    const baseUrl = 'http://localhost:8080/profileImg/';
     const defaultImg = 'dgk-default-profile.png';
     if (!props.review?.profileImg) return `${baseUrl}${defaultImg}`;
     return `${baseUrl}${props.review.profileImg}`;
 });
+
 </script>
 
 <style scoped>
