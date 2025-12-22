@@ -4,14 +4,12 @@
       <div v-if="!isMyPage">
         <CourseMap />
       </div>
-      <div
-        v-if="showOverlayBackdrop"
-        class="overlay-backdrop"
-        @click="goHome"
-      ></div>
+      <div v-if="showOverlayBackdrop" class="overlay-backdrop" @click="goHome"></div>
       <RouterView />
-      <div v-if="!isOnBoarding"><CousreFooter></CousreFooter></div>
-      
+      <div v-if="!isOnBoarding">
+        <CousreFooter></CousreFooter>
+      </div>
+
     </div>
 
   </div>
@@ -27,7 +25,7 @@ const route = useRoute();
 const router = useRouter();
 
 const hiddenPaths = [
-  'myinfo',
+  'myInfo',
   'login',
   'signup',
   'editProfile',
@@ -60,10 +58,11 @@ const goHome = () => {
 </script>
 
 <style scoped>
-  .overlay-backdrop {
+.overlay-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 10;          /* Map 위, RouterView 아래 */
+  z-index: 10;
+  /* Map 위, RouterView 아래 */
   background: transparent;
 }
 </style>
