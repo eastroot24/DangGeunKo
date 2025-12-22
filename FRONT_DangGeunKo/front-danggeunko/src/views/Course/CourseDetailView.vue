@@ -1,8 +1,10 @@
 <template>
     <div class="panel" ref="panelRef">
         <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
-        <CourseDetail :courseId="route.params.id"></CourseDetail>
+        <div class="course-panel-wrapper">
+            <CourseDetail :courseId="route.params.id"></CourseDetail>
         <Review :courseId="route.params.id"></Review>
+        </div>
     </div>
 </template>
 

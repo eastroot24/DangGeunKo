@@ -64,24 +64,8 @@ watch(
 </script>
 
 <style scoped>
-.course-panel {
-    background: hsl(0, 0%, 100%);
-    border-radius: 20px;
-    padding: 8px 2px 6px;
-    height: 100%;
-    /* 기본 높이 */
-    overflow-y: visible;
-    transition: height 0.1s ease-out;
-}
 
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    padding: 4px 10px 10px;
-}
-
-/* 2. 일반적인 코스 카드 Wrapper */
+/* 일반적인 코스 카드 Wrapper */
 .course-item-wrapper {
     display: block;
 }
@@ -124,12 +108,4 @@ watch(
     color: #ff7a00;
 }
 
-.course-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    /* 그림자 강화 */
-    overflow: hidden;
-    font-size: 11px;
-}
 </style>

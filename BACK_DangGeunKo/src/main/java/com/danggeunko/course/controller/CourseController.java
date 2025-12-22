@@ -191,21 +191,24 @@ public class CourseController {
 
 		    HttpClient client = HttpClient.newHttpClient();
 		    HttpResponse<byte[]> response =
-		        client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+		    	    client.send(request, HttpResponse.BodyHandlers.ofByteArray());
 
-		    if (response.statusCode() != 200) {
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		    }
+		    	if (response.statusCode() != 200 || response.body() == null || response.body().length == 0) {
+		    	    throw new IllegalStateException(
+		    	        "map-renderer failed, status=" + response.statusCode()
+		    	    );
+		    	}
 
-		    byte[] imageBytes = response.body();
+		    	byte[] image = response.body();
+
 
 		    // 4. 파일로 저장 (캐싱)
-		    Files.write(thumbnailPath, imageBytes);
+		    Files.write(thumbnailPath, image);
 
 		    return ResponseEntity.ok()
 		        .contentType(MediaType.IMAGE_PNG)
 		        .header("Cache-Control", "no-cache, no-store, must-revalidate")
-		        .body(imageBytes);
+		        .body(image);
 		}
 
 

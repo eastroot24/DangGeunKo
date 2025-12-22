@@ -1,5 +1,6 @@
 <template>
     <div class="navbar">
+        <i class="fi fi-ts-user"></i>
         <RouterLink :to='myInfoPath' class="nav-item" @click="toggleByTap">MYPAGE</RouterLink>
         <RouterLink to="/course" class="nav-item" @click="toggleByTap">COURSE</RouterLink>
         <RouterLink to="/course/ranking" class="nav-item" @click="toggleByTap">RANKING</RouterLink>
@@ -10,6 +11,7 @@
 import { useSlidingPanel } from '@/assets/script.js'
 import { useUserStore } from '@/stores/user';
 import { computed, onMounted, ref, watch } from 'vue';
+
   
 const { toggleByTap } = useSlidingPanel()  
 
@@ -38,6 +40,6 @@ watch()
 
 .router-link-active {
     font-weight: bold;
-    color: #ff7f00;
+    color: #ff8a24;
 }
 </style>

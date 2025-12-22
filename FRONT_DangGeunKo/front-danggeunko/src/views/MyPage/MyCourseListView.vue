@@ -15,8 +15,11 @@
     </div>
     <CourseSearchBar></CourseSearchBar>
     <CourseFilter></CourseFilter>
-    <RegistCourse v-if="tab === 'registered'" :targetUserId="targetUser?.userId" :allView="true" />
-    <LikeCourse v-else :targetUserId="targetUser?.userId" :allView="true"></LikeCourse>
+    <div class="course-panel-wrapper">
+      <RegistCourse v-if="tab === 'registered'" :targetUserId="targetUser?.userId" :allView="true" />
+      <LikeCourse v-else :targetUserId="targetUser?.userId" :allView="true"></LikeCourse></div>
+    
+    
   </div>
 </template>
 

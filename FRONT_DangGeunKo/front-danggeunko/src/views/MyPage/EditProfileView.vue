@@ -298,4 +298,26 @@ const regionDB = {
   cursor: not-allowed;
   border: 1px solid #ddd;
 }
+
+.form{
+  height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 200px;
+}
+
+.form::-webkit-scrollbar{
+  width: 10px;
+}
+
+/* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
+.form::-webkit-scrollbar-thumb {
+  background: #ff7a00;         /* 주황색 적용 */
+  border-radius: 10px;
+  border: 1px solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+}
+
+/* 호버 시 조금 더 진한 주황색 */
+.form::-webkit-scrollbar-thumb:hover {
+  background: #e66e00;
+}
 </style>
