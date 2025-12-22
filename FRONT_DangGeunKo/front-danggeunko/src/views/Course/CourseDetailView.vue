@@ -1,6 +1,9 @@
 <template>
     <div class="panel" ref="panelRef">
         <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
+        <button class="back-btn" @click="goBack">
+      <i class="fi fi-rs-angle-left"></i>
+    </button>
         <CourseDetail :courseId="route.params.id"></CourseDetail>
         <Review :courseId="route.params.id"></Review>
     </div>
@@ -9,14 +12,16 @@
 <script setup>
 import CourseDetail from '@/components/Course/CourseDetail.vue';
 import Review from '@/components/Review/Review.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ref, watch, onMounted } from 'vue'
 import { useSlidingPanel } from '@/assets/script.js'
 
 const route = useRoute()
-
+const router = useRouter()
 const panelRef = ref(null)
-
+const goBack = () => {
+  router.back()
+}
 const {
     panelState,
     setPanelState,

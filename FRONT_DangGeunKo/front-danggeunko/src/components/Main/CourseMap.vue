@@ -14,12 +14,17 @@
 import { onMounted, ref, watch } from 'vue'; // onMounted 훅을 import
 import CourseSearchBar from './CourseSearchBar.vue';
 import dgkMarkerImage from '@/assets/img/dgk_marker.png'
+import dgkReigistMarkerImage from '@/assets/img/dgk_regist_marker.png'
+import dgkLikeMarkerImage from '@/assets/img/dgk_like_marker.png'
+import dgkRank1MarkerImage from '@/assets/img/dgk_rank1_marker.png'
+
 import { useRouter } from 'vue-router';
 import { useMapStore } from '@/stores/map';
 import { storeToRefs } from 'pinia';
+import { useCourseStore } from '@/stores/course';
 const router = useRouter()
 const mapStore = useMapStore()
-// const searchAddress = ref('정자동 178-1'); // 초기 검색 주소 설정
+const courseStore = useCourseStore()
 
 // Naver Map 객체를 저장할 반응형 변수 (지도 인스턴스에 접근하기 위해)
 const mapInstance = ref(null);
@@ -30,44 +35,52 @@ const markerList = ref([]);
 // =========================================================
 // ⭐ 마커 생성 및 관리 함수
 // =========================================================
+// NaverMap 컴포넌트 내의 updateMarkers 함수 수정
 const updateMarkers = (newMarkerData) => {
-    // 1. 데이터 유효성 검사 (undefined 방지)
     const safeData = Array.isArray(newMarkerData) ? newMarkerData : [];
+    if (!mapInstance.value) return;
 
-    if (!mapInstance.value) {
-        console.warn("⚠️ 아직 지도 객체가 없습니다. 생성을 기다립니다.");
-        return;
-    }
-
-    // 기존 마커 제거
     markerList.value.forEach(m => m.setMap(null));
     markerList.value = [];
 
-    // 마커 생성 로직
-    const markers = safeData.map((data, index) => {
+    const markers = safeData.map((data) => {
         if (!data.lat || !data.lng) return null;
+
+        let markerImg = dgkMarkerImage;
+        //마커 기본 사이즈 설정
+        let sizeValue = 40; 
+
+        if (data.type === 'rank1') {
+            markerImg = dgkRank1MarkerImage;
+            sizeValue = 80; 
+        } else if (data.type === 'regist') {
+            markerImg = dgkReigistMarkerImage;
+        } else if (data.type === 'like') {
+            markerImg = dgkLikeMarkerImage;
+        }
 
         const marker = new naver.maps.Marker({
             position: new naver.maps.LatLng(data.lat, data.lng),
             map: mapInstance.value,
             title: data.name,
             icon: {
-                url: dgkMarkerImage,
-                size: new naver.maps.Size(40, 40),
-                scaledSize: new naver.maps.Size(40, 40),
-                anchor: new naver.maps.Point(20, 40)
-            }
+                url: markerImg,
+                size: new naver.maps.Size(sizeValue, sizeValue),
+                scaledSize: new naver.maps.Size(sizeValue, sizeValue),
+                anchor: new naver.maps.Point(sizeValue / 2, sizeValue)
+            },
+            zIndex: data.type === 'rank1' ? 100 : 1
         });
 
         naver.maps.Event.addListener(marker, 'click', () => {
             router.push({ name: 'courseDetail', params: { id: data.id } });
         });
+
         return marker;
     }).filter(m => m !== null);
 
     markerList.value = markers;
 };
-
 // =========================================================
 // ⭐ 1. 지도/주소 검색 관련 함수 정의 (initMap 밖으로 이동)
 // =========================================================
@@ -328,6 +341,7 @@ watch(mapInstance, (newMap) => {
 
 // onMounted는 기존 코드 유지
 onMounted(async () => {
+    courseStore.getCourseList()
     initMap();
     moveToCurrentLocation()
 });

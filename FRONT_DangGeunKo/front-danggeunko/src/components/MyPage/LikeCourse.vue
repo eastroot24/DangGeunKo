@@ -7,7 +7,8 @@
                     @click="goDetail(course)">
                     <CourseCard :course="course"></CourseCard>
                     <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        {{ course.liked ? '♥' : '♡' }}
+                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
+                        <span v-else><i class="fi fi-rs-heart"></i></span>
                     </div>
                 </div>
             </div>
@@ -22,7 +23,8 @@
                         <CourseCard :course="course"></CourseCard>
                     </div>
                     <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        {{ course.liked ? '♥' : '♡' }}
+                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
+                        <span v-else><i class="fi fi-rs-heart"></i></span>
                     </div>
                 </div>
             </div>

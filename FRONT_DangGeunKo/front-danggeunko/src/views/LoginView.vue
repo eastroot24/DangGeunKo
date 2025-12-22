@@ -7,7 +7,7 @@
     <input type="password" placeholder="비밀번호" v-model="password" @keyup.enter="login">
 
     <button class="login-btn" @click="login">로그인</button>
-
+     <i class="fi fi-rr-menu-burger"></i>
     <div class="to-join">
         처음이신가요? <router-link to="/signup">회원가입하기</router-link>
     </div>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <RouterLink to="/course/create" class="plus-btn">＋</RouterLink>
+        <RouterLink to="/course/create" class="plus-btn"><i class="fi fi-rs-plus"></i></RouterLink>
     </div>
 </template>
 

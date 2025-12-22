@@ -12,6 +12,7 @@ export const useCourseStore = defineStore('course', () => {
     const courseList = ref([])
     const registCourseList = ref([])
     const likeCourseList = ref([])
+    const rankingCourseList = ref([])
     const course = ref({})
     const searchInfo = ref({ 
         key: 'courseName',
@@ -22,24 +23,39 @@ export const useCourseStore = defineStore('course', () => {
         minRange: 1,     
         maxRange: 50,     
         orderBy: 'createdAt', 
-        orderByDir: 'desc'    
+        orderByDir: 'desc',
+        userId: userStore.loginUserId ? userStore.loginUserId : '',   
         })
-        // ⭐ 맵에 마커를 표시하는 액션 정의
-    const setCourseMarkers = (courses) => {
-        // 1. courses가 없거나 배열이 아닌 경우 빈 배열로 처리하여 에러 방지
-        const dataArray = Array.isArray(courses) ? courses : (courses ? [courses] : []);
-        
-        const markers = dataArray.map(course => ({
-            id: course.courseId,
-            lat: course.startLat,       // ⭐ 서버에서 넘어온 시작 위도 필드 (가정)
-            lng: course.startLng,       // ⭐ 서버에서 넘어온 시작 경도 필드 (가정)
-            name: course.courseName,    // 마커 정보창에 표시할 이름
-            city: course.courseCity,    // (선택 사항)
-        }));
+   const setCourseMarkers = (courses, isRanking = false) => {
+    const dataArray = Array.isArray(courses) ? courses : (courses ? [courses] : []);
+    const loginUserId = userStore.loginUserId;
 
-        // 맵 스토어의 액션을 호출하여 마커 목록을 지도 컴포넌트에 전달
-        mapStore.setMarkers(markers);
-    }
+    const markers = dataArray.map((course, index) => {
+        let markerType = 'default'; 
+
+        // 1. 우선순위 판별
+        if (isRanking && index === 0) {
+            // 랭킹 리스트이고 1등인 경우 (최우선)
+            markerType = 'rank1';
+        } else if (loginUserId && String(course.userId) === String(loginUserId)) {
+            // 내가 등록한 코스인 경우
+            markerType = 'regist';
+        } else if (course.liked) {
+            markerType = 'like';
+        }
+
+        return {
+            id: course.courseId,
+            lat: course.startLat,
+            lng: course.startLng,
+            name: course.courseName,
+            type: markerType,
+        };
+    });
+    
+    mapStore.setMarkers(markers);
+};
+
 
     // 전체 코스 조회
     const getCourseList = async () => {
@@ -121,23 +137,34 @@ export const useCourseStore = defineStore('course', () => {
     }   
 
     //코스 랭킹 조회
-    const getWeeklyRanking= () =>{
-        axios.get(`${REST_API_COURSE_URL}/ranking`, {
+// 코스 랭킹 조회
+const getWeeklyRanking = async () => {
+    try {
+        const res = await axios.get(`${REST_API_COURSE_URL}/ranking`, {
             params: searchInfo.value
-        })
-        .then((res)=>{
-            courseList.value = res.data
-        })
-        .catch((err)=>{
-            console.log("검색조건:", searchInfo)
-            console.log("랭킹 검색 오류:", err)
-        })
-    } 
+        });
+        
+        const data = res.data || [];
+        rankingCourseList.value = data;
+
+        // 마커 생성 및 지도 중심 이동
+        setCourseMarkers(rankingCourseList.value, true);
+
+        if (data.length > 0 && data[0].startLat && data[0].startLng) {
+            mapStore.setMapCenter({
+                lat: data[0].startLat,
+                lng: data[0].startLng,
+                zoom: 14
+            });
+        }
+    } catch (err) {
+        console.error("랭킹 로드 중 에러 발생:", err);
+    }
+};
 
     //코스 등록
     const registCourse = async function(course) {
         const response = await axios.post(REST_API_COURSE_URL, course)
-        
         return response.data.courseId;
     };
 
@@ -220,7 +247,7 @@ export const useCourseStore = defineStore('course', () => {
 
 
 
-    return { course, searchInfo, courseList, registCourseList, likeCourseList, resetSearchInfo,
+    return { course, searchInfo, courseList, registCourseList, likeCourseList, rankingCourseList, resetSearchInfo,
         getCourseDetailById, getCourseList, searchCourseList, 
         getWeeklyRanking, registCourse, updateCourseById,
         deleteCourseById, addLike, setCourseMarkers, getRegistCourseList, getLikeCourseList}

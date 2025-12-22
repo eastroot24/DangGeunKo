@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="top-bar">
-      <div class="back" @click="goLogin">←</div>
+      <div class="back" @click="goLogin"><i class="fi fi-rs-angle-left"></i></div>
       <div class="title">회원가입</div>
     </div>
 

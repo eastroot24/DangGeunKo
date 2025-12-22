@@ -1,5 +1,8 @@
 <template>
     <div class="follow-container">
+        <button class="back-btn" @click="goBack">
+      <i class="fi fi-rs-angle-left"></i>
+    </button>
         <div class="tabs">
             <div class="tab-item" :class="{ active: currentType === 'following' }" @click="changeTab('following')">
                 <strong>{{ followingCount }}</strong> 팔로잉
@@ -53,7 +56,9 @@ const followingCount = ref(0)
 const followerCount = ref(0)
 const localUserList = ref([])
 
-
+const goBack = () => {
+  router.back()
+}
 const filteredList = computed(() => {
     if (!searchQuery.value.trim()) {
         return localUserList.value;

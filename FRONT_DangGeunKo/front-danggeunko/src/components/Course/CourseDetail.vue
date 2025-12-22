@@ -26,7 +26,8 @@
             <div class="stats">
                 <div>
                     <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        {{ course.liked ? '♥' : '♡' }}
+                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
+                        <span v-else><i class="fi fi-rs-heart"></i></span>
                     </div>
                     <span>{{ course.likeCnt || 0 }}</span>
                 </div>

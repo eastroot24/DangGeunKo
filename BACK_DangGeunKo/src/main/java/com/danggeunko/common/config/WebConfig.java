@@ -1,5 +1,7 @@
 package com.danggeunko.common.config;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -26,9 +28,12 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // http://localhost:8080/uploads/파일명.jpg 로 접근하면
-        // 실제 로컬의 C:/danggeunko/uploads/ 폴더를 보여줌
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:///C:/danggeunko/uploads/");
+        // ⭐ 실제 이미지 폴더 위치 계산 (백엔드 폴더의 부모 폴더 아래 profileImg)
+        String rootPath = new File(System.getProperty("user.dir")).getParent();
+        String profileImgPath = "file:///" + rootPath + File.separator + "profileImg" + File.separator;
+
+        // http://localhost:8080/profileImg/파일명 으로 요청이 오면 응답
+        registry.addResourceHandler("/profileImg/**")
+                .addResourceLocations(profileImgPath);
     }
 }

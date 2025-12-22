@@ -3,6 +3,8 @@ package com.danggeunko.course.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.danggeunko.course.dto.Course;
 import com.danggeunko.course.dto.SearchCondition;
 
@@ -30,7 +32,8 @@ public interface CourseDao {
 	public List<Course> search(SearchCondition condition);
 	
 	// 게시글 정렬
-	public List<Course> selectWeeklyRanking(SearchCondition condition);
+	// CourseMapper.java (또는 DAO 인터페이스)
+	List<Course> selectWeeklyRanking(SearchCondition condition);
 	
 	// 좋아요 여부 확인
 	int existsCourseLike(int userId, int courseId);
