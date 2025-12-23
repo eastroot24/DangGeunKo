@@ -25,14 +25,14 @@
             </div>
             <div class="stats">
                 <div>
-                    <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
+                    <div class="heart-btn" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
                         <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
                         <span v-else><i class="fi fi-rs-heart"></i></span>
                     </div>
-                    <span>{{ course.likeCnt || 0 }}</span>
+                    <span>찜 {{ course.likeCnt || 0 }}</span>
                 </div>
-                <div>💬 {{ course.reviewCount || 0 }}</div>
-                <div>👁 {{ course.viewCnt }}</div>
+                <div>댓글 {{ course.reviewCount || 0 }}</div>
+                <div>조회수 {{ course.viewCnt }}</div>
             </div>
         </div>
     </div>
@@ -127,7 +127,7 @@ watch(course, () => {
     position: relative;
 }
 
-.card-heart {
+.heart-btn {
     position: absolute;
     top: 1px;
     left: 2px;
@@ -140,10 +140,10 @@ watch(course, () => {
     justify-content: center;
     font-size: 14px;
     color: var(--orange);
-    cursor: pointer;
+    border: none;
 }
 
-.card-heart.active {
+.heart-btn.active {
     color: var(--orange);
 }
 

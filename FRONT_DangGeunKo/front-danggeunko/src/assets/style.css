@@ -23,7 +23,7 @@ body, #app {
 :root {
   --orange: #ff8a24;
   --light-orange: #ffe4c4;
-  --bg: #f7f7f7;
+  --bg: #f5f5f5;
   --gray: #dddddd;
   --text-main: #222222;
   --text-sub: #888888;
@@ -51,7 +51,7 @@ body {
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background: var(--bg);
 }
 
 .back-btn {
