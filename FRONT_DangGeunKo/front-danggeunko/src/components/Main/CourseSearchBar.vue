@@ -2,6 +2,7 @@
   <div class="top-search-row">
     <div>
       <select v-model="searchInfo.key" class="category-btn" id="categorySelect">
+
         <option value="courseName">제목</option>
         <option value="userName">작성자</option>
         <option value="description">내용</option>

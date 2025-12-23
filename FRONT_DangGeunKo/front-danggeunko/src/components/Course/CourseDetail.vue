@@ -1,38 +1,56 @@
 <template>
-    <div>
-        <div class="content">
-            <!-- 수정 삭제 버튼 -->
-            <div v-if="course.userId === loginUserId">
-                <button @click="goUpdate">수정</button>
-                <button @click="deleteCourse">삭제</button>
-            </div>
+    <div class="course-detail-container">
+        <div class="header-row">
+            <button class="back-btn" @click="goBack">
+                <i class="fi fi-rs-angle-left"></i>
+            </button>
             <div class="course-name">{{ course.courseName }}</div>
-            <!-- 지도 -->
-            <StaticCourseMap :points="course.coursePoints || []" />
-            <div class="sub-info">출발 · 종료 : {{ course.startAddress }} – {{ course.endAddress }}</div>
+            <div v-if="course.userId === loginUserId" class="admin-btns">
+                <button class="mini-btn update" @click="goUpdate">수정</button>
+                <button class="mini-btn delete" @click="deleteCourse">삭제</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="map-section">
+                <StaticCourseMap :points="course.coursePoints || []" />
+            </div>
+
+            <div class="combined-info-section">
+                <div class="info-left-author">
+                    <div class="author-info" v-if="writer">
+                        <span class="author-name">{{ writer.nickname }}</span>
+                        <div class="post-time">{{ writer.userCity }} {{ writer.userDistrict }} · {{
+                            formatTimeAgo(course.updatedAt) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-right-address">
+                    <div class="address-group">
+                        <div class="marker-circle">
+                            <i class="fi fi-rs-marker"></i>
+                        </div>
+                        <div class="address-text">
+                            <div>출발 - {{ course.startAddress }}</div>
+                            <div>도착 - {{ course.endAddress }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="tag-list">
-                <div class="tag">{{ course.courseCity }}</div>
                 <div class="tag">{{ course.courseDistrict }}</div>
                 <div class="tag">{{ course.difficulty }}</div>
-                <div class="tag">화장실 : {{ course.hasToilet ? "있음" : "없음" }}</div>
-                <div class="tag">횡단보도 : {{ course.hasCrosswalk ? "있음" : "없음" }}</div>
-                <div class="tag">{{ course.distanceKm }}km / {{ course.duration_min }}시간 / {{ course.coursePace }} 페이스
+                <div class="tag">횡단보도 {{ course.hasCrosswalk ? "있음" : "없음" }}</div>
+                <div class="tag">공중화장실 {{ course.hasToilet ? "있음" : "없음" }}</div>
+                <div class="tag wide-tag">
+                    {{ course.distanceKm }}km / {{ course.duration_min }}시간 / {{ course.coursePace }} 페이스
                 </div>
             </div>
-            <div class="desc">
-                {{ course.description }}
-            </div>
-            <div class="stats">
-                <div>
-                    <div class="heart-btn" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
-                        <span v-else><i class="fi fi-rs-heart"></i></span>
-                    </div>
-                    <span>찜 {{ course.likeCnt || 0 }}</span>
-                </div>
-                <div>댓글 {{ course.reviewCount || 0 }}</div>
-                <div>조회수 {{ course.viewCnt }}</div>
+
+            <div class="description-text">
+                {{ course.description || 'Content' }}
             </div>
         </div>
     </div>
@@ -42,10 +60,10 @@
 import { useCourseStore } from '@/stores/course';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { onMounted, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import StaticCourseMap from '../Main/StaticCourseMap.vue';
-
+import { timeAgo } from '@/utils/timeUtils';
 const route = useRoute();
 const router = useRouter()
 const courseStore = useCourseStore()
@@ -53,12 +71,29 @@ const userStore = useUserStore()
 
 const { course } = storeToRefs(courseStore)
 const { loginUserId } = storeToRefs(userStore)
-
+const writer = ref(null)
 const props = {
     courseId: Number,
 }
-
-// const course = ref({})
+const formatTimeAgo = (dateString) => {
+    if (!dateString) return '';
+    return timeAgo(dateString);
+};
+// 유저 정보를 가져오는 함수 수정
+const fetchWriterInfo = async () => {
+    if (course.value && course.value.userId) {
+        try {
+            // Store의 getUserById가 전역 user를 바꾸므로, 
+            // 반환값을 직접 받아서 writer ref에 넣어줍니다.
+            const userData = await userStore.getUserById(course.value.userId)
+            if (userData) {
+                writer.value = userData
+            }
+        } catch (error) {
+            console.error("작성자 정보 로드 실패:", error)
+        }
+    }
+}
 
 const goUpdate = () => {
     router.push({ name: 'courseUpdate', params: course.value.courseId })
@@ -93,7 +128,11 @@ const toggleLike = async (courseData) => {
         alert("찜 상태 변경에 실패했습니다.");
     }
 }
-
+watch(course, async (newCourse) => {
+    if (newCourse && newCourse.userId) {
+        await fetchWriterInfo()
+    }
+}, { immediate: true })
 watch(() => route.params.id, (newId) => {
     if (newId) {
         courseStore.getCourseDetailById(newId);
@@ -147,7 +186,7 @@ watch(course, () => {
     color: var(--orange);
 }
 
-.content{
+.content {
     padding: 1.5rem 2.3rem 0.1rem;
 }
 </style>

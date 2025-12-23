@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="back" @click="retry">← 코스 다시 그리기</div>
+    <div class="back" @click="retry">코스 다시 그리기 <i class="fi fi-rr-pencil"></i> </div>
     <!-- 입력 폼 -->
     <div class="form-wrap">
       <label style="font-weight: bold;">코스 이름</label>
@@ -88,8 +88,8 @@
           <div v-if="errors.hasToilet" class="error-text">{{ errors.hasToilet }}</div>
         </div>
       </div>
-      <div><button @click="addCourse" class="submit">등록하기</button></div>
-      
+      <div><button @click="addCourse" class="btn-orange">등록하기</button></div>
+
     </div>
   </div>
 </template>
@@ -327,27 +327,34 @@ watch(selectedDistrict, (v) => {
 }
 
 .back {
-  font-size: 10px;
+  padding: 18px;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
   color: #ff7a00;
 }
 
-.form-wrap {
-  padding: 18px;
-  height: calc(100vh - 210px);
-  overflow-y: auto;
-  padding-bottom: 200px;
+.back i {
+  font-size: 12px;
 }
 
-.form-wrap::-webkit-scrollbar{
+.form-wrap {
+  padding: 18px;
+  height: auto;
+  overflow-y: auto;
+}
+
+.form-wrap::-webkit-scrollbar {
   width: 10px;
 }
 
 /* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
 .form-wrap::-webkit-scrollbar-thumb {
-  background: #ff7a00;         /* 주황색 적용 */
+  background: #ff7a00;
+  /* 주황색 적용 */
   border-radius: 10px;
-  border: 1px solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+  border: 1px solid #fff;
+  /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
 }
 
 /* 호버 시 조금 더 진한 주황색 */
@@ -380,24 +387,12 @@ textarea {
 
 .row-3 {
   display: flex;
-  gap: 6px;
+  gap: 10px;
   margin-bottom: 12px;
 }
 
 .row-3 input,
 .row-3 select {
   flex: 1;
-}
-
-.submit {
-  width: 85%;
-  height: 48px;
-  border-radius: 25px;
-  background: #ff7a00;
-  color: #fff;
-  border: none;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
 }
 </style>
