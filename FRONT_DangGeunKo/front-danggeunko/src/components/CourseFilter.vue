@@ -68,9 +68,9 @@
         난이도 선택
       </div>
       <div class="difficulty-chips">
-        <button class="difficulty-chip" data-level="초급">런린이</button>
-        <button class="difficulty-chip" data-level="중급">러너</button>
-        <button class="difficulty-chip" data-level="고급">런고수</button>
+        <button class="difficulty-chip" data-level="런린이">런린이</button>
+        <button class="difficulty-chip" data-level="러너">러너</button>
+        <button class="difficulty-chip" data-level="런고수">런고수</button>
       </div>
     </div>
   </div>

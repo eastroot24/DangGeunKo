@@ -1,9 +1,10 @@
 <template>
     <div class="follow-container">
-        <button class="back-btn" @click="goBack">
-      <i class="fi fi-rs-angle-left"></i>
-    </button>
+
         <div class="tabs">
+            <button class="back-btn" @click="goBack">
+                <i class="fi fi-rs-angle-left"></i>
+            </button>
             <div class="tab-item" :class="{ active: currentType === 'following' }" @click="changeTab('following')">
                 <strong>{{ followingCount }}</strong> 팔로잉
             </div>
@@ -57,7 +58,7 @@ const followerCount = ref(0)
 const localUserList = ref([])
 
 const goBack = () => {
-  router.back()
+    router.back()
 }
 const filteredList = computed(() => {
     if (!searchQuery.value.trim()) {
@@ -144,6 +145,14 @@ watch(() => route.params.nickname, loadData)
 </script>
 
 <style scoped>
+.back-btn {
+    top: 1rem;
+}
+
+.user-list {
+    padding: 1rem;
+}
+
 .tabs {
     display: flex;
     border-bottom: 1px solid #eee;
@@ -153,7 +162,7 @@ watch(() => route.params.nickname, loadData)
 .tab-item {
     flex: 1;
     text-align: center;
-    padding: 12px;
+    padding: 1rem;
     cursor: pointer;
     color: #999;
 }
@@ -168,8 +177,8 @@ watch(() => route.params.nickname, loadData)
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
     border-bottom: 1px solid #f9f9f9;
+    padding: 1rem;
 }
 
 .user-left {

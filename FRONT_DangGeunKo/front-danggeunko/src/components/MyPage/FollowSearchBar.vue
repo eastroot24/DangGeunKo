@@ -2,7 +2,7 @@
     <div class="search-bar">
         <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"
             placeholder="보고 싶은 사람을 검색하세요">
-        <div class="icon">🔍</div>
+        <div class="icon"><i class="fi fi-rs-search"></i></div>
     </div>
 </template>
 
@@ -15,7 +15,7 @@ defineEmits(['update:modelValue'])
 <style scoped>
 .search-bar {
     margin: auto;
-    width: 90%;
+    width: 100%;
     position: relative;
 }
 
@@ -30,7 +30,7 @@ defineEmits(['update:modelValue'])
 .search-bar .icon {
     position: absolute;
     right: 10px;
-    top: 4px;
+    top: 10px;
     font-size: 18px;
     color: #666;
 }

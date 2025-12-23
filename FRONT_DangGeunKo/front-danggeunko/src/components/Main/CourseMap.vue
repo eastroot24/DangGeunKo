@@ -4,9 +4,9 @@
             <CourseSearchBar />
         </div>
         <div class="map" id="map" style="width:100%;height:100vh;"></div>
-            <button @click="moveToCurrentLocation" class="map-btn map-btn--current">
-                <i class="fi fi-rr-location-crosshairs"></i>
-            </button>
+        <button @click="moveToCurrentLocation" class="map-btn map-btn--current">
+            <i class="fi fi-rr-location-crosshairs"></i>
+        </button>
     </div>
 </template>
 <script setup>
@@ -47,11 +47,11 @@ const updateMarkers = (newMarkerData) => {
 
         let markerImg = dgkMarkerImage;
         //마커 기본 사이즈 설정
-        let sizeValue = 40; 
+        let sizeValue = 40;
 
         if (data.type === 'rank1') {
             markerImg = dgkRank1MarkerImage;
-            sizeValue = 80; 
+            sizeValue = 80;
         } else if (data.type === 'regist') {
             markerImg = dgkReigistMarkerImage;
         } else if (data.type === 'like') {
@@ -365,5 +365,4 @@ onMounted(async () => {
     z-index: 100;
     pointer-events: auto;
 }
-
 </style>
