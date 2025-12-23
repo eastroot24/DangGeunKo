@@ -1,27 +1,37 @@
 <template>
   <div class="app">
-     <button class="back-btn" @click="goBack">
-      <i class="fi fi-rs-angle-left"></i>
-    </button>
-    <div class="panel-title">등록/찜 코스 목록</div>
-    <div class="tab-toggle-wrap">
-      <div class="tab-toggle">
-        <button class="tab-btn" :class="{ active: tab === 'registered' }" @click="tab = 'registered'">
-          등록 코스
-        </button>
 
-        <button class="tab-btn" :class="{ active: tab === 'liked' }" @click="tab = 'liked'">
-          찜한 코스
-        </button>
+    <div class="top-bar">
+      <div class="back-btn" @click="goBack">
+        <i class="fi fi-rs-angle-left"></i>
+      </div>
+      <div class="title">
+        등록/찜 코스 목록
       </div>
     </div>
-    <CourseSearchBar></CourseSearchBar>
-    <CourseFilter></CourseFilter>
+
+    <div class="mylist-header">
+      <div class="tab-toggle-wrap">
+        <div class="tab-toggle">
+          <button class="tab-btn" :class="{ active: tab === 'registered' }" @click="tab = 'registered'">
+            등록 코스
+          </button>
+
+          <button class="tab-btn" :class="{ active: tab === 'liked' }" @click="tab = 'liked'">
+            찜한 코스
+          </button>
+        </div>
+      </div>
+      <CourseSearchBar></CourseSearchBar>
+      <CourseFilter></CourseFilter>
+    </div>
+
     <div class="course-panel-wrapper">
       <RegistCourse v-if="tab === 'registered'" :targetUserId="targetUser?.userId" :allView="true" />
-      <LikeCourse v-else :targetUserId="targetUser?.userId" :allView="true"></LikeCourse></div>
-    
-    
+      <LikeCourse v-else :targetUserId="targetUser?.userId" :allView="true"></LikeCourse>
+    </div>
+
+
   </div>
 </template>
 
@@ -53,6 +63,15 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.mylist-header {
+  padding: 1rem;
+}
+
+.top-bar {
+  margin: 1rem;
+}
+
+
 .tab-toggle-wrap {
   display: flex;
   justify-content: center;
@@ -73,7 +92,7 @@ onMounted(async () => {
   background: transparent;
   border-radius: 999px;
   padding: 5px 14px;
-  font-size: 11px;
+  font-size: 14px;
   cursor: pointer;
   color: #777;
   transition: all 0.15s ease-out;

@@ -1,18 +1,18 @@
 <template>
     <div class="course-section">
         <div class="section-header">
-            <h2 class="section-title">등록 코스</h2> <RouterLink 
-                v-if="!allView && limitedCourses.length > 0 && route.path.toLowerCase().includes('/myinfo')"
+            <h2 class="section-title">등록 코스</h2>
+            <RouterLink v-if="!allView && limitedCourses.length > 0 && route.path.toLowerCase().includes('/myinfo')"
                 :to="{ name: 'myCourseList', params: { nickname: route.params.nickname }, query: { tab: 'registered' } }"
-                class="more-btn"
-            >
+                class="more-btn">
                 더보기
             </RouterLink>
         </div>
 
         <div class="course-container" v-if="limitedCourses.length > 0">
-            <div class="course-grid">
-                <div class="course-card-wrapper" v-for="course in (allView ? courseStore.registCourseList : limitedCourses)" :key="course.courseId">
+            <div class="myinfo-course-grid ">
+                <div class="course-card-wrapper"
+                    v-for="course in (allView ? courseStore.registCourseList : limitedCourses)" :key="course.courseId">
                     <div class="card-content" @click="goDetail(course)">
                         <CourseCard :course="course"></CourseCard>
                     </div>
@@ -101,6 +101,4 @@ watch(() => props.targetUserId, loadData)
 onMounted(loadData)
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

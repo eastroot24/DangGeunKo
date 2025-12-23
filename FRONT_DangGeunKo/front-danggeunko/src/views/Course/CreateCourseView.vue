@@ -1,19 +1,21 @@
 <template>75rem
   <div class="panel" ref="panelRef">
     <div class="drag-handle" @mousedown="(e) => startDrag(e, panelRef)"></div>
-    <div class="panel-header"><button class="back-btn" @click="goBack">
-      <i class="fi fi-rs-angle-left"></i>
-    </button>
+    <div class="panel-header">
+      <button class="back-btn" @click="goBack">
+        <i class="fi fi-rs-angle-left"></i>
+      </button>
 
-    <div class="panel-title">코스 등록하기</div></div>
-    
+      <div class="panel-title">코스 등록하기</div>
+    </div>
+
     <div class="course-panel-wrapper">
       <DrawingMap v-if="!isDrawing" @is-done="onDrawingDone" />
 
-    <CourseForm v-else :points="points" :distanceKm="distanceKm" :startAddress="startAddress" :endAddress="endAddress"
-      @is-done="retryDrawing" />
+      <CourseForm v-else :points="points" :distanceKm="distanceKm" :startAddress="startAddress" :endAddress="endAddress"
+        @is-done="retryDrawing" />
     </div>
-    
+
 
   </div>
 </template>
@@ -76,13 +78,12 @@ watch(panelState, () => {
 </script>
 
 <style>
-
 .panel-header {
   display: flex;
   align-items: center;
   position: relative;
   justify-content: center;
   height: 40px;
-  margin : 1rem 0.625rem;
+  margin: 1rem 0.625rem;
 }
 </style>
