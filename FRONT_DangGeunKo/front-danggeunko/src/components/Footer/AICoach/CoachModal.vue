@@ -107,13 +107,13 @@ const renderedComment = computed(() => {
     return md.render(aiStore.comment || '');
 });
 // 최종 테스트 때 열거임 다시!!!!!!!!
-// onMounted(async () => {
-//     await couruseStore.getCourseList()
+onMounted(async () => {
+    await couruseStore.getCourseList()
 
-//     if (props.user) {
-//         await send();
-//     }
-// })
+    if (props.user) {
+        await send();
+    }
+})
 // 부모에게 창을 닫으라고 신호를 보냄
 defineEmits(['close']);
 </script>
