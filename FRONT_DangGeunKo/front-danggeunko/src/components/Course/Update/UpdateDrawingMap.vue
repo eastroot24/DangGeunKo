@@ -11,7 +11,7 @@
         <div v-if="errorMessage" class="error-text">
             {{ errorMessage }}
         </div>
-        <button @click="draw">코스 그리기 완료</button>
+        <button class="btn-orange" @click="draw">코스 그리기 완료</button>
     </div>
 </template>
 

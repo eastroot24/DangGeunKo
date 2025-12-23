@@ -1,17 +1,17 @@
 <template>
-        <div class="course-panel" id="coursePanel">
-            <div class="course-grid" v-if="courseStore.courseList && courseStore.courseList.length > 0">
-                <div class="course-card" v-for="course in courseStore.courseList" :key="course.courseId">
-                    <div @click="goDetail(course)">
-                        <CourseCard :course="course"></CourseCard>
-                    </div>
-                    <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
-                        <span v-else><i class="fi fi-rs-heart"></i></span>
-                    </div>
+    <div class="course-panel" id="coursePanel">
+        <div class="course-grid" v-if="courseStore.courseList && courseStore.courseList.length > 0">
+            <div class="course-card" v-for="course in courseStore.courseList" :key="course.courseId">
+                <div @click="goDetail(course)">
+                    <CourseCard :course="course"></CourseCard>
+                </div>
+                <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
+                    <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
+                    <span v-else><i class="fi fi-rs-heart"></i></span>
                 </div>
             </div>
         </div>
+    </div>
 </template>
 
 <script setup>
@@ -75,6 +75,4 @@ onMounted(() => {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
