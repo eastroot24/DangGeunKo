@@ -1,11 +1,12 @@
 <template>
   <div class="body">
     <div class="app">
-      <div v-if="!isMyPage">
+      <div class="map-layer" v-if="!isMyPage">
         <CourseMap />
+        <div v-if="showOverlayBackdrop" class="map-backdrop" @click="goHome"></div>
       </div>
-      <div v-if="showOverlayBackdrop" class="overlay-backdrop" @click="goHome"></div>
-      <RouterView />
+      <div class="panel-layer"><RouterView /></div>
+      
       <div v-if="!isOnBoarding">
         <CousreFooter></CousreFooter>
       </div>
@@ -58,11 +59,23 @@ const goHome = () => {
 </script>
 
 <style scoped>
-.overlay-backdrop {
-  position: fixed;
+/* 지도 영역 */
+.map-layer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 지도 위 클릭용 투명 레이어 */
+.map-backdrop {
+  position: absolute;
   inset: 0;
-  z-index: 10;
-  /* Map 위, RouterView 아래 */
   background: transparent;
+}
+
+/* 패널은 항상 위 */
+.panel-layer {
+  position: relative;
+  z-index: 10;
 }
 </style>

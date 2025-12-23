@@ -3,15 +3,22 @@
     <div class="map-guide-text">
       마커를 찍어 코스를 그려보세요!
     </div>
-    <div id="createmap" style="width:100%;height:400px;">
+    <div id="createmap" style="width:100%;height: 100%;border-radius: 1rem;">
 
       <div class="map-btn-group">
-        <button @click="moveToCurrentLocation" class="map-btn">
-          현위치
+        <button class="map-btn" @click="moveToCurrentLocation">
+          <i class="fi fi-rr-location-crosshairs"></i>
         </button>
-        <button @click="undoLast">되돌리기</button>
-        <button @click="resetAll">초기화</button>
-      </div>
+
+        <button class="map-btn" @click="undoLast">
+          <i class="fi fi-rr-rotate-right"></i>
+        </button>
+
+        <button class="map-btn text-btn" @click="resetAll">
+          초기화
+        </button>
+</div>
+
 
     </div>
 
@@ -245,33 +252,10 @@ onMounted(() => {
   height: 100%;
 }
 
-.map-btn-group {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 100;
-}
-
-.map-btn {
-  padding: 8px 10px;
-  font-size: 12px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.map-btn:hover {
-  background: #f5f5f5;
-}
-
 .map-wrapper {
   position: relative;
   width: 100%;
+  height: calc(100vh - 25rem);
 }
 
 .map-guide-text {
@@ -280,16 +264,91 @@ onMounted(() => {
   left: 50%;
   transform: translateX(-50%);
 
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 138, 36, 0.9);
   padding: 8px 14px;
   border-radius: 20px;
 
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #fff;
 
   z-index: 10;
   pointer-events: none;
   /* 지도 조작 방해 안 함 */
 }
+
+.map-btn-group {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+/* 공통 버튼 */
+.map-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  color: #3f3f46;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* 아이콘 크기 */
+.map-btn i {
+  font-size: 18px;
+}
+
+/* hover */
+.map-btn:hover {
+  background: #f8f8f8;
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 눌렸을 때 */
+.map-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.14);
+}
+
+/* 텍스트 버튼 (초기화) */
+.text-btn {
+  width: auto;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  background: rgba(255, 138, 36, 0.9);
+  color: #ffffff;
+}
+
+.text-btn:hover {
+  background: rgba(255, 138, 36, 1);
+}
+
 </style>

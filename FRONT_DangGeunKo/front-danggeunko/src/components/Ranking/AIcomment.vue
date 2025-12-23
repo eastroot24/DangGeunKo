@@ -56,11 +56,11 @@ const renderedComment = computed(() => {
 });
 
 //최종 테스트 때 열거임 다시!!!!!!!!
-onMounted(async () => {
-    if (props.course) {
-        await send();
-    }
-})
+// onMounted(async () => {
+//     if (props.course) {
+//         await send();
+//     }
+// })
 </script>
 
 <style scoped>

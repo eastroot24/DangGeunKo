@@ -73,10 +73,11 @@ watch(panelState, () => {
 </script>
 
 <style>
-.back-btn {
-  background: #fff;
+.back-btn i{
+  background: none;
   color: #ff7a00;
   font-weight: 600;
+  font-size:1.7rem;
 }
 
 .back-btn:hover {

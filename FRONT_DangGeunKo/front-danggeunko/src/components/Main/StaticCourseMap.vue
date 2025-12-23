@@ -1,5 +1,6 @@
 <template>
-  <div id="staticMap" style="width:100%; height:300px;"></div>
+  <div id="staticmap-wrapper"><div id="staticMap"></div></div>
+  
 </template>
 
 <script setup>
@@ -86,7 +87,9 @@ function drawMap() {
     (b, coord) => b.extend(coord),
     new naver.maps.LatLngBounds(latLngs[0], latLngs[0])
   )
-  map.fitBounds(bounds)
+  map.fitBounds(bounds);
+
+  
 }
 
 onMounted(drawMap)
@@ -100,3 +103,11 @@ watch(
   { deep: true }
 )
 </script>
+
+<style>
+  #staticMap{
+     width:100%; 
+     aspect-ratio: 5 / 4;
+     border-radius: 1rem;
+  }
+</style>
