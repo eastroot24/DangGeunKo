@@ -309,7 +309,7 @@ const regionDB = {
   right: 0;
   width: 34px;
   height: 34px;
-  background-color: #ff7a00;
+  background-color: #ff8a24;
   color: white;
   border-radius: 50%;
   display: flex;
@@ -344,7 +344,7 @@ const regionDB = {
 .success-msg {
   color: #52c41a;
   font-size: 11px;
-  margin-top: 4px;
+  margin-top: 10px;
   font-weight: bold;
 }
 
@@ -358,21 +358,23 @@ const regionDB = {
 .form {
   height: 100vh;
   overflow-y: auto;
-  padding: 0.75rem;
+  padding-left: 2rem;
+  padding-right: 0.5rem;
   padding-bottom: 200px;
 }
 
 .form::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 1.5rem;
 }
 
 /* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
 .form::-webkit-scrollbar-thumb {
   background: #ff8a24;
   /* 주황색 적용 */
-  border-radius: 0.625rem;
-  border: 0.0625rem solid #fff;
+  border-radius: 1rem;
+  border: 0.6rem solid #f5f5f5;
   /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+  z-index: 1;
 }
 
 /* 호버 시 조금 더 진한 주황색 */

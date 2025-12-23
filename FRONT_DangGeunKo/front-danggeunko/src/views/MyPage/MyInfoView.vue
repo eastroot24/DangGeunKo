@@ -44,18 +44,18 @@ watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로�
 .my-info-scroll{
     height: 100vh;
     overflow-y: auto;
-    padding-bottom: 120px;
+    padding-bottom: 100px;
 }
 
 .my-info-scroll::-webkit-scrollbar {
-  width: 1.5rem;
+  width: 0.8rem;
 }
 
 /* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
 .my-info-scroll::-webkit-scrollbar-thumb {
   background: #ff8a24;         /* 주황색 적용 */
   border-radius: 1rem;
-  border: 0.6rem solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+  border: 0.2rem solid #f5f5f5;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
 }
 
 /* 호버 시 조금 더 진한 주황색 */
