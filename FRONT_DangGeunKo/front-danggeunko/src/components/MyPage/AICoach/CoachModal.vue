@@ -7,12 +7,11 @@
         </div>
         
         <div class="coach-content">
-          <img src="@/assets/img/dgk_coach.png" class="full-coach">
-          <div class="bubble">
-            <span v-if="aiStore.loading">코스를 분석하고 있습니다...</span>
-            <div v-else>
+          <CoachLoading v-if="aiStore.loading"></CoachLoading>
+          <div v-else>
+            <img src="@/assets/img/dgk_coach.png" class="full-coach">
+            <div class="bubble">
             <div v-html="renderedComment"></div>
-       
                 <button v-if="recommendedCourseId" @click="goToCourse" class="go-course-btn">
                     추천 코스 상세보기 🏃
                 </button>
@@ -34,6 +33,7 @@ import MarkdownIt from 'markdown-it';
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import CoachLoading from './CoachLoading.vue';
 const router = useRouter()
 const md = new MarkdownIt({
     linkify: true,
@@ -107,13 +107,13 @@ const renderedComment = computed(() => {
     return md.render(aiStore.comment || '');
 });
 // 최종 테스트 때 열거임 다시!!!!!!!!
-onMounted(async () => {
-    await couruseStore.getCourseList()
+// onMounted(async () => {
+//     await couruseStore.getCourseList()
 
-    if (props.user) {
-        await send();
-    }
-})
+//     if (props.user) {
+//         await send();
+//     }
+// })
 // 부모에게 창을 닫으라고 신호를 보냄
 defineEmits(['close']);
 </script>
@@ -132,7 +132,14 @@ defineEmits(['close']);
   padding: 2rem; box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.2);
 }
 .coach-header { margin-bottom: 1.5rem; font-weight: 700; color: #ff7a00; font-size: 1.25rem; }
-.coach-content { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+.coach-content {
+  min-height: 250px; 
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 로딩 컴포넌트 중앙 정렬을 위해 추가 */
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
 .full-coach { width: 8rem; height: auto; flex-shrink: 0; }
 .bubble {
   flex: 1; background: #fff8f0; border-radius: 1.25rem; padding: 1.25rem;
@@ -161,5 +168,11 @@ defineEmits(['close']);
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
+}
+.coach-content > div:not(.loading-container) {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;       
+  width: 100%;        
 }
 </style>
