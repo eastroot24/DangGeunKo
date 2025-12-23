@@ -43,7 +43,7 @@
                 <div class="popup-title">비밀번호 확인</div>
                 <input type="password" v-model="pwInput" placeholder="비밀번호를 입력하세요" @keyup.enter="checkPassword">
                 <div class="error" v-if="pwError">비밀번호가 일치하지 않습니다.</div>
-                <button class="confirm-btn" @click="checkPassword">확인</button>
+                <button class="btn-orange" @click="checkPassword">확인</button>
                 <button class="close-btn" @click="closePopup">취소</button>
             </div>
         </div>
@@ -221,7 +221,7 @@ watch(() => props.user?.userId, loadFollowData, { immediate: true })
 .my-actions { display: flex; align-items: center; gap: 0.75rem; }
 
 .profile-btn {
-    padding: 0.375rem 0.875rem;
+    padding: 0.375rem 0.625rem;
     border-radius: 0.5rem;
     border: 0.0625rem solid #ddd;
     background: #fff;
@@ -261,20 +261,9 @@ watch(() => props.user?.userId, loadFollowData, { immediate: true })
 .popup {
     width: 18.75rem; /* 300px */
     background: white;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     padding: 1.5rem;
     text-align: center;
-}
-
-.confirm-btn {
-    width: 100%;
-    height: 2.5rem;
-    background: var(--orange);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: 700;
 }
 
 .close-btn { background: none; border: none; color: #999; margin-top: 0.75rem; cursor: pointer; }

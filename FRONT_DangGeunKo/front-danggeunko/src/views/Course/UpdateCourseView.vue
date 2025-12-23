@@ -81,12 +81,6 @@ watch(panelState, () => {
   backdrop-filter: blur(10px);
 }
 
-.panel-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-
 /* 코스 리스트 패널 (드래그로 높이 조절) */
 .course-panel-wrapper {
   margin-top: 4px;
