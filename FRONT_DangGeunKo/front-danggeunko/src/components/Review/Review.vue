@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="content">
         <ReviewForm></ReviewForm>
         <div v-if="reviewList && reviewList.length > 0">
             <div class="review-card" v-for="review in reviewList">
@@ -47,4 +47,8 @@ watch(() => route.params.id, (newId) => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+    .content{
+    padding: 1.125rem 1rem 0.75rem;
+}
+</style>
