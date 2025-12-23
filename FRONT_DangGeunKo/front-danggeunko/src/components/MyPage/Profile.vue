@@ -58,7 +58,7 @@ import { ref, computed, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/stores/user"
 import { storeToRefs } from "pinia"
-import CoachModal from "./CoachModal.vue"
+import CoachModal from "./AICoach/CoachModal.vue"
 const userStore = useUserStore();
 const { isCoachOpen } = storeToRefs(userStore); 
 const props = defineProps({

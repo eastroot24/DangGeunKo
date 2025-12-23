@@ -1,9 +1,14 @@
 <template>
     <div class="firstDesc-wrapper">
         <div class="firstDesc">
-            <span v-if="aiStore.loading">코스를 분석하고 있습니다...</span>
-            <span v-else class="bubble-speech" v-html="renderedComment"></span>
-            <img style="height: 100px;" class="dkImg" src="@/assets/img/dgk.png" alt="당근코 캐릭터">
+            <AICommentLoading v-if="aiStore.loading"></AICommentLoading>
+            
+            <div v-else class="content-container">
+                <div class="bubble-speech">
+                    <span v-html="renderedComment"></span>
+                </div>
+                <img class="dkImg" src="@/assets/img/dgk.png" alt="당근코 캐릭터">
+            </div>
         </div>
     </div>
 </template>
@@ -12,6 +17,7 @@
 import { useAIStore } from '@/stores/ai';
 import MarkdownIt from 'markdown-it';
 import { computed, onMounted, ref } from 'vue';
+import AICommentLoading from './AICommentLoading.vue';
 
 const md = new MarkdownIt({
     linkify: true,
@@ -42,7 +48,7 @@ const prompt = () => {
                    별점 평균: ${course.value.avgRating}
                    조회수: ${course.value.viewCnt}
                    강조할 부분은 마크다운언어 형식으로 강조해주고,
-                   답변 예시: 2줄로 ~한 이유로 런린이/러너/런고수 분들에게 추천드려요!
+                   답변 총 분량은 2줄로 ~한 이유로 런린이/러너/런고수 분들에게 추천드려요!
                    `
 }
 const send = async () => {
@@ -56,11 +62,11 @@ const renderedComment = computed(() => {
 });
 
 //최종 테스트 때 열거임 다시!!!!!!!!
-onMounted(async () => {
-    if (props.course) {
-        await send();
-    }
-})
+// onMounted(async () => {
+//     if (props.course) {
+//         await send();
+//     }
+// })
 </script>
 
 <style scoped>
@@ -76,19 +82,16 @@ onMounted(async () => {
 /* ⭐ 1. 설명 영역 컨테이너 스타일 (HTML 파일의 .firstDesc) */
 .firstDesc {
     display: flex;
-    flex-direction: column;
-    /* 내부 요소 세로 정렬 */
+    width: 100%;
+    justify-content: center;
     align-items: center;
-    /* 이미지와 텍스트 가운데 정렬 */
-    text-align: center;
-    font-size: 14px;
-    flex-shrink: 0;
-    /* width는 부모 .ai-comment-container가 이미 조정했으므로 여기서는 너비 고정 제거 */
 }
 
 .dkImg {
-    margin-top: 5px;
-    /* 말풍선과 캐릭터 사이 간격 */
+    height: 10.25rem;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 /* 마크다운 내부 요소 스타일링 */
@@ -103,44 +106,51 @@ onMounted(async () => {
     word-break: break-all;
     /* 긴 링크가 말풍선을 삐져나가지 않게 설정 */
 }
-
+/* 컨테이너 가로 정렬 */
+.content-container {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center;
+    gap: 20px; /* 말풍선과 이미지 사이 간격 */
+    width: 100%;
+}
 /* 2. 말풍선 스타일 (HTML 파일의 .bubble-speech) */
 .bubble-speech {
     background: white;
     border: 2px solid #ff7a00;
-    border-radius: 10px;
-    padding: 10px;
+    border-radius: 15px;
+    padding: 15px;
     position: relative;
-    /* 꼬리를 위한 기준점 */
-    line-height: 1.4;
-    font-size: 13px;
-    /* 글꼴 크기 조정 */
+    line-height: 1.5;
+    font-size: 14px;
     font-weight: 500;
     text-align: left;
-    width: 90%;
-
+    flex: 1; /* 가용 공간 차지 */
+    max-width: 70%; /* 너무 길어지지 않게 제한 */
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.05));
 }
 
 /* 말풍선 꼬리 - 외부 테두리 (.bubble-speech::after) */
 .bubble-speech::after {
     content: '';
     position: absolute;
-    right: 100%;
+    left: 100%; /* 오른쪽 끝에 배치 */
     top: 50%;
     transform: translateY(-50%);
-    border: 10px solid transparent;
-    border-right-color: #ff7a00;
-    border-left: 0;
+    border: 12px solid transparent;
+    border-left-color: #ff7a00; /* 화살표가 오른쪽을 향하도록 */
+    border-right: 0;
 }
 
 .bubble-speech::before {
     content: '';
     position: absolute;
-    right: calc(100% - 2px);
+    left: calc(100% - 2px); /* 테두리 안쪽으로 살짝 겹침 */
     top: 50%;
     transform: translateY(-50%);
-    border: 9px solid transparent;
-    border-right-color: white;
-    border-left: 0;
+    border: 11px solid transparent;
+    border-left-color: white;
+    border-right: 0;
+    z-index: 1;
 }
 </style>

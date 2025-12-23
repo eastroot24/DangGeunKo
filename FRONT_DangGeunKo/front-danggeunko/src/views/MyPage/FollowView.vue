@@ -17,7 +17,7 @@
             </div>
             <div class="user-card" v-for="u in filteredList" :key="u.userId">
                 <div class="user-left" @click="goToProfile(u.nickname)" style="cursor:pointer">
-                    <img :src="u.profileImg ? `http://localhost:8080/uploads/${u.profileImg}` : 'https://i.imgur.com/7b3cP6e.png'"
+                    <img :src="u.profileImg ? `http://localhost:8080/profileImg/${u.profileImg}` : 'http://localhost:8080/profileImg/dgk-default-profile.png'"
                         class="user-img">
                     <div>
                         <div class="user-name">{{ u.nickname || '이름 없음' }}</div>
@@ -115,7 +115,7 @@ const changeTab = (type) => {
 }
 
 const goToProfile = (nickname) => {
-    router.push(`/myinfo/${nickname}`)
+    router.push(`/myInfo/${nickname}`)
 }
 
 async function toggleFollow(u) {
