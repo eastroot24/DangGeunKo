@@ -273,7 +273,7 @@ label {
 .card-heart {
   position: absolute;
   right: 0.375rem; /* 6px */
-  bottom: 5rem; /* 80px */
+  top: 20rem; /* 80px */
   width: 1.5rem; /* 24px */
   height: 1.5rem;
   border-radius: 50%;

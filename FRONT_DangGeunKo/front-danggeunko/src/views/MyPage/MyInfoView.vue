@@ -132,7 +132,7 @@ watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로�
 }
 
 /* 하트 위치: 카드의 우측 하단 고정 */
-.card-heart {
+.card-myheart {
     position: absolute;
     /* 고정 px 대신 이미지 하단 근처로 위치 조정 */
     bottom: 63px;
@@ -143,19 +143,29 @@ watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로�
     color: rgba(200, 200, 200, 0.8);
     cursor: pointer;
     transition: transform 0.2s;
+  top: 12rem; /* 80px */
+  width: 1.5rem; /* 24px */
+  height: 1.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem; /* 14px */
+  box-shadow: var(--shadow-soft);
 }
 
-.card-heart i {
+.card-myheart i {
     margin-top: 5px;
     font-size: 15px;
 }
 
-.card-heart:hover {
+.card-myheart:hover {
     transform: scale(1.1);
 }
 
-.card-heart.active {
-    color: #ff4b4b;
+.card-myheart.active {
+    color: #ff8a24;
 }
 
 /* 데이터 없을 때 */

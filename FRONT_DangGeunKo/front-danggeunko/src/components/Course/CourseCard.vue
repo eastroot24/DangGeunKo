@@ -7,11 +7,11 @@
     <div class="course-info">
       <div class="course-name">{{ course.courseName }}</div>
       <div class="course-meta">
-        평균 별점: {{ course.avgRating }}
+        평균 별점: {{ course.avgRating? course.avgRating : "등록된 별점이 없습니다." }}
         | 조회수: {{ course.viewCnt }}
         | 거리 {{ course.distance_km }}
         | 난이도 {{ course.difficulty }}
-        | 게시일 {{ course.createdAt }}
+        | 게시일 {{ course.createdAt.slice(0,10) }}
       </div>
     </div>
   </div>
@@ -117,39 +117,18 @@ body {
   align-items: center;
 }
 
-.card-heart {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: #bbbbbb;
-  cursor: pointer;
-  box-shadow: var(--shadow-soft);
-}
-
-.card-heart.active {
-  color: var(--orange);
-}
-
 .course-info {
-  padding: 6px 8px 8px;
+  padding: 1rem;
 }
 
 .course-name {
-  font-size: 11px;
-  font-weight: 600;
-  margin-bottom: 2px;
+  font-size: 14px; /* 12px */
+  font-weight: 600; 
+  margin-bottom: 7px; /* 6px */
 }
 
 .course-meta {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--text-sub);
   line-height: 1.4;
 }
