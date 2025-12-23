@@ -6,11 +6,18 @@
     </div>
 
     <div class="form">
-      <label>프로필 사진</label>
-      <div class="row">
-        <img :src="imagePreview"
-          style="width:100px; height:100px; border-radius:50%; object-fit:cover; background-color: #eee;">
-        <input type="file" @change="handleFileUpload" accept="image/*">
+
+      <div class="profile-section">
+        <div class="profile-image-container">
+          <img :src="imagePreview" class="profile-preview">
+
+          <label for="file-input" class="edit-icon-btn">
+            <i class="fi fi-rs-pencil"></i>
+          </label>
+
+          <input id="file-input" type="file" @change="handleFileUpload" accept="image/*" style="display: none;">
+        </div>
+        <label class="profile-label">프로필 사진</label>
       </div>
 
       <label>이름</label>
@@ -166,8 +173,8 @@ onMounted(async () => {
     };
     originalNickname.value = loginUser.nickname;
     const baseUrl = 'http://localhost:8080/profileImg/';
-    imagePreview.value = loginUser.profileImg 
-      ? `${baseUrl}${loginUser.profileImg}` 
+    imagePreview.value = loginUser.profileImg
+      ? `${baseUrl}${loginUser.profileImg}`
       : `${baseUrl}dgk-default-profile.png`;
 
     // 초기 상태는 본인 닉네임이므로 통과 상태
@@ -191,15 +198,8 @@ const handleNicknameCheck = async () => {
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
-    // 1. 서버 전송용 파일 객체 저장
     user.value.profileImg = file;
-
-    // 2. 브라우저 미리보기용 URL 생성 및 할당
-    // 기존에 생성된 URL이 있다면 메모리 해제를 해주는 것이 좋지만, 
-    // 단순 구현 시 아래 한 줄만으로도 미리보기가 작동해야 합니다.
     imagePreview.value = URL.createObjectURL(file);
-
-    console.log("이미지 경로:", imagePreview.value); // 콘솔에서 경로가 찍히는지 확인해보세요.
   }
 };
 const handleUpdate = async () => {
@@ -277,6 +277,59 @@ const regionDB = {
 </script>
 
 <style scoped>
+/* 프로필 섹션 전체 (중앙 정렬) */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  /* 수직 정렬로 변경 */
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.profile-label {
+  margin-top: 15px;
+  /* 이미지와의 간격 */
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.profile-image-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+/* 연필 버튼 (우측 상단) */
+.edit-icon-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  background-color: #ff7a00;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 2;
+  border: 2px solid #fff;
+}
+
+.profile-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #eee;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 .input-error {
   border: 1px solid #ff4d4f !important;
 }
@@ -287,6 +340,7 @@ const regionDB = {
   margin-top: 4px;
   font-weight: bold;
 }
+
 .success-msg {
   color: #52c41a;
   font-size: 11px;
@@ -301,21 +355,24 @@ const regionDB = {
   border: 1px solid #ddd;
 }
 
-.form{
+.form {
   height: 100vh;
   overflow-y: auto;
+  padding: 0.75rem;
   padding-bottom: 200px;
 }
 
-.form::-webkit-scrollbar{
+.form::-webkit-scrollbar {
   width: 0.5rem;
 }
 
 /* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
 .form::-webkit-scrollbar-thumb {
-  background: #ff8a24;         /* 주황색 적용 */
+  background: #ff8a24;
+  /* 주황색 적용 */
   border-radius: 0.625rem;
-  border: 0.0625rem solid #fff;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+  border: 0.0625rem solid #fff;
+  /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
 }
 
 /* 호버 시 조금 더 진한 주황색 */

@@ -26,18 +26,6 @@
                 <button class="logout-link" @click="logout">로그아웃</button>
             </div>
         </div>
-
-        <div class="coach-btn-wrapper">
-            <button class="coach-icon-btn" @click="isCoachOpen = true" title="당근코치 피드백">
-                <img src="@/assets/img/dgk_coach_head.png" alt="당근코치">
-            </button>
-            
-            <CoachModal 
-                v-if="isCoachOpen" 
-                :user="user" 
-                @close="isCoachOpen = false" 
-            />
-        </div>
         <div class="popup-bg" v-if="isOpen">
             <div class="popup">
                 <div class="popup-title">비밀번호 확인</div>
@@ -58,9 +46,7 @@ import { ref, computed, watch } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/stores/user"
 import { storeToRefs } from "pinia"
-import CoachModal from "./AICoach/CoachModal.vue"
 const userStore = useUserStore();
-const { isCoachOpen } = storeToRefs(userStore); 
 const props = defineProps({
     user: Object,
     isMe: Boolean
@@ -156,14 +142,17 @@ watch(() => props.user?.userId, loadFollowData, { immediate: true })
 <style scoped>
 /* Profile Card Layout */
 .profile-card {
+    margin: 1rem;
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
-    padding: 1.5rem;
+    padding: 1.8rem;
     gap: 1.25rem;
-    background: #fff;
     position: relative;
     /* 수평 분할을 위해 justify-content 설정 가능하지만, 
        중앙 영역(profile-info)이 flex:1이므로 자동 밀어내기가 됨 */
+    background-color: #fff;
+    border-radius: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 .profile-img {
@@ -176,10 +165,8 @@ watch(() => props.user?.userId, loadFollowData, { immediate: true })
 }
 
 .profile-info { 
-    flex: 1; /* 남은 공간을 다 차지하여 코치 버튼을 오른쪽 끝으로 밀어냄 */
+    flex: 1;
 }
-
-.profile-info { flex: 1; }
 
 .name-row {
     display: flex;

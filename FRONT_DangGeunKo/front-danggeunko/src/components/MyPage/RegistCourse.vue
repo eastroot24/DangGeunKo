@@ -1,43 +1,31 @@
 <template>
-    <div>
-        <div class="section-title">
-            등록 코스
-            <div class="course-grid" v-if="allView">
-                <div class="course-card" v-for="(course) in courseStore.registCourseList" :key="course.courseId"
-                    @click="goDetail(course)">
-                    <div @click="goDetail(course)">
+    <div class="course-section">
+        <div class="section-header">
+            <h2 class="section-title">등록 코스</h2> <RouterLink 
+                v-if="!allView && limitedCourses.length > 0 && route.path.toLowerCase().includes('/myinfo')"
+                :to="{ name: 'myCourseList', params: { nickname: route.params.nickname }, query: { tab: 'registered' } }"
+                class="more-btn"
+            >
+                더보기
+            </RouterLink>
+        </div>
+
+        <div class="course-container" v-if="limitedCourses.length > 0">
+            <div class="course-grid">
+                <div class="course-card-wrapper" v-for="course in (allView ? courseStore.registCourseList : limitedCourses)" :key="course.courseId">
+                    <div class="card-content" @click="goDetail(course)">
                         <CourseCard :course="course"></CourseCard>
                     </div>
                     <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
-                        <span v-else><i class="fi fi-rs-heart"></i></span>
+                        <i :class="course.liked ? 'fi fi-ss-heart' : 'fi fi-rs-heart'"></i>
                     </div>
                 </div>
-            </div>
-
-            <div class="course-grid" v-else-if="limitedCourses != null && limitedCourses.length > 0">
-                <RouterLink v-if="route.path.toLowerCase().includes('/myinfo')"
-                    :to="{ name: 'myCourseList', params: { nickname: route.params.nickname }, query: { tab: 'registered' } }"
-                    class="more-btn">
-                    더보기
-                </RouterLink>
-                <div class="course-card" v-for="(course) in limitedCourses" :key="course.courseId"
-                    @click="goDetail(course)">
-                    <div @click="goDetail(course)">
-                        <CourseCard :course="course"></CourseCard>
-                    </div>
-                    <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
-                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
-                        <span v-else><i class="fi fi-rs-heart"></i></span>
-                    </div>
-                </div>
-            </div>
-
-            <div v-else>
-                <p>아직 등록한 코스가 없어요 ㅜ.ㅜ</p>
             </div>
         </div>
 
+        <div class="empty-msg" v-else>
+            <p>아직 코스가 없어요 ㅜ.ㅜ</p>
+        </div>
     </div>
 </template>
 
@@ -114,15 +102,5 @@ onMounted(loadData)
 </script>
 
 <style scoped>
-.more-btn {
-    grid-column: span 2;
-    /* 그리드 전체 너비 차지 */
-    text-align: right;
-    font-size: 12px;
-    color: #ff7f00;
-    text-decoration: none;
-    margin-bottom: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
+
 </style>
