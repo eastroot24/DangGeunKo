@@ -3,11 +3,10 @@
         <div class="map-overlay">
             <CourseSearchBar />
         </div>
-        <div id="map" style="width:100%;height:100vh;">
-            <button @click="moveToCurrentLocation" class="curr-loc-btn">
-                내 위치로 이동
+        <div class="map" id="map" style="width:100%;height:100vh;"></div>
+            <button @click="moveToCurrentLocation" class="map-btn map-btn--current">
+                <i class="fi fi-rr-location-crosshairs"></i>
             </button>
-        </div>
     </div>
 </template>
 <script setup>
@@ -348,20 +347,12 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.curr-loc-btn {
+.map-btn--current {
     position: absolute;
     z-index: 100;
     top: 60px;
     /* 검색바 아래로 */
     right: 16px;
-    padding: 8px 12px;
-    background: white;
-    border: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
 }
 
 .map-overlay {
@@ -374,4 +365,5 @@ onMounted(async () => {
     z-index: 100;
     pointer-events: auto;
 }
+
 </style>

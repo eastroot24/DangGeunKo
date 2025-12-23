@@ -3,32 +3,30 @@
     <div class="map-guide-text">
       마커를 찍어 코스를 그려보세요!
     </div>
-    <div id="createmap" style="width:100%;height: 100%;border-radius: 1rem;">
+  <div class="map-btn-group top-actions">
+    <button class="map-btn" @click="undoLast">
+      <i class= "fi fi-rr-undo-alt" style="font-size: 16px; padding-bottom: 4px;"></i>
+    </button>
 
-      <div class="map-btn-group">
-        <button class="map-btn" @click="moveToCurrentLocation">
-          <i class="fi fi-rr-location-crosshairs"></i>
-        </button>
-
-        <button class="map-btn" @click="undoLast">
-          <i class="fi fi-rr-rotate-right"></i>
-        </button>
-
-        <button class="map-btn text-btn" @click="resetAll">
-          초기화
-        </button>
-</div>
-
-
-    </div>
-
-    <div style="margin-top:10px;">
-      <div style="margin-top:6px;font-size:12px;">
-        현재 거리: {{ distanceKm }} km
-      </div>
-
-    </div>
+    <button class="map-btn text-btn" @click="resetAll">
+      초기화
+    </button>
   </div>
+
+  <div class="map-distance">
+    현재 거리 : {{ distanceKm }} km
+  </div>
+
+  <div class="map-btn-group bottom-actions">
+    <button class="map-btn" @click="moveToCurrentLocation">
+      <i class="fi fi-rr-location-crosshairs"></i>
+    </button>
+  </div>
+
+    <div id="createmap" style="width:100%;height: 100%;border-radius: 1rem;">
+</div>
+    </div>
+
 </template>
 
 <script setup>
@@ -260,17 +258,18 @@ onMounted(() => {
 
 .map-guide-text {
   position: absolute;
-  top: 12px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
 
   background: rgba(255, 138, 36, 0.9);
   padding: 8px 14px;
-  border-radius: 20px;
+  border-radius: 999px;
 
   font-size: 14px;
   font-weight: 500;
   color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 
   z-index: 10;
   pointer-events: none;
@@ -279,58 +278,10 @@ onMounted(() => {
 
 .map-btn-group {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 100;
-}
-
-/* 공통 버튼 */
-.map-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  background: #ffffff;
-  color: #3f3f46;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.12),
-    0 1px 3px rgba(0, 0, 0, 0.08);
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-/* 아이콘 크기 */
-.map-btn i {
-  font-size: 18px;
-}
-
-/* hover */
-.map-btn:hover {
-  background: #f8f8f8;
-  box-shadow:
-    0 6px 14px rgba(0, 0, 0, 0.16),
-    0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* 눌렸을 때 */
-.map-btn:active {
-  transform: translateY(1px);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.14);
+  gap: 10px;
+  z-index: 100;
 }
 
 /* 텍스트 버튼 (초기화) */
@@ -340,8 +291,8 @@ onMounted(() => {
   padding: 0 14px;
   border-radius: 999px;
 
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 400;
 
   background: rgba(255, 138, 36, 0.9);
   color: #ffffff;
@@ -350,5 +301,36 @@ onMounted(() => {
 .text-btn:hover {
   background: rgba(255, 138, 36, 1);
 }
+
+.map-distance {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 400;
+  color: #18181b;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+
+  pointer-events: none; /* 지도 조작 방해 안 함 */
+}
+
+.top-actions {
+  top: 16px;          /* map-guide-text와 동일 */
+  right: 12px;
+}
+
+.bottom-actions {
+  bottom: 16px;       /* map-distance와 동일 */
+  right: 12px;
+}
+
 
 </style>

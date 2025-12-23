@@ -50,6 +50,7 @@ watch(() => userStore.isLoggedIn, async (newVal) => {
 <style scoped>
 .nav-item {
     text-decoration: none;
+    font-size: 1rem;
 
 }
 

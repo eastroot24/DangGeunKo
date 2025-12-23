@@ -8,7 +8,7 @@
                 <span v-for="n in 5" :key="n" @click="review.rating = n"
                     :class="{ active: n <= review.rating }">★</span>
             </div>
-            <button @click="addReview" class="comment-submit">등록</button>
+            <button @click="addReview" class="btn-orange">등록</button>
         </div>
     </div>
 </template>
@@ -130,16 +130,4 @@ onMounted(() => {
     color: #ffb400;
 }
 
-.comment-submit {
-    background: #ff7a00;
-    color: #fff;
-    width: 100%;
-    border: none;
-    height: 36px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-}
 </style>
