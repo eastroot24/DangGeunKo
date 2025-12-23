@@ -2,15 +2,15 @@
     <div class="navbar">
 
         <RouterLink :to="myInfoPath" class="nav-item" @click="toggleByTap">
-            <i class="fi fi-rs-user"></i>
+            <i class="fi fi-rs-user" style="font-size: 1.7rem;""></i>
             <div>MYPAGE</div>
         </RouterLink>
         <RouterLink to="/course" class="nav-item" @click="toggleByTap">
-            <i class="fi fi-rs-map-marker"></i>
+            <i class="fi fi-rs-map-marker " style="font-size: 1.7rem;""></i>
             <div>COURSE</div>
         </RouterLink>
         <RouterLink to="/course/ranking" class="nav-item" @click="toggleByTap">
-            <i class="fi fi-rs-trophy"></i>
+            <i class="fi fi-rs-trophy" style="font-size: 1.7rem;"></i>
             <div>RANKING</div>
         </RouterLink>
     </div>

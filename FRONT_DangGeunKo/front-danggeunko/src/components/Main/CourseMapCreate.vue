@@ -288,7 +288,7 @@ onMounted(() => {
 .text-btn {
   width: auto;
   height: 36px;
-  padding: 0 14px;
+  padding: 0 13px;
   border-radius: 999px;
 
   font-size: 13px;

@@ -357,7 +357,7 @@ onMounted(async () => {
 
 .map-overlay {
     position: absolute;
-    top: 16px;
+    top: 1rem;
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 32px);

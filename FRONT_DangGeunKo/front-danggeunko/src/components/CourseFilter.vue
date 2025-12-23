@@ -1,7 +1,7 @@
 <template>
   <div class="filter-row">
     <div class="filter-buttons">
-      <button class="pill-btn active" id="distanceBtn">
+      <button class="pill-btn" id="distanceBtn">
         거리
         <span class="caret">▾</span>
       </button>
