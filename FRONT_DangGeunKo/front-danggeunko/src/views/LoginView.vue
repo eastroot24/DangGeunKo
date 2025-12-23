@@ -1,15 +1,22 @@
 <template>
     
 <div class="app">
-    <h2>로그인</h2>
+  <div class="login-form">
+    <h2 style="font-family: DanggeunkoFont;
+    font-size: 40px;
+  font-weight: 700;
+  color: #ff8a24;
+  margin-bottom: 1.5rem;">당근코</h2>
 
     <input type="email" placeholder="이메일" v-model="id">
     <input type="password" placeholder="비밀번호" v-model="password" @keyup.enter="login">
 
-    <button class="login-btn" @click="login">로그인</button>
+    <button class="btn-orange" @click="login">로그인</button>
     <div class="to-join">
-        처음이신가요? <router-link to="/signup">회원가입하기</router-link>
+        처음이신가요? <router-link to="/signup" class="signup-link">회원가입하기</router-link>
     </div>
+  </div>
+    
 </div>
 </template>
 
@@ -37,5 +44,33 @@ const login = async () => {
 </script>
 
 <style scoped>
+.login-form{
+    position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 1.5rem;
+  text-align: center;
+
+  width: 100%;
+  max-width: 360px;
+}
+
+.to-join {
+  margin-top: 1rem;
+  font-size: 14px;
+  color: #52525b;
+}
+
+.signup-link,
+.signup-link:visited,
+.signup-link:hover,
+.signup-link:active {
+  color: #ff8a24;
+  font-weight: 600;
+    margin-left: 4px;
+  text-decoration: none;
+}
 
 </style>

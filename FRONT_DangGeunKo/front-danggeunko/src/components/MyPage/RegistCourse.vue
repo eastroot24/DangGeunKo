@@ -16,7 +16,7 @@
                     <div class="card-content" @click="goDetail(course)">
                         <CourseCard :course="course"></CourseCard>
                     </div>
-                    <div class="card-heart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
+                    <div class="card-myheart" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
                         <i :class="course.liked ? 'fi fi-ss-heart' : 'fi fi-rs-heart'"></i>
                     </div>
                 </div>

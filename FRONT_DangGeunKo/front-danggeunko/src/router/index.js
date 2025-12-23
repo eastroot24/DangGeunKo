@@ -55,13 +55,15 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginView,
-      meta: { alreadyAuth: true },
+      meta: { skipOnboarding: true,
+        alreadyAuth: true },
     },
     {
       path: "/signUp",
       name: "signUp",
       component: SignUpView,
-      meta: { alreadyAuth: true },
+      meta: { skipOnboarding: true,
+        alreadyAuth: true },
     },
     {
       path: "/myInfo/:nickname",
@@ -106,9 +108,16 @@ router.beforeEach((to, from, next) => {
   }
 
   // 첫 방문 + 비로그인 → 온보딩 강제
-  if (!isLoggedIn && !hasVisited && to.name !== 'onboarding') {
-    return next({ name: 'onboarding' });
-  }
+ // 첫 방문 + 비로그인 → 온보딩 강제 (예외 페이지 제외)
+if (
+  !isLoggedIn &&
+  !hasVisited &&
+  to.name !== 'onboarding' &&
+  !to.meta.skipOnboarding
+) {
+  return next({ name: 'onboarding' });
+}
+
 
   // 1. 로그인 중 로그인/회원가입 페이지 접근 시
   if (to.meta.alreadyAuth && store.isLoggedIn) {
