@@ -49,9 +49,9 @@
 <div v-else class="final-step final-layout">
   <div class="final-text-area">
     <h2 class="final-hero-title">
-      당신<br />
-      근처의<br />
-      코스
+      당<span style="color:#ffad66">신</span><br />
+      근<span style="color:#ffad66">처의</span><br />
+      코<span style="color:#ffad66">스</span>
     </h2>
 
     <p class="final-sub-desc">
