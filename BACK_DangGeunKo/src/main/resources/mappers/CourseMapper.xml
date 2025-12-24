@@ -260,7 +260,7 @@
 		LEFT JOIN course_like l ON c.course_id = l.course_id
 		LEFT JOIN user u ON c.user_id = u.user_id
 		WHERE 1=1
-		AND r.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+		AND r.updated_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
 
 		<if test="courseCity != null and courseCity != ''">
 			AND c.course_city LIKE CONCAT('%', #{courseCity}, '%')

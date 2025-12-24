@@ -151,7 +151,7 @@ const characterRef = ref(null);
 const currentStep = ref(0);
 const characterX = ref(10);
 const isFrameA = ref(true);
-const FINAL_STOP_X = -250; // ← 빈세주가 원하는 위치로 조절
+const FINAL_STOP_X = -160; // ← 빈세주가 원하는 위치로 조절
 
 
 /* =====================
@@ -416,8 +416,8 @@ onUnmounted(() => {
 }
 
 .carrot-character {
-  width: 58rem;
-  height: 58rem;
+  width: 50rem;
+  height: 50rem;
   object-fit: contain;
 }
 
@@ -535,7 +535,7 @@ onUnmounted(() => {
 /* 텍스트 영역 */
 .final-text-area {
   position: absolute;
-  right: 0px;
+  right: -20px;
   top: 50%;
   transform: translateY(-50%);
   text-align: left;
