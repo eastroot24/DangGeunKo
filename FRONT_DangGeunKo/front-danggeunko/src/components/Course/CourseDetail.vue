@@ -6,8 +6,8 @@
             </button>
             <div class="course-name">{{ course.courseName }}</div>
             <div v-if="course.userId === loginUserId" class="admin-btns">
-                <button class="mini-btn update" @click="goUpdate">수정</button>
-                <button class="mini-btn delete" @click="deleteCourse">삭제</button>
+                <button class="edit-btn" @click="goUpdate">수정</button>
+                <button class="del-btn" @click="deleteCourse">삭제</button>
             </div>
         </div>
 
@@ -48,9 +48,19 @@
                     {{ course.distanceKm }}km / {{ course.duration_min }}시간 / {{ course.coursePace }} 페이스
                 </div>
             </div>
-
             <div class="description-text">
                 {{ course.description || 'Content' }}
+            </div>
+            <div class="stats">
+                <div>
+                    <div class="heart-btn" :class="{ active: course.liked }" @click.stop="toggleLike(course)">
+                        <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
+                        <span v-else><i class="fi fi-rs-heart"></i></span>
+                    </div>
+                    <span>찜 {{ course.likeCnt || 0 }}</span>
+                </div>
+                <div>댓글 {{ course.reviewCount || 0 }}</div>
+                <div>조회수 {{ course.viewCnt }}</div>
             </div>
         </div>
     </div>
@@ -94,7 +104,9 @@ const fetchWriterInfo = async () => {
         }
     }
 }
-
+const goBack = () => {
+    router.back()
+}
 const goUpdate = () => {
     router.push({ name: 'courseUpdate', params: course.value.courseId })
 }
@@ -155,21 +167,20 @@ watch(course, () => {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 20px;
 }
 
 .stats div {
     font-size: 13px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    left: -4;
     position: relative;
 }
 
 .heart-btn {
     position: absolute;
     top: 1px;
-    left: 2px;
+    left: 0px;
     right: 0px;
     bottom: 80px;
     width: 24px;

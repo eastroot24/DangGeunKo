@@ -27,17 +27,28 @@ const isMe = computed(() => loginUserId.value === targetUser.value.userId);
 
 const loadProfile = async () => {
     const nickname = route.params.nickname;
-    // 1. 닉네임으로 대상 유저 정보 가져오기
-    const userData = await userStore.getUserByNickname(nickname);
-    if (userData) {
-        targetUser.value = userData;
+    targetUser.value = {};
+
+    try {
+        const userData = await userStore.getUserByNickname(nickname);
+        if (userData) {
+            targetUser.value = userData;
+        } else {
+            console.error("해당 유저를 찾을 수 없습니다.");
+        }
+    } catch (error) {
+        console.error("프로필 로드 중 에러:", error);
     }
 };
 
-onMounted(() => {
-    loadProfile()
+// 닉네임 파라미터가 바뀔 때마다 loadProfile 실행
+watch(() => route.params.nickname, () => {
+    loadProfile();
 });
-watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로드
+
+onMounted(() => {
+    loadProfile();
+});
 </script>
 
 <style>
@@ -48,14 +59,16 @@ watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로�
 }
 
 .my-info-scroll::-webkit-scrollbar {
-  width: 0.8rem;
+    width: 0.8rem;
 }
 
 /* ★ 패널 스크롤바 핸들 (평소 색상) ★ */
 .my-info-scroll::-webkit-scrollbar-thumb {
-  background: #ff8a24;         /* 주황색 적용 */
-  border-radius: 1rem;
-  border: 0.2rem solid #f5f5f5;      /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
+    background: #ff8a24;
+    /* 주황색 적용 */
+    border-radius: 1rem;
+    border: 0.2rem solid #f5f5f5;
+    /* 주황색이 너무 답답해 보이지 않게 살짝 여백 */
 }
 
 /* 호버 시 조금 더 진한 주황색 */
@@ -143,16 +156,19 @@ watch(() => route.params.nickname, loadProfile); // 닉네임 변경 시 재로�
     color: rgba(200, 200, 200, 0.8);
     cursor: pointer;
     transition: transform 0.2s;
-  top: 12rem; /* 80px */
-  width: 1.5rem; /* 24px */
-  height: 1.5rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.875rem; /* 14px */
-  box-shadow: var(--shadow-soft);
+    top: 12rem;
+    /* 80px */
+    width: 1.5rem;
+    /* 24px */
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    /* 14px */
+    box-shadow: var(--shadow-soft);
 }
 
 .card-myheart i {

@@ -600,11 +600,13 @@ label {
 .header-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 15px 20px;
   position: sticky;
   top: 0;
   z-index: 10;
+  background-color: var(--bg);
+  min-height: 60px;
 }
 
 .course-name {
@@ -702,20 +704,36 @@ label {
 
 /* 설명글 */
 .description-text {
+  font-size: 17.6px;
   margin-top: 20px;
   line-height: 1.6;
   color: #333;
 }
-
-/* 버튼 스타일 */
-.mini-btn {
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 0.8rem;
-  cursor: pointer;
-  margin-left: 5px;
-  color: white;
+/* 수정/삭제 버튼 그룹을 절대 위치로 */
+.admin-btns {
+  position: absolute; /* 절대 위치 */
+  right: 20px;        /* 오른쪽 여백 */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
 }
-.mini-btn.update { background-color: #ff8a24; }
-.mini-btn.delete { background-color: #ff8a24; opacity: 0.8; }
+
+.edit-btn,
+.del-btn {
+  font-size: 12px; /* 약간 작게 조정 */
+  border-radius: 8px;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.edit-btn {
+    background: #ededed;
+}
+
+.del-btn {
+    background: #ff4e4e;
+    color: #fff;
+}
