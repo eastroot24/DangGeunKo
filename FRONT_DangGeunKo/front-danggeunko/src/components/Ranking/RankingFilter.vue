@@ -11,7 +11,7 @@
     <!-- 거리 / 지역 / 난이도 옵션 박스들 -->
     <div class="filter-options">
       <div class="region-control" id="regionControl">
-        <div style="margin-bottom: 4px; color: var(--text-sub)">
+        <div style="margin-bottom: 0.4rem; color: var(--text-sub)">
                 도시 / 지역구 선택
         </div>
         <div class="region-selects">
@@ -46,7 +46,7 @@ watch(
 /////////////////////////////////////////////////////////////////////////
 
 const regionDB = {
-    "도시" : [],
+    "시/도 선택" : [],
     "서울특별시": ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구",
     "마포구","서대문구","서초구","성동구","성북구","송파구","양천구","영등포구","용산구","은평구","종로구","중구","중랑구"],
 
@@ -89,13 +89,13 @@ onMounted(() => {
 
   const loadDistricts = () => {
     district.value.innerHTML = ""
-    district.value.innerHTML += `<option value="">지역구 전체</option>`
+    district.value.innerHTML += `<option value="">시/군/구 선택</option>`
     regionDB[city.value.value].forEach(gu => {
         district.value.innerHTML += `<option>${gu}</option>`
     })
         
      
-     searchInfo.value.courseCity = city.value.value === '도시'? '' : city.value.value;
+     searchInfo.value.courseCity = city.value.value === '시/도 선택'? '' : city.value.value;
      searchInfo.value.courseDistrict = district.value.value
   }
 

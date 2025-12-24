@@ -200,4 +200,9 @@ watch(course, () => {
 .content {
     padding: 1.5rem 2.3rem 0.1rem;
 }
+
+.course-name{
+    font-size: 24px;
+    font-weight: 700;
+}
 </style>

@@ -3,13 +3,13 @@
     <div class="back" @click="retry">코스 다시 그리기 <i class="fi fi-rr-pencil"></i> </div>
     <!-- 입력 폼 -->
     <div class="form-wrap">
-      <label style="font-weight: bold;">코스 이름</label>
+      <label style="">코스 이름</label>
       <input v-model="courseInfo.courseName" @input="errors.courseName = ''" type="text" placeholder="코스 이름" />
       <div v-if="errors.courseName" class="error-text">
         {{ errors.courseName }}
       </div>
 
-      <label style="font-weight: bold;">지역구</label>
+      <label style="">지역구</label>
       <div class="row">
         <select v-model="selectedCity">
           <option value="">시/도 선택</option>
@@ -31,25 +31,26 @@
         <div v-if="errors.courseDistrict" class="error-text">
           {{ errors.courseDistrict }}
         </div>
-        <label style="font-weight: bold;">출발지 주소</label>
+        <label style="">출발지 주소</label>
         <input v-model="courseInfo.startAddress" type="text" placeholder="출발지 주소">
-        <label style="font-weight: bold;">도착지 주소</label>
+        <label style="">도착지 주소</label>
         <input v-model="courseInfo.endAddress" type="text" placeholder="도착지 주소">
 
         <div class="row-3">
-          <label style="font-weight: bold;">전체거리</label>
+          <label style="">전체거리</label>
           <input v-model="courseInfo.distanceKm" type="number" placeholder="전체 거리 (km)">
-          <label style="font-weight: bold;">소요 시간</label>
+          <label style="">소요 시간</label>
           <input v-model="courseInfo.durationMin" @input="errors.durationMin = ''" type="number"
             placeholder="소요 시간 (분)" />
           <div v-if="errors.durationMin" class="error-text">{{ errors.durationMin }}</div>
-          <label style="font-weight: bold;">평균 페이스</label>
+          <label style="">평균 페이스</label>
           <input v-model="courseInfo.paceMin" type="number" placeholder="평균 페이스 (/km)">
         </div>
 
         <div class="row-3">
-          <label style="font-weight: bold;">러닝 유형</label>
+          <label style="">러닝 유형</label>
           <select v-model="courseInfo.courseType" @change="errors.courseType = ''">
+            <option value="">선택</option>
             <option value="1">조깅</option>
             <option value="2">인터벌</option>
             <option value="3">가속주</option>
@@ -58,28 +59,29 @@
             <option value="6">업힐</option>
           </select>
           <div v-if="errors.courseType" class="error-text">{{ errors.courseType }}</div>
-          <label style="font-weight: bold;">코스 난이도</label>
+          <label style="">코스 난이도</label>
           <select v-model="courseInfo.difficulty" @change="errors.difficulty = ''">
+            <option value="">선택</option>
             <option value="런린이">런린이</option>
             <option value="러너">러너</option>
             <option value="런고수">런고수</option>
           </select>
           <div v-if="errors.difficulty" class="error-text">{{ errors.difficulty }}</div>
         </div>
-        <label style="font-weight: bold;">코스 설명 및 편의 시설</label>
+        <label style="">코스 설명 및 편의 시설</label>
         <textarea v-model="courseInfo.description" @input="errors.description = ''"
           placeholder="코스의 특징, 주의 사항 등을 적어주세요."></textarea>
         <div v-if="errors.description" class="error-text">{{ errors.description }}</div>
 
         <div class="row-3" style="margin-top:10px;">
-          <label style="font-weight: bold;">횡단보도 유무</label>
+          <label style="">횡단보도 유무</label>
           <select v-model="courseInfo.hasCrosswalk" @change="errors.hasCrosswalk = ''">
             <option value="">선택</option>
             <option value="true">있음</option>
             <option value="false">없음</option>
           </select>
           <div v-if="errors.hasCrosswalk" class="error-text">{{ errors.hasCrosswalk }}</div>
-          <label style="font-weight: bold;">공중화장실 유무</label>
+          <label style="">공중화장실 유무</label>
           <select v-model="courseInfo.hasToilet" @change="errors.hasToilet = ''">
             <option value="">선택</option>
             <option value="true">있음</option>
@@ -329,7 +331,7 @@ watch(selectedDistrict, (v) => {
 .back {
   padding: 18px;
   font-size: 14px;
-  font-weight: bold;
+  
   cursor: pointer;
   color: #ff7a00;
 }
@@ -362,24 +364,6 @@ watch(selectedDistrict, (v) => {
   background: #e66e00;
 }
 
-label {
-  font-size: 12px;
-  color: #444;
-  margin-bottom: 4px;
-  display: block;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  font-size: 12px;
-  margin-bottom: 14px;
-}
-
 textarea {
   height: 100px;
   resize: none;
@@ -387,8 +371,13 @@ textarea {
 
 .row-3 {
   display: flex;
+  align-items: center;
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.row-3 label{
+  transform: translateY(-5.5px);
 }
 
 .row-3 input,

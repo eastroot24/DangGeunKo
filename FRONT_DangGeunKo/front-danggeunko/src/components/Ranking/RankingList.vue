@@ -109,7 +109,7 @@ watch(
     margin-right: 0;
 
 
-    border: 3px solid #ff7a00;
+    border: 5px solid #ff7a00;
     box-shadow: 0 4px 12px rgba(255, 122, 0, 0.2);
 }
 .has-ai-comment .card-heart {

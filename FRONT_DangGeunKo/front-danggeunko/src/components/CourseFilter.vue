@@ -53,7 +53,7 @@
     </div>
 
     <div class="region-control" id="regionControl">
-      <div style="margin-bottom: 4px; color: var(--text-sub)">
+      <div style="margin-bottom: 0.6rem; color: var(--text-sub)">
         도시 / 지역구 선택
       </div>
       <div class="region-selects">
@@ -64,7 +64,7 @@
 
     <!-- 난이도 -->
     <div class="difficulty-control" id="levelControl">
-      <div style="margin-bottom: 4px; color: var(--text-sub)">
+      <div style="margin-bottom: 0.6rem; color: var(--text-sub)">
         난이도 선택
       </div>
       <div class="difficulty-chips">
@@ -103,7 +103,7 @@ watch(
 /////////////////////////////////////////////////////////////////////////
 
 const regionDB = {
-  "도시": [],
+  "시/도 선택": [],
   "서울특별시": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구",
     "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
 
@@ -481,7 +481,7 @@ onMounted(() => {
 
   const loadDistricts = () => {
     district.value.innerHTML = ""
-    district.value.innerHTML += `<option value="">지역구 전체</option>`
+    district.value.innerHTML += `<option value="">시/군/구 선택</option>`
 
     const selectedCity = city.value.value;
     if (regionDB[selectedCity]) {
@@ -496,7 +496,7 @@ onMounted(() => {
       mapStore.setMapCenter({ lat: coords.lat, lng: coords.lng, zoom: coords.zoom });
     }
 
-    searchInfo.value.courseCity = selectedCity === '도시' ? '' : selectedCity;
+    searchInfo.value.courseCity = selectedCity === '시/도 선택' ? '' : selectedCity;
     searchInfo.value.courseDistrict = ""; // 도시 변경 시 지역구 초기화
   }
 
@@ -504,7 +504,7 @@ onMounted(() => {
     const selectedCity = city.value.value;
     const selectedDistrict = district.value.value;
 
-    searchInfo.value.courseCity = selectedCity === '도시' ? '' : selectedCity;
+    searchInfo.value.courseCity = selectedCity === '시/도 선택' ? '' : selectedCity;
     searchInfo.value.courseDistrict = selectedDistrict;
 
     // ⭐ 유니크 키 생성: "서울특별시 중구" 형태
