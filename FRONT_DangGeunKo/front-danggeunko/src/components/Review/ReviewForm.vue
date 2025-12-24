@@ -104,18 +104,17 @@ onMounted(() => {
 /* 댓글 입력칸 */
 .comment-box {
     padding: 12px;
-    background: #fff;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     margin-bottom: 16px;
 }
 
 .comment-input {
-    width: 95%;
+    width: 100%;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid #ddd;
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 10px;
 }
 
@@ -129,5 +128,4 @@ onMounted(() => {
 .stars span.active {
     color: #ffb400;
 }
-
 </style>

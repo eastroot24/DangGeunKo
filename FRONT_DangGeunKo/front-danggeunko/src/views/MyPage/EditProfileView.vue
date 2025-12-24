@@ -28,16 +28,17 @@
 
       <label>별명</label>
       <div class="row">
-        <input type="text" v-model="user.nickname" :class="{ 'input-error': errors.nickname }">
-        <button class="btn-duple" @click="handleNicknameCheck">중복확인</button>
+        <input class="duple-input" type="text" v-model="user.nickname" :class="{ 'input-error': errors.nickname }">
+        <button class="mini-btn" @click="handleNicknameCheck">중복확인</button>
+        <div v-if="errors.nickname" class="error-msg">{{ errors.nickname }}</div>
+        <div v-else-if="store.nicknameAvailable === true && user.nickname !== originalNickname" class="success-msg">
+          사용 가능한 별명입니다.
+        </div>
+        <div v-else-if="user.nickname === originalNickname && originalNickname !== ''" class="success-msg">
+          현재 사용 중인 별명입니다.
+        </div>
       </div>
-      <div v-if="errors.nickname" class="error-msg">{{ errors.nickname }}</div>
-      <div v-else-if="store.nicknameAvailable === true && user.nickname !== originalNickname" class="success-msg">
-        사용 가능한 별명입니다.
-      </div>
-      <div v-else-if="user.nickname === originalNickname && originalNickname !== ''" class="success-msg">
-        현재 사용 중인 별명입니다.
-      </div>
+
 
       <label>새 비밀번호 (변경 시에만 입력)</label>
       <input type="password" v-model="user.userPassword" :class="{ 'input-error': errors.userPassword }">
@@ -63,7 +64,6 @@
       <label>나이</label>
       <div class="row">
         <input type="number" v-model="user.age">
-        <span class="unit">세</span>
       </div>
 
       <label>지역</label>
@@ -335,17 +335,25 @@ const regionDB = {
 }
 
 .error-msg {
+  display: inline;
   color: #ff4d4f;
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 4px;
   font-weight: bold;
 }
 
 .success-msg {
+  display: inline;
   color: #52c41a;
-  font-size: 11px;
-  margin-top: 10px;
+  font-size: 14px;
+  margin-top: 0.2rem;
   font-weight: bold;
+
+}
+
+.mini-btn {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .disabled-input {
@@ -380,5 +388,9 @@ const regionDB = {
 /* 호버 시 조금 더 진한 주황색 */
 .form::-webkit-scrollbar-thumb:hover {
   background: #e66e00;
+}
+
+.duple-input {
+  margin-bottom: 0.25rem;
 }
 </style>

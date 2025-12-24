@@ -1,16 +1,17 @@
 <template>
     <div class="c-item">
         <div class="c-top">
-            <div class="c-user" @click="goToUserProfile(review.nickName)" style="cursor: pointer;">
-                <img :src="profileImgPreview" />
-                <span class="nick">{{ review.nickName }}</span>
-
-
+            <div class="c-userbox" style="cursor: pointer;">
+                <div class="c-user" @click="goToUserProfile(review.nickName)">
+                    <img :src="profileImgPreview" />
+                    <span class="nick">{{ review.nickName }}</span>
+                </div>
+                <button v-if="loginUserId !== review.userId" class="follow-btn-sm" :class="{ unfollow: isFollowing }"
+                    @click="handleToggleFollow">
+                    {{ isFollowing ? "언팔로우" : "팔로우" }}
+                </button>
             </div>
-            <button v-if="loginUserId !== review.userId" class="follow-btn-sm" :class="{ unfollow: isFollowing }"
-                @click="handleToggleFollow">
-                {{ isFollowing ? "언팔로우" : "팔로우" }}
-            </button>
+
             <div class="c-meta">{{ review.userDistrict }} · {{ formatTimeAgo(review.updatedAt) }}</div>
         </div>
 
@@ -59,9 +60,7 @@ const isFollowing = computed(() => {
 })
 // 유저 프로필 페이지로 이동하는 함수
 const goToUserProfile = (nickName) => {
-    // 본인이면 /mypage로, 타인이면 /user/:id 형식으로 보낼 수 있습니다.
-    // 여기서는 통일성을 위해 /profile/:id 형태로 이동한다고 가정합니다.
-    router.push(`/myinfo/${nickName}`);
+    router.push(`/myInfo/${nickName}`);
 };
 // 팔로우 토글 핸들러
 async function handleToggleFollow() {
@@ -141,8 +140,8 @@ const profileImgPreview = computed(() => {
 .c-user {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -153,7 +152,7 @@ const profileImgPreview = computed(() => {
 }
 
 .c-meta {
-    font-size: 10px;
+    font-size: 12px;
     color: #666;
 }
 
@@ -164,28 +163,11 @@ const profileImgPreview = computed(() => {
 }
 
 .c-content {
-    font-size: 12px;
-    padding-left: 36px;
+    font-size: 14px;
     margin-top: 2px;
 }
 
-.edit-btn,
-.del-btn {
-    font-size: 10px;
-    border-radius: 10px;
-    border: none;
-    padding: 2px 6px;
-    cursor: pointer;
-}
 
-.edit-btn {
-    background: #ededed;
-}
-
-.del-btn {
-    background: #ff4e4e;
-    color: #fff;
-}
 
 /* 팔로우 버튼 (작은 사이즈 버전) */
 .follow-btn-sm {
@@ -197,7 +179,7 @@ const profileImgPreview = computed(() => {
     color: white;
     cursor: pointer;
     transition: 0.2s;
-    margin-right: 100px;
+    display: inlinesss;
 }
 
 .follow-btn-sm.unfollow {
@@ -206,8 +188,21 @@ const profileImgPreview = computed(() => {
 
 .action-btns {
     margin-top: 8px;
-    padding-left: 36px;
     display: flex;
     gap: 5px;
+}
+
+.action-btns,
+.c-content {
+    padding: 0.25rem;
+}
+
+.c-userbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* ★ 여기서 유저정보와 팔로우 버튼 사이의 간격을 조절하세요 */
+    cursor: default;
+    /* 박스 전체가 클릭되는 느낌을 주지 않으려면 기본값으로 */
 }
 </style>
