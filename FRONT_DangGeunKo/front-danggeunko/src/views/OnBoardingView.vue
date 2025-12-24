@@ -37,9 +37,11 @@
 
   <!-- STEP 1 ~ 3 -->
   <div v-else-if="!isLastStep" class="content-card">
-    <h2 class="section-title">
-      {{ steps[currentStep].title }}
-    </h2>
+    <img
+    v-if="steps[currentStep].img"
+    :src="steps[currentStep].img"
+    class="section-image"
+    />
     <p class="section-desc">
       {{ steps[currentStep].desc }}
     </p>
@@ -72,8 +74,6 @@
 
 </section>
 
-
-
     <!-- 캐릭터 -->
     <div
   class="character-wrapper"
@@ -82,8 +82,6 @@
     zIndex: characterZ
   }"
 >
-
-
       <img
   ref="characterRef"
   :src="
@@ -116,6 +114,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
+import detailImg from '@/assets/img/detail_capture.png';
+import mainImg from '@/assets/img/main_capture.png';
+import coachImg from '@/assets/img/coach_capture.png';
 
 const router = useRouter();
 
@@ -134,11 +135,11 @@ const blockRefs = ref([]);
    스텝 데이터
 ===================== */
 const steps = [
-  { title: '어디서 뛸지 고민인가요?', desc: '내 주변의 숨은 러닝 코스를 당근코가 찾아드려요.' },
-  { title: '로컬 코스 정보', desc: '이웃들의 러닝 코스를 구경해 보세요.' },
-  { title: '함께 달리는 즐거움', desc: '혼자보다 함께할 때 더 즐거운 러닝 커뮤니티!' },
-  { title: '오늘의 기록 공유', desc: '내가 뛴 코스를 등록하고 이웃과 공유해보세요.' },
-  { title: '시작해볼까요?', desc: '지금 당근코와 함께 첫 러닝을 시작해요!' },
+  { },
+  { img: mainImg ,desc: '이웃들의 러닝 코스를 한눈에 찾아 보세요!' },
+  { img: detailImg ,desc: '내가 뛴 코스를 등록하고 이웃과 소통해 보세요!' },
+  { img: coachImg ,desc: '당신만의 러닝코치와 함께 달려보세요!' },
+  {  },
 ];
 
 /* =====================
@@ -162,8 +163,8 @@ const textBlocks = ref([]);
 const initBlocks = () => {
   textBlocks.value = [
     {
-      text: '어디서 뛸지 고민이신가요?',
-      x: 200,
+      text: '도대체 러닝을 어디서 시작해야 되는거지..',
+      x: 120,
       y: -30,
       hit: false,
       flyX: 0,
@@ -171,8 +172,8 @@ const initBlocks = () => {
       rotate: 0,
     },
     {
-      text: '내 주변 코스 찾기가 힘드신가요?',
-      x: 360,
+      text: '내 목표에 맞는 코스를 찾을 수가 없어..',
+      x: 300,
       y: 30,
       hit: false,
       flyX: 0,
@@ -180,8 +181,8 @@ const initBlocks = () => {
       rotate: 0,
     },
     {
-      text: '당근코와 함께 달려요!',
-      x: 540,
+      text: '우리 집 근처에 뛸만한 곳 없을까?',
+      x: 410,
       y: 90,
       hit: false,
       flyX: 0,
@@ -377,7 +378,7 @@ onUnmounted(() => {
 
 .content-card {
   text-align: center;
-  max-width: 520px;
+  max-width: 550px;
   padding: 2rem;
 }
 
@@ -400,9 +401,16 @@ onUnmounted(() => {
 }
 
 .section-desc {
-  font-size: 1.125rem;
-  color: #71717a;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+
+  width: 600px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #ff8a24;
   line-height: 1.6;
+  text-align: center; /* 선택 */
 }
 
 /* 캐릭터 */
@@ -508,7 +516,7 @@ onUnmounted(() => {
   background: white;
   border-radius: 16px;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: #18181b;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   transition:
@@ -552,7 +560,7 @@ onUnmounted(() => {
 
 /* 서브 설명 */
 .final-sub-desc {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #2f2f2f;
   line-height: 1.6;
   margin-bottom: 1.75rem;
@@ -580,7 +588,7 @@ onUnmounted(() => {
 
 /* 로그인 텍스트 */
 .final-login-text {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: #888;
 }
 
@@ -589,6 +597,19 @@ onUnmounted(() => {
   color: #ff7a1a;
   font-weight: 600;
   cursor: pointer;
+}
+
+.section-image {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%) translateY(-18px);
+
+  display: block;
+  width: 115%;
+  max-width: none;
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
 

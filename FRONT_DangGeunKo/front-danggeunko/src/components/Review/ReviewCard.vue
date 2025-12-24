@@ -128,7 +128,7 @@ const profileImgPreview = computed(() => {
 
 .c-item {
     border-bottom: 1px solid #f1f1f1;
-    padding: 12px 0;
+    padding: 12px 14px;
 }
 
 .c-top {
@@ -154,6 +154,7 @@ const profileImgPreview = computed(() => {
 .c-meta {
     font-size: 12px;
     color: #666;
+    margin-right: 6px;
 }
 
 .star-show {
@@ -187,9 +188,10 @@ const profileImgPreview = computed(() => {
 }
 
 .action-btns {
-    margin-top: 8px;
     display: flex;
     gap: 5px;
+    justify-content: right;
+    transform: translateY(-50px);
 }
 
 .action-btns,
