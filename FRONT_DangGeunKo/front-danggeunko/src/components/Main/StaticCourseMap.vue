@@ -58,10 +58,6 @@ function drawMap() {
     draggable: true,
     scrollWheel: true,
     pinchZoom: true,
-    zoomControl: true,
-    zoomControlOptions: {
-      position: naver.maps.Position.TOP_RIGHT
-    }
   })
 
   // 폴리라인
