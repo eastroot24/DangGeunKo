@@ -688,6 +688,7 @@ textarea::placeholder{
 .post-time {
   font-size: 0.8rem;
   color: #888;
+  padding-top: 5px;
 }
 
 /* 2. 오른쪽 아이콘 + 주소 덩어리 */

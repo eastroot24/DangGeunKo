@@ -28,7 +28,7 @@
         </div>
         <div class="popup-bg" v-if="isOpen">
             <div class="popup">
-                <div class="popup-title">비밀번호 확인</div>
+                <div class="title">비밀번호 확인</div>
                 <input type="password" v-model="pwInput" placeholder="비밀번호를 입력하세요" @keyup.enter="checkPassword">
                 <div class="error" v-if="pwError">비밀번호가 일치하지 않습니다.</div>
                 <button class="btn-orange" @click="checkPassword">확인</button>
@@ -289,11 +289,14 @@ watch(() => props.user?.userId, loadFollowData, { immediate: true })
     text-align: center;
 }
 
+.popup input {
+    margin-bottom: 0px;
+}
+
 .close-btn {
     background: none;
     border: none;
     color: #999;
-    margin-top: 0.75rem;
     cursor: pointer;
 }
 
