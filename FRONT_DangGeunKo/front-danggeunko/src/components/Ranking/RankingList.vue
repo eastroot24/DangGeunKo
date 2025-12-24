@@ -12,13 +12,10 @@
                     <span v-if="course.liked"><i class="fi fi-ss-heart"></i></span>
                     <span v-else><i class="fi fi-rs-heart"></i></span>
                 </div>
-
                 <div v-if="index === 0" class="ai-comment-container">
                     <AIcomment :course="course"></AIcomment>
                 </div>
-
             </div>
-
         </div>
     </div>
 </template>
@@ -79,7 +76,6 @@ onMounted(async () => {
 watch(
     () => ({ ...searchInfo.value }),
     async (newVal, oldVal) => {
-        console.log("필터 변경 감지됨:", newVal);
         await courseStore.getWeeklyRanking();
     },
     { deep: true }

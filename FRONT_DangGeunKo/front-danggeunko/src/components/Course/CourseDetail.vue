@@ -154,10 +154,6 @@ onMounted(async () => {
     await courseStore.getCourseDetailById(route.params.id)
 })
 
-watch(course, () => {
-    console.log('course:', course.value)
-    console.log('coursePoints:', course.value?.coursePoints)
-})
 
 </script>
 
@@ -201,7 +197,7 @@ watch(course, () => {
     padding: 1.5rem 2.3rem 0.1rem;
 }
 
-.course-name{
+.course-name {
     font-size: 24px;
     font-weight: 700;
 }
