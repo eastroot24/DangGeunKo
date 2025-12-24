@@ -1,18 +1,21 @@
 <template>
     <div class="firstDesc-wrapper">
         <div class="firstDesc">
-            <AICommentLoading v-if="aiStore.loading"></AICommentLoading>
-            
+            <AICommentLoading v-if="aiStore.loading" />
+
             <div v-else class="content-container">
                 <div class="bubble-speech">
+                    <div class="summary-title">당근코 한 줄 요약✨</div>
                     <span v-html="renderedComment"></span>
                 </div>
-                <img class="dkImg" src="@/assets/img/dgk.png" alt="당근코 캐릭터">
+
+                <div class="character-wrapper">
+                    <img class="dkImg" src="@/assets/img/dgk.png" alt="당근코 캐릭터">
+                </div>
             </div>
         </div>
     </div>
 </template>
-
 <script setup>
 import { useAIStore } from '@/stores/ai';
 import MarkdownIt from 'markdown-it';
@@ -47,7 +50,7 @@ const prompt = () => {
                    공중화장실 유무: ${course.value.hasToilet}
                    별점 평균: ${course.value.avgRating}
                    조회수: ${course.value.viewCnt}
-                   강조할 부분은 마크다운언어 형식으로 강조해주고,
+                   강조할 부분은 마크다운언어 형식으로 강조해주고, 너비
                    답변 총 분량은 2줄로 ~한 이유로 런린이/러너/런고수 분들에게 추천드려요!
                    `
 }
@@ -62,95 +65,113 @@ const renderedComment = computed(() => {
 });
 
 //최종 테스트 때 열거임 다시!!!!!!!!
-// onMounted(async () => {
-//     if (props.course) {
-//         await send();
-//     }
-// })
+onMounted(async () => {
+    if (props.course) {
+        await send();
+    }
+})
 </script>
 
 <style scoped>
-/* AI Comment가 렌더링될 내부 컨테이너 */
+/* 래퍼: 전체 영역 확보 및 중앙 정렬 */
 .firstDesc-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    padding: 10px;
-}
-
-/* ⭐ 1. 설명 영역 컨테이너 스타일 (HTML 파일의 .firstDesc) */
-.firstDesc {
-    display: flex;
     width: 100%;
-    justify-content: center;
-    align-items: center;
+    display: flex;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-.dkImg {
-    height: 10.25rem;
-    width: auto;
-    object-fit: contain;
-    flex-shrink: 0;
+.firstDesc {
+    width: 100%;
 }
 
-/* 마크다운 내부 요소 스타일링 */
-.bubble-speech :deep(strong) {
-    color: #ff7a00;
-    font-weight: bold;
-}
-
-.bubble-speech :deep(a) {
-    color: #007bff;
-    text-decoration: underline;
-    word-break: break-all;
-    /* 긴 링크가 말풍선을 삐져나가지 않게 설정 */
-}
-/* 컨테이너 가로 정렬 */
+/* 컨테이너: 말풍선과 캐릭터를 세로로 배치 */
 .content-container {
     display: flex;
-    align-items: center; /* 세로 중앙 정렬 */
-    justify-content: center;
-    gap: 20px; /* 말풍선과 이미지 사이 간격 */
+    flex-direction: column;
+    align-items: center;
     width: 100%;
+    gap: 5px;
 }
-/* 2. 말풍선 스타일 (HTML 파일의 .bubble-speech) */
+
+/* 말풍선 제목 스타일 */
+.summary-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* 1. 말풍선 스타일 */
 .bubble-speech {
     background: white;
     border: 2px solid #ff7a00;
-    border-radius: 15px;
-    padding: 15px;
+    border-radius: 20px;
+    padding: 18px;
     position: relative;
-    line-height: 1.5;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: left;
-    flex: 1; /* 가용 공간 차지 */
-    max-width: 70%; /* 너무 길어지지 않게 제한 */
-    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.05));
+    line-height: 1.6;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    width: 90%;
+    filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.1));
+    margin-bottom: 25px;
+    /* 꼬리 공간 확보 */
+
+    /* 한글 줄바꿈 최적화 */
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
-/* 말풍선 꼬리 - 외부 테두리 (.bubble-speech::after) */
+/* 말풍선 꼬리 - 테두리 */
 .bubble-speech::after {
     content: '';
     position: absolute;
-    left: 100%; /* 오른쪽 끝에 배치 */
-    top: 50%;
-    transform: translateY(-50%);
-    border: 12px solid transparent;
-    border-left-color: #ff7a00; /* 화살표가 오른쪽을 향하도록 */
-    border-right: 0;
+    top: 100%;
+    left: 40px;
+    border-top: 20px solid #ff7a00;
+    border-right: 15px solid transparent;
+    border-left: 0px solid transparent;
 }
 
+/* 말풍선 꼬리 - 내부 채우기 */
 .bubble-speech::before {
     content: '';
     position: absolute;
-    left: calc(100% - 2px); /* 테두리 안쪽으로 살짝 겹침 */
-    top: 50%;
-    transform: translateY(-50%);
-    border: 11px solid transparent;
-    border-left-color: white;
-    border-right: 0;
+    top: calc(100% - 2px);
+    left: 42px;
+    border-top: 18px solid white;
+    border-right: 13px solid transparent;
+    border-left: 0px solid transparent;
     z-index: 1;
+}
+
+/* 2. 캐릭터 스타일 */
+.character-wrapper {
+    align-self: flex-start;
+    margin-left: 10px;
+    margin-top: -15px;
+    /* 말풍선과 밀착 */
+}
+
+.dkImg {
+    height: 10.9rem;
+    width: auto;
+    object-fit: contain;
+}
+
+/* 마크다운 내부 강조 스타일 */
+.bubble-speech :deep(strong) {
+    color: #ff7a00;
+    font-weight: 800;
+}
+
+/* 로딩 컴포넌트 레이아웃 */
+.firstDesc :deep(.loading-container) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    /* 로딩 바 높이 고정 */
 }
 </style>

@@ -1,15 +1,18 @@
 <template>
   <div class="loading-container">
-    <div class="track-area">
-      <div class="character-mover">
-        <img :src="currentImg" alt="running" class="loading-character" />
+    <div class="loading-content-wrapper">
+      <div class="track-area">
+        <div class="character-mover">
+          <img :src="currentImg" alt="running" class="loading-character" />
+        </div>
+
+        <div class="gauge-bar-bg">
+          <div class="gauge-bar-fill"></div>
+        </div>
       </div>
 
-      <div class="gauge-bar-bg">
-        <div class="gauge-bar-fill"></div>
-      </div>
+      <p class="loading-text">코스를 분석하고 있습니다...</p>
     </div>
-    <p class="loading-text">코스를 분석하고 있습니다...</p>
   </div>
 </template>
 
@@ -35,29 +38,41 @@ onUnmounted(() => {
 <style scoped>
 .loading-container {
   display: flex;
+  align-items: center;
+  /* 수직 중앙 정렬 */
+  justify-content: center;
+  /* 수평 중앙 정렬 */
+  width: 100%;
+  height: 100%;
+  /* 부모 높이 전체 차지 */
+  min-height: 300px;
+  /* 최소 높이 확보 */
+}
+
+.loading-content-wrapper {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
-  width: 100%;
+  width: 280px;
+  /* 로딩 영역 전체 너비 고정 */
 }
 
 .track-area {
-  width: 280px; /* 로딩 바 길이를 조금 더 늘림 */
+  width: 100%;
   position: relative;
+  margin-bottom: 10px;
+  /* 텍스트와의 간격 */
 }
 
 .character-mover {
   width: 100%;
-  /* 캐릭터 크기에 맞춰 이동 종료 지점 조정 */
+  /* 수직 중앙 정렬 관련 flex 제거 - 캐릭터는 애니메이션으로만 이동 */
   animation: move-right 2s linear infinite;
-  display: flex;
 }
 
 .loading-character {
-  height: 8.5rem; /* 요청하신 크기 */
+  height: 8.5rem;
   display: block;
-  /* 이미지가 이동 영역을 벗어나지 않도록 설정 */
 }
 
 .gauge-bar-bg {
@@ -66,9 +81,8 @@ onUnmounted(() => {
   background: #eee;
   border-radius: 5px;
   overflow: hidden;
-  margin-top: -10px; /* 캐릭터 발바닥에 가깝게 붙임 */
-  position: relative;
-  z-index: 1;
+  margin-top: -10px;
+  /* 캐릭터 발바닥에 붙임 */
 }
 
 .gauge-bar-fill {
@@ -78,25 +92,30 @@ onUnmounted(() => {
   animation: fill-bar 2s linear infinite;
 }
 
-/* ⭐ 핵심 수정: 캐릭터의 너비를 고려한 이동 거리 계산 */
 @keyframes move-right {
-  0% { 
-    transform: translateX(0); 
+  0% {
+    transform: translateX(0);
   }
-  100% { 
-    /* 8.5rem 높이일 때 보통 너비는 100px~120px 내외입니다. */
-    /* calc(100% - 캐릭터의 실제너비)로 맞춰야 끝까지 갑니다. */
-    transform: translateX(calc(100% - 60px)); 
+
+  100% {
+    transform: translateX(calc(100% - 100px));
   }
+
+  /* 캐릭터 너비에 맞춰 조정 */
 }
 
 @keyframes fill-bar {
-  0% { width: 0%; }
-  100% { width: 100%; }
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
 }
 
 .loading-text {
-  margin-top: 20px;
+  margin-top: 15px;
   font-size: 14px;
   color: #ff7a00;
   font-weight: bold;
@@ -104,7 +123,14 @@ onUnmounted(() => {
 }
 
 @keyframes fade {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 </style>

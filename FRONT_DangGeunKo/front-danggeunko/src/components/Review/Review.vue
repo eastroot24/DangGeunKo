@@ -34,7 +34,6 @@ onMounted(() => {
 watch(
     () => store.reviewList, // 감시할 대상: Store의 reviewList (getter 함수 사용)
     (newReviews) => {
-        console.log('리뷰 목록이 업데이트됨!');
         reviewList.value = newReviews; // 변경된 새로운 목록을 로컬 ref에 할당
     },
     { deep: true } // 객체 내부 변경까지 감시할 필요는 없지만, 안전을 위해 추가 가능
@@ -48,7 +47,7 @@ watch(() => route.params.id, (newId) => {
 </script>
 
 <style scoped>
-    .content{
+.content {
     padding: 1.125rem 1rem 0.75rem;
 }
 </style>
