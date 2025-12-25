@@ -6,12 +6,12 @@
             <div>MYPAGE</div>
         </RouterLink>
         <RouterLink to="/course" class="nav-item" @click="toggleByTap">
-            <i class="fi fi-rs-map-marker " style="font-size: 1.7rem;""></i>
+                <i class="fi fi-rs-map-marker " style="font-size: 1.7rem;""></i>
             <div>COURSE</div>
         </RouterLink>
         <RouterLink to="/course/ranking" class="nav-item" @click="toggleByTap">
-            <i class="fi fi-rs-trophy" style="font-size: 1.7rem;"></i>
-            <div>RANKING</div>
+                    <i class="fi fi-rs-trophy" style="font-size: 1.7rem;"></i>
+                    <div>RANKING</div>
         </RouterLink>
     </div>
 </template>
@@ -25,7 +25,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 
 const { toggleByTap } = useSlidingPanel()
 const userStore = useUserStore()
-const { user, isLoggedIn } = storeToRefs(userStore)
+const { user, isLoggedIn, loginUserId } = storeToRefs(userStore)
 // 로그인한 유저의 닉네임이 바뀔 때마다 자동으로 경로를 업데이트
 const myInfoPath = computed(() => {
     if (!userStore.isLoggedIn) {
@@ -34,7 +34,7 @@ const myInfoPath = computed(() => {
     if (!userStore.user?.nickname) {
         return '/';
     }
-
+    const loginUser = userStore.getUserById(loginUserId.value)
     return `/myInfo/${userStore.user.nickname}`;
 });
 
