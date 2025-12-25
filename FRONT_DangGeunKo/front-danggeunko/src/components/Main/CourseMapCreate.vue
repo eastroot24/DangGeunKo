@@ -3,29 +3,29 @@
     <div class="map-guide-text">
       마커를 찍어 코스를 그려보세요!
     </div>
-  <div class="map-btn-group top-actions">
-    <button class="map-btn" @click="undoLast">
-      <i class= "fi fi-rr-undo-alt" style="font-size: 16px; padding-bottom: 4px;"></i>
-    </button>
+    <div class="map-btn-group top-actions">
+      <button class="map-btn" @click="undoLast">
+        <i class="fi fi-rr-undo-alt" style="font-size: 16px; padding-bottom: 4px;"></i>
+      </button>
 
-    <button class="map-btn text-btn" @click="resetAll">
-      초기화
-    </button>
-  </div>
+      <button class="map-btn text-btn" @click="resetAll">
+        초기화
+      </button>
+    </div>
 
-  <div class="map-distance">
-    현재 거리 : {{ distanceKm }} km
-  </div>
+    <div class="map-distance">
+      현재 거리 : {{ distanceKm }} km
+    </div>
 
-  <div class="map-btn-group bottom-actions">
-    <button class="map-btn" @click="moveToCurrentLocation">
-      <i class="fi fi-rr-location-crosshairs"></i>
-    </button>
-  </div>
+    <div class="map-btn-group bottom-actions">
+      <button class="map-btn" @click="moveToCurrentLocation">
+        <i class="fi fi-rr-location-crosshairs"></i>
+      </button>
+    </div>
 
     <div id="createmap" style="width:100%;height: 100%;border-radius: 1rem;">
-</div>
     </div>
+  </div>
 
 </template>
 
@@ -319,18 +319,19 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   z-index: 100;
 
-  pointer-events: none; /* 지도 조작 방해 안 함 */
+  pointer-events: none;
+  /* 지도 조작 방해 안 함 */
 }
 
 .top-actions {
-  top: 16px;          /* map-guide-text와 동일 */
+  top: 16px;
+  /* map-guide-text와 동일 */
   right: 12px;
 }
 
 .bottom-actions {
-  bottom: 16px;       /* map-distance와 동일 */
-  right: 12px;
+  bottom: 16px;
+  /* map-distance와 동일 */
+  left: 12px;
 }
-
-
 </style>
