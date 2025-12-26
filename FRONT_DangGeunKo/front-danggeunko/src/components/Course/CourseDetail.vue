@@ -18,8 +18,11 @@
 
             <div class="combined-info-section">
                 <div class="info-left-author">
-                    <div class="author-info" v-if="writer">
-                        <span class="author-name">{{ writer.nickname }}</span>
+                    <div class="author-info" v-if="writer" @click="goToUserProfile(writer.nickname)">
+                        <div class="author-card">
+                            <img :src="profileImgPreview" />
+                            <span class=" author-name">{{ writer.nickname }}</span>
+                        </div>
                         <div class="post-time">{{ writer.userCity }} {{ writer.userDistrict }} · {{
                             formatTimeAgo(course.updatedAt) }}
                         </div>
@@ -70,7 +73,7 @@
 import { useCourseStore } from '@/stores/course';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import StaticCourseMap from '../Main/StaticCourseMap.vue';
 import { timeAgo } from '@/utils/timeUtils';
@@ -89,6 +92,10 @@ const formatTimeAgo = (dateString) => {
     if (!dateString) return '';
     return timeAgo(dateString);
 };
+// 유저 프로필 페이지로 이동하는 함수
+const goToUserProfile = (nickName) => {
+    router.push(`/myInfo/${nickName}`);
+};
 // 유저 정보를 가져오는 함수 수정
 const fetchWriterInfo = async () => {
     if (course.value && course.value.userId) {
@@ -104,6 +111,12 @@ const fetchWriterInfo = async () => {
         }
     }
 }
+const profileImgPreview = computed(() => {
+    const baseUrl = 'http://localhost:8080/profileImg/';
+    const defaultImg = 'dgk-default-profile.png';
+    if (!props.writer?.profileImg) return `${baseUrl}${defaultImg}`;
+    return `${baseUrl}${props.writer.profileImg}`;
+});
 const goBack = () => {
     router.back()
 }
@@ -200,5 +213,21 @@ onMounted(async () => {
 .course-name {
     font-size: 24px;
     font-weight: 700;
+}
+
+.author-card {
+    cursor: pointer;
+    display: flex;
+    /* 가로 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+    gap: 10px;
+    /* 이미지와 이름 사이 간격 */
+}
+
+.author-card img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
 }
 </style>
